@@ -18,6 +18,7 @@ import 'package:mausam_app/features/modules/fitness/presentation/screens/fitness
 import 'package:mausam_app/features/modules/health/presentation/screens/health_screen.dart';
 import 'package:mausam_app/features/modules/marine/presentation/screens/marine_screen.dart';
 import 'package:mausam_app/features/modules/travel/presentation/screens/travel_screen.dart';
+import 'package:mausam_app/features/radar/presentation/screens/radar_screen.dart';
 
 void main() {
   testWidgets('WeatherHeroCard renders temperature and condition',
@@ -276,6 +277,31 @@ void main() {
         expect(tester.takeException(), isNull,
             reason: 'Failed zero-overflow check on ${screen.runtimeType} at width $width');
       }
+    }
+  });
+
+  testWidgets(
+      'RadarScreen renders interactive Doppler map, timeline, and controls with zero overflow',
+      (WidgetTester tester) async {
+    for (final width in [320.0, 360.0, 412.0]) {
+      tester.view.physicalSize = Size(width, 800);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp(
+            theme: AppTheme.darkTheme,
+            home: const RadarScreen(),
+          ),
+        ),
+      );
+
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(find.byType(RadarScreen), findsOneWidget);
+      expect(find.text('Rain / Precipitation'), findsOneWidget);
+      expect(find.text('12:00 PM'), findsOneWidget);
+      expect(tester.takeException(), isNull,
+          reason: 'Failed zero-overflow check on RadarScreen at width $width');
     }
   });
 }

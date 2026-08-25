@@ -93,10 +93,28 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                     ],
                   ),
                   child: const Center(
-                    child: Icon(
-                      Icons.wb_sunny_rounded,
-                      size: 64,
-                      color: Colors.white,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Positioned(
+                          top: 18,
+                          right: 20,
+                          child: Icon(
+                            Icons.wb_sunny_rounded,
+                            size: 46,
+                            color: Color(0xFFFFB300),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 20,
+                          left: 18,
+                          child: Icon(
+                            Icons.cloud_rounded,
+                            size: 56,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
