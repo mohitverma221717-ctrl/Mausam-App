@@ -161,6 +161,12 @@ class ProfileScreen extends ConsumerWidget {
                   onTap: () => context.push('/locations/manage'),
                 ),
                 _SettingsTile(
+                  icon: Icons.notifications_active_outlined,
+                  title: 'Notification Center',
+                  subtitle: 'Recent alerts & briefing updates',
+                  onTap: () => context.push('/alerts/notifications'),
+                ),
+                _SettingsTile(
                   icon: Icons.notifications_none_rounded,
                   title: 'Notification Settings',
                   subtitle: 'Weather & severe rain alerts',
@@ -208,6 +214,12 @@ class ProfileScreen extends ConsumerWidget {
                           ? 'Light Theme'
                           : 'System Default'),
                   onTap: () => context.push('/profile/appearance'),
+                ),
+                _SettingsTile(
+                  icon: Icons.screen_lock_portrait_rounded,
+                  title: 'Always-On Display (AOD)',
+                  subtitle: 'Ambient clock & weather glance on standby',
+                  onTap: () => context.push('/profile/aod'),
                 ),
               ],
             ),

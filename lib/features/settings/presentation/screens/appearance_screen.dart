@@ -49,12 +49,12 @@ class AppearanceScreen extends ConsumerWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Container(
-          decoration: BoxDecoration(
-            color:
-                isDark ? AppColors.darkSurfaceCard : AppColors.lightSurfaceCard,
+        child: Material(
+          color:
+              isDark ? AppColors.darkSurfaceCard : AppColors.lightSurfaceCard,
+          shape: RoundedRectangleBorder(
             borderRadius: AppRadius.brXl,
-            border: Border.all(
+            side: BorderSide(
                 color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
           ),
           child: Column(

@@ -28,13 +28,12 @@ class NotificationSettingsScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
-          Container(
-            decoration: BoxDecoration(
-              color: isDark
-                  ? AppColors.darkSurfaceCard
-                  : AppColors.lightSurfaceCard,
+          Material(
+            color:
+                isDark ? AppColors.darkSurfaceCard : AppColors.lightSurfaceCard,
+            shape: RoundedRectangleBorder(
               borderRadius: AppRadius.brXl,
-              border: Border.all(
+              side: BorderSide(
                   color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
             ),
             child: Column(

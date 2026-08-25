@@ -127,11 +127,11 @@ class _UnitSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurfaceCard : AppColors.lightSurfaceCard,
+    return Material(
+      color: isDark ? AppColors.darkSurfaceCard : AppColors.lightSurfaceCard,
+      shape: RoundedRectangleBorder(
         borderRadius: AppRadius.brLg,
-        border: Border.all(
+        side: BorderSide(
             color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
       ),
       child: Column(

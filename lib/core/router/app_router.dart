@@ -32,6 +32,7 @@ import '../../features/settings/presentation/screens/appearance_screen.dart';
 import '../../features/settings/presentation/screens/notification_settings_screen.dart';
 import '../../features/settings/presentation/screens/about_screen.dart';
 import '../../features/settings/presentation/screens/help_feedback_screen.dart';
+import '../../features/settings/presentation/screens/aod_screen.dart';
 import '../../features/weather/presentation/screens/weather_details_screen.dart';
 import '../../features/forecast/presentation/screens/hourly_forecast_screen.dart';
 import '../../features/forecast/presentation/screens/daily_forecast_screen.dart';
@@ -188,6 +189,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/profile/help',
       builder: (context, state) => const HelpFeedbackScreen(),
+    ),
+    GoRoute(
+      path: '/profile/aod',
+      builder: (context, state) => const AodScreen(),
     ),
 
     // Specialized Domain Modules Sub-routes

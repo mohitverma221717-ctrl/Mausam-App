@@ -86,13 +86,13 @@ class _HelpFeedbackScreenState extends State<HelpFeedbackScreen> {
               ),
             ),
             const SizedBox(height: 12),
-            Container(
-              decoration: BoxDecoration(
-                color: isDark
-                    ? AppColors.darkSurfaceCard
-                    : AppColors.lightSurfaceCard,
+            Material(
+              color: isDark
+                  ? AppColors.darkSurfaceCard
+                  : AppColors.lightSurfaceCard,
+              shape: RoundedRectangleBorder(
                 borderRadius: AppRadius.brXl,
-                border: Border.all(
+                side: BorderSide(
                     color:
                         isDark ? AppColors.darkBorder : AppColors.lightBorder),
               ),

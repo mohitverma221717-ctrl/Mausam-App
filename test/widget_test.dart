@@ -20,6 +20,14 @@ import 'package:mausam_app/features/modules/marine/presentation/screens/marine_s
 import 'package:mausam_app/features/modules/travel/presentation/screens/travel_screen.dart';
 import 'package:mausam_app/features/radar/presentation/screens/radar_screen.dart';
 import 'package:mausam_app/core/widgets/mausam_module_drawer.dart';
+import 'package:mausam_app/features/alerts/presentation/screens/notification_center_screen.dart';
+import 'package:mausam_app/features/settings/presentation/screens/notification_settings_screen.dart';
+import 'package:mausam_app/features/settings/presentation/screens/units_screen.dart';
+import 'package:mausam_app/features/settings/presentation/screens/language_screen.dart';
+import 'package:mausam_app/features/settings/presentation/screens/help_feedback_screen.dart';
+import 'package:mausam_app/features/settings/presentation/screens/about_screen.dart';
+import 'package:mausam_app/features/settings/presentation/screens/aod_screen.dart';
+import 'package:mausam_app/features/settings/presentation/screens/appearance_screen.dart';
 
 void main() {
   testWidgets('WeatherHeroCard renders temperature and condition',
@@ -346,6 +354,42 @@ void main() {
 
       await tester.pump(const Duration(milliseconds: 300));
       await tester.pumpAndSettle();
+    }
+  });
+
+  testWidgets(
+      'Screens 33–41 Secondary Panels render with zero overflow across device widths',
+      (WidgetTester tester) async {
+    for (final width in [320.0, 360.0, 412.0]) {
+      tester.view.physicalSize = Size(width, 800);
+      tester.view.devicePixelRatio = 1.0;
+
+      final secondaryScreens = <Widget>[
+        const NotificationCenterScreen(),
+        const NotificationSettingsScreen(),
+        const UnitsScreen(),
+        const LanguageScreen(),
+        const HelpFeedbackScreen(),
+        const AboutScreen(),
+        const AodScreen(),
+        const AppearanceScreen(),
+      ];
+
+      for (final screen in secondaryScreens) {
+        await tester.pumpWidget(
+          ProviderScope(
+            child: MaterialApp(
+              theme: AppTheme.darkTheme,
+              home: screen,
+            ),
+          ),
+        );
+
+        await tester.pump(const Duration(milliseconds: 100));
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull,
+            reason: 'Failed zero-overflow check on ${screen.runtimeType} at width $width');
+      }
     }
   });
 }

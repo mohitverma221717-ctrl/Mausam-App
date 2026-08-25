@@ -3,7 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 /// StorageService encapsulating SharedPreferences and SecureStorage
 class StorageService {
-  static late SharedPreferences _prefs;
+  static SharedPreferences? _prefs;
   static const FlutterSecureStorage _secureStorage = FlutterSecureStorage();
 
   static Future<void> init() async {
@@ -31,28 +31,31 @@ class StorageService {
 
   // Synchronous / Async Getters & Setters
   static bool getBool(String key, {bool defaultValue = false}) {
-    return _prefs.getBool(key) ?? defaultValue;
+    return _prefs?.getBool(key) ?? defaultValue;
   }
 
-  static Future<bool> setBool(String key, bool value) {
-    return _prefs.setBool(key, value);
+  static Future<bool> setBool(String key, bool value) async {
+    if (_prefs == null) return false;
+    return await _prefs!.setBool(key, value);
   }
 
   static String getString(String key, {String defaultValue = ''}) {
-    return _prefs.getString(key) ?? defaultValue;
+    return _prefs?.getString(key) ?? defaultValue;
   }
 
-  static Future<bool> setString(String key, String value) {
-    return _prefs.setString(key, value);
+  static Future<bool> setString(String key, String value) async {
+    if (_prefs == null) return false;
+    return await _prefs!.setString(key, value);
   }
 
   static List<String> getStringList(String key,
       {List<String> defaultValue = const []}) {
-    return _prefs.getStringList(key) ?? defaultValue;
+    return _prefs?.getStringList(key) ?? defaultValue;
   }
 
-  static Future<bool> setStringList(String key, List<String> value) {
-    return _prefs.setStringList(key, value);
+  static Future<bool> setStringList(String key, List<String> value) async {
+    if (_prefs == null) return false;
+    return await _prefs!.setStringList(key, value);
   }
 
   // Secure Storage Methods
@@ -69,7 +72,7 @@ class StorageService {
   }
 
   static Future<void> clearAll() async {
-    await _prefs.clear();
+    await _prefs?.clear();
     await _secureStorage.deleteAll();
   }
 }

@@ -95,18 +95,23 @@ class NotificationCenterScreen extends ConsumerWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    notif.title,
-                                    style: AppTypography.titleMedium.copyWith(
-                                      fontWeight: notif.isRead
-                                          ? FontWeight.w600
-                                          : FontWeight.w800,
-                                      color: isDark
-                                          ? AppColors.textDarkPrimary
-                                          : AppColors.textLightPrimary,
+                                  Expanded(
+                                    child: Text(
+                                      notif.title,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: AppTypography.titleMedium.copyWith(
+                                        fontWeight: notif.isRead
+                                            ? FontWeight.w600
+                                            : FontWeight.w800,
+                                        color: isDark
+                                            ? AppColors.textDarkPrimary
+                                            : AppColors.textLightPrimary,
+                                      ),
                                     ),
                                   ),
-                                  if (!notif.isRead)
+                                  if (!notif.isRead) ...[
+                                    const SizedBox(width: 8),
                                     Container(
                                       width: 8,
                                       height: 8,
@@ -115,6 +120,7 @@ class NotificationCenterScreen extends ConsumerWidget {
                                         color: AppColors.primaryBlue,
                                       ),
                                     ),
+                                  ],
                                 ],
                               ),
                               const SizedBox(height: 4),
