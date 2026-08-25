@@ -11,6 +11,7 @@ class MausamAppBar extends ConsumerWidget implements PreferredSizeWidget {
   final bool showLocationPicker;
   final List<Widget>? actions;
   final bool showBackButton;
+  final bool showDrawerButton;
   final VoidCallback? onLocationTap;
 
   const MausamAppBar({
@@ -19,6 +20,7 @@ class MausamAppBar extends ConsumerWidget implements PreferredSizeWidget {
     this.showLocationPicker = true,
     this.actions,
     this.showBackButton = false,
+    this.showDrawerButton = true,
     this.onLocationTap,
   });
 
@@ -40,9 +42,20 @@ class MausamAppBar extends ConsumerWidget implements PreferredSizeWidget {
       leading: showBackButton
           ? IconButton(
               icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
+              tooltip: 'Back',
               onPressed: () => context.pop(),
             )
-          : null,
+          : (showDrawerButton
+              ? Builder(
+                  builder: (ctx) => IconButton(
+                    icon: const Icon(Icons.menu_rounded, size: 24),
+                    tooltip: 'Open navigation menu',
+                    onPressed: () {
+                      Scaffold.of(ctx).openDrawer();
+                    },
+                  ),
+                )
+              : null),
       title: showLocationPicker
           ? InkWell(
               borderRadius: BorderRadius.circular(12),
@@ -111,27 +124,40 @@ class MausamAppBar extends ConsumerWidget implements PreferredSizeWidget {
             ),
       actions: actions ??
           [
-            // Notification Center with Badge
+            // Notification Center with Dynamic Badge
             Stack(
               alignment: Alignment.center,
               children: [
                 IconButton(
                   icon: const Icon(Icons.notifications_outlined, size: 24),
+                  tooltip: 'Open notifications',
                   onPressed: () => context.push('/alerts/notifications'),
                 ),
                 if (alertsState.unreadNotificationsCount > 0)
                   Positioned(
-                    top: 10,
-                    right: 10,
+                    top: 8,
+                    right: 8,
                     child: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: const BoxDecoration(
+                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                      decoration: BoxDecoration(
                         color: AppColors.statusDanger,
-                        shape: BoxShape.circle,
+                        borderRadius: BorderRadius.circular(8),
                       ),
                       constraints: const BoxConstraints(
-                        minWidth: 8,
-                        minHeight: 8,
+                        minWidth: 16,
+                        minHeight: 16,
+                      ),
+                      child: Center(
+                        child: Text(
+                          alertsState.unreadNotificationsCount > 99
+                              ? '99+'
+                              : '${alertsState.unreadNotificationsCount}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 9,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
                       ),
                     ),
                   ),

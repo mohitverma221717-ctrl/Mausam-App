@@ -19,6 +19,7 @@ import 'package:mausam_app/features/modules/health/presentation/screens/health_s
 import 'package:mausam_app/features/modules/marine/presentation/screens/marine_screen.dart';
 import 'package:mausam_app/features/modules/travel/presentation/screens/travel_screen.dart';
 import 'package:mausam_app/features/radar/presentation/screens/radar_screen.dart';
+import 'package:mausam_app/core/widgets/mausam_module_drawer.dart';
 
 void main() {
   testWidgets('WeatherHeroCard renders temperature and condition',
@@ -302,6 +303,49 @@ void main() {
       expect(find.text('12:00 PM'), findsOneWidget);
       expect(tester.takeException(), isNull,
           reason: 'Failed zero-overflow check on RadarScreen at width $width');
+    }
+  });
+
+  testWidgets(
+      'MausamModuleDrawer renders all 8 specialized modules with zero overflow across device widths',
+      (WidgetTester tester) async {
+    for (final width in [320.0, 360.0, 412.0]) {
+      tester.view.physicalSize = Size(width, 800);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp(
+            theme: AppTheme.darkTheme,
+            home: const Scaffold(
+              drawer: MausamModuleDrawer(),
+              body: Center(child: Text('Home Content')),
+            ),
+          ),
+        ),
+      );
+
+      // Open drawer
+      final ScaffoldState state = tester.firstState(find.byType(Scaffold));
+      state.openDrawer();
+      await tester.pumpAndSettle();
+
+      expect(find.text('MAUSAM'), findsOneWidget);
+      expect(find.text('SPECIALIZED MODULES'), findsOneWidget);
+      expect(find.text('Health & AQI'), findsOneWidget);
+      expect(find.text('Fitness & Running'), findsOneWidget);
+      expect(find.text('Marine & Surfing'), findsOneWidget);
+      expect(find.text('Travel & Destinations'), findsOneWidget);
+      expect(find.text('Family & School'), findsOneWidget);
+      expect(find.text('Agriculture & Farm'), findsOneWidget);
+      expect(find.text('Commute'), findsOneWidget);
+      expect(find.text('Event Planner'), findsOneWidget);
+
+      expect(tester.takeException(), isNull,
+          reason: 'Failed zero-overflow check on MausamModuleDrawer at width $width');
+
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pumpAndSettle();
     }
   });
 }

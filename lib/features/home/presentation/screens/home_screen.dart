@@ -5,6 +5,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/widgets/mausam_app_bar.dart';
+import '../../../../core/widgets/mausam_module_drawer.dart';
 import '../../../../core/widgets/weather_hero_card.dart';
 import '../../../../core/widgets/weather_metric_tile.dart';
 import '../../../../core/widgets/hourly_forecast_row.dart';
@@ -30,6 +31,7 @@ class HomeScreen extends ConsumerWidget {
     if (weatherState.isLoading && weatherState.currentWeather == null) {
       return const Scaffold(
         appBar: MausamAppBar(),
+        drawer: MausamModuleDrawer(),
         body: SingleChildScrollView(child: WeatherSkeletonView()),
       );
     }
@@ -38,6 +40,7 @@ class HomeScreen extends ConsumerWidget {
         weatherState.currentWeather == null) {
       return Scaffold(
         appBar: const MausamAppBar(),
+        drawer: const MausamModuleDrawer(),
         body: ErrorStateView(
           message: weatherState.errorMessage!,
           onRetry: () => ref.read(weatherProvider.notifier).fetchWeather(),
@@ -54,6 +57,7 @@ class HomeScreen extends ConsumerWidget {
       backgroundColor:
           isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: const MausamAppBar(),
+      drawer: const MausamModuleDrawer(),
       body: RefreshIndicator(
         color: AppColors.primaryBlue,
         backgroundColor: isDark ? AppColors.darkSurfaceElevated : Colors.white,
