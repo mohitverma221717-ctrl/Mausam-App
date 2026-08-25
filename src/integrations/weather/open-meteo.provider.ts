@@ -8,6 +8,52 @@ import {
 } from './weather.types.js';
 import { logger } from '@config/logger.js';
 
+interface OpenMeteoCurrent {
+  time: string;
+  temperature_2m: number;
+  apparent_temperature: number;
+  relative_humidity_2m: number;
+  surface_pressure: number;
+  wind_speed_10m: number;
+  wind_direction_10m: number;
+  wind_gusts_10m?: number;
+  precipitation: number;
+  cloud_cover: number;
+  weather_code: number;
+}
+
+interface OpenMeteoHourly {
+  time: string[];
+  temperature_2m: number[];
+  apparent_temperature: number[];
+  relative_humidity_2m: number[];
+  precipitation_probability: number[];
+  precipitation: number[];
+  weather_code: number[];
+  wind_speed_10m: number[];
+  wind_direction_10m: number[];
+  uv_index: number[];
+}
+
+interface OpenMeteoDaily {
+  time: string[];
+  weather_code: number[];
+  temperature_2m_max: number[];
+  temperature_2m_min: number[];
+  precipitation_sum: number[];
+  precipitation_probability_max: number[];
+  wind_speed_10m_max: number[];
+  uv_index_max: number[];
+  sunrise?: string[];
+  sunset?: string[];
+}
+
+interface OpenMeteoWeatherResponse {
+  current: OpenMeteoCurrent;
+  hourly?: OpenMeteoHourly;
+  daily?: OpenMeteoDaily;
+}
+
 export class OpenMeteoWeatherProvider implements IWeatherProvider {
   public readonly providerName = 'OPEN_METEO';
   private readonly baseUrl = 'https://api.open-meteo.com/v1/forecast';
@@ -25,7 +71,7 @@ export class OpenMeteoWeatherProvider implements IWeatherProvider {
       if (!response.ok) {
         throw new Error(`Open-Meteo API returned status ${response.status}`);
       }
-      const data = await response.json();
+      const data = (await response.json()) as OpenMeteoWeatherResponse;
       return this.mapResponse(data);
     } catch (error) {
       logger.error({ error, lat, lon }, 'Failed to fetch Open-Meteo weather data');
@@ -33,7 +79,7 @@ export class OpenMeteoWeatherProvider implements IWeatherProvider {
     }
   }
 
-  private mapResponse(data: any): NormalizedWeatherReport {
+  private mapResponse(data: OpenMeteoWeatherResponse): NormalizedWeatherReport {
     const current = data.current;
     const hourly = data.hourly;
     const daily = data.daily;

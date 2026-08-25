@@ -20,8 +20,9 @@ async function startServer(): Promise<void> {
       try {
         await redis.connect();
         logger.info('⚡ Connected to Redis successfully');
-      } catch (redisErr: any) {
-        logger.warn({ err: redisErr?.message }, '⚠️ Redis operating in degraded/offline mode');
+      } catch (redisErr: unknown) {
+        const message = redisErr instanceof Error ? redisErr.message : String(redisErr);
+        logger.warn({ err: message }, '⚠️ Redis operating in degraded/offline mode');
       }
     }
 
@@ -29,8 +30,9 @@ async function startServer(): Promise<void> {
     try {
       await prisma.$connect();
       logger.info('🐘 Connected to PostgreSQL via Prisma');
-    } catch (dbErr: any) {
-      logger.warn({ err: dbErr?.message }, '⚠️ Database connection deferred - server operating in standalone mode');
+    } catch (dbErr: unknown) {
+      const message = dbErr instanceof Error ? dbErr.message : String(dbErr);
+      logger.warn({ err: message }, '⚠️ Database connection deferred - server operating in standalone mode');
     }
 
     // Setup background workers if Redis is available

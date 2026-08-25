@@ -10,6 +10,24 @@ import {
 import { getAqiCategory, getUvCategory } from '@core/utils/calculations.js';
 import { logger } from '@config/logger.js';
 
+interface OpenMeteoAirQualityCurrent {
+  pm2_5?: number;
+  pm10?: number;
+  ozone?: number;
+  nitrogen_dioxide?: number;
+  sulphur_dioxide?: number;
+  carbon_monoxide?: number;
+  grass_pollen?: number;
+  birch_pollen?: number;
+  ragweed_pollen?: number;
+  olive_pollen?: number;
+  uv_index?: number;
+}
+
+interface OpenMeteoAirQualityResponse {
+  current?: OpenMeteoAirQualityCurrent;
+}
+
 export class OpenMeteoAQIProvider implements IAQIProvider {
   public readonly providerName = 'OPEN_METEO_AIR_QUALITY';
   private readonly baseUrl = 'https://air-quality-api.open-meteo.com/v1/air-quality';
@@ -27,7 +45,7 @@ export class OpenMeteoAQIProvider implements IAQIProvider {
       if (!response.ok) {
         throw new Error(`Air Quality API status: ${response.status}`);
       }
-      const data = await response.json();
+      const data = (await response.json()) as OpenMeteoAirQualityResponse;
       return this.mapResponse(data);
     } catch (error) {
       logger.warn({ error, lat, lon }, 'Air Quality API failed, returning calibrated estimate');
@@ -35,7 +53,7 @@ export class OpenMeteoAQIProvider implements IAQIProvider {
     }
   }
 
-  private mapResponse(data: any): NormalizedEnvironmentReport {
+  private mapResponse(data: OpenMeteoAirQualityResponse): NormalizedEnvironmentReport {
     const current = data.current;
 
     // Convert PM2.5 to standard Indian AQI proxy if official Indian AQI is not returned

@@ -3,7 +3,9 @@
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "lib": ["ES2022"],
+    "lib": [
+      "ES2022"
+    ],
     "outDir": "./dist",
     "rootDir": ".",
     "strict": true,
@@ -24,15 +26,36 @@
     "emitDecoratorMetadata": true,
     "baseUrl": ".",
     "paths": {
-      "@config/*": ["src/config/*"],
-      "@core/*": ["src/core/*"],
-      "@modules/*": ["src/modules/*"],
-      "@integrations/*": ["src/integrations/*"],
-      "@jobs/*": ["src/jobs/*"],
-      "@queues/*": ["src/queues/*"],
-      "@routes/*": ["src/routes/*"]
+      "@config/*": [
+        "src/config/*"
+      ],
+      "@core/*": [
+        "src/core/*"
+      ],
+      "@modules/*": [
+        "src/modules/*"
+      ],
+      "@integrations/*": [
+        "src/integrations/*"
+      ],
+      "@jobs/*": [
+        "src/jobs/*"
+      ],
+      "@queues/*": [
+        "src/queues/*"
+      ],
+      "@routes/*": [
+        "src/routes/*"
+      ]
     }
   },
-  "include": ["src/**/*", "prisma/seed.ts"],
-  "exclude": ["node_modules", "dist", "tests"]
+  "include": [
+    "src/**/*",
+    "prisma/seed.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "tests"
+  ]
 }

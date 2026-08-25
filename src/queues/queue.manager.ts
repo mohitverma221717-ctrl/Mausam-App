@@ -29,7 +29,7 @@ let _alertCheckQueue: Queue | null = null;
 let _notificationQueue: Queue | null = null;
 
 export const weatherSyncQueue = {
-  add: async (name: string, data: any) => {
+  add: async (name: string, data: unknown) => {
     try {
       if (!_weatherSyncQueue) _weatherSyncQueue = new Queue('weather-sync', defaultQueueOptions);
       return await _weatherSyncQueue.add(name, data);
@@ -41,7 +41,7 @@ export const weatherSyncQueue = {
 };
 
 export const alertCheckQueue = {
-  add: async (name: string, data: any) => {
+  add: async (name: string, data: unknown) => {
     try {
       if (!_alertCheckQueue) _alertCheckQueue = new Queue('alert-check', defaultQueueOptions);
       return await _alertCheckQueue.add(name, data);
@@ -53,7 +53,7 @@ export const alertCheckQueue = {
 };
 
 export const notificationQueue = {
-  add: async (name: string, data: any) => {
+  add: async (name: string, data: unknown) => {
     try {
       if (!_notificationQueue) _notificationQueue = new Queue('push-notifications', defaultQueueOptions);
       return await _notificationQueue.add(name, data);

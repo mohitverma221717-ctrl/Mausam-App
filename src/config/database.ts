@@ -15,13 +15,20 @@ const prismaClientSingleton = () => {
         : [{ emit: 'event', level: 'error' }],
   });
 
+  type PrismaEventClient = PrismaClient & {
+    $on(event: 'query', cb: (e: { query: string; params: string; duration: number }) => void): void;
+    $on(event: 'error', cb: (e: { message: string }) => void): void;
+  };
+
+  const eventClient = client as unknown as PrismaEventClient;
+
   if (env.NODE_ENV === 'development') {
-    (client as any).$on('query', (e: { query: string; params: string; duration: number }) => {
+    eventClient.$on('query', (e: { query: string; params: string; duration: number }) => {
       logger.debug({ query: e.query, params: e.params, duration: `${e.duration}ms` }, 'Prisma Query');
     });
   }
 
-  (client as any).$on('error', (e: { message: string }) => {
+  eventClient.$on('error', (e: { message: string }) => {
     logger.error({ error: e.message }, 'Prisma Error');
   });
 
@@ -29,7 +36,6 @@ const prismaClientSingleton = () => {
 };
 
 declare global {
-  // eslint-disable-next-line no-var
   var prismaGlobal: ReturnType<typeof prismaClientSingleton> | undefined;
 }
 

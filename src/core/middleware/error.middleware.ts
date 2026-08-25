@@ -10,7 +10,6 @@ export function errorHandler(
   err: Error | AppError,
   req: Request,
   res: Response,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _next: NextFunction,
 ): void {
   const requestId = (req.headers['x-request-id'] as string) || 'unknown';
