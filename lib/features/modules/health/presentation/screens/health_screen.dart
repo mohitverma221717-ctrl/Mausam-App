@@ -51,30 +51,36 @@ class HealthScreen extends ConsumerWidget {
                   child: Column(
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Air Quality Index',
-                                style: AppTypography.titleLarge.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                  color: isDark
-                                      ? AppColors.textDarkPrimary
-                                      : AppColors.textLightPrimary,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Air Quality Index',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppTypography.titleLarge.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                    color: isDark
+                                        ? AppColors.textDarkPrimary
+                                        : AppColors.textLightPrimary,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                health.aqiCategory,
-                                style: AppTypography.titleMedium.copyWith(
-                                  color: health.aqiColor,
-                                  fontWeight: FontWeight.w700,
+                                const SizedBox(height: 4),
+                                Text(
+                                  health.aqiCategory,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppTypography.titleMedium.copyWith(
+                                    color: health.aqiColor,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
+                          const SizedBox(width: 8),
                           // Big AQI Circle
                           Container(
                             width: 80,
@@ -140,13 +146,13 @@ class HealthScreen extends ConsumerWidget {
                     crossAxisCount: 2,
                     crossAxisSpacing: 12,
                     mainAxisSpacing: 12,
-                    childAspectRatio: 1.6,
+                    childAspectRatio: 1.25,
                   ),
                   itemCount: health.pollutants.length,
                   itemBuilder: (context, index) {
                     final p = health.pollutants[index];
                     return Container(
-                      padding: const EdgeInsets.all(14),
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                       decoration: BoxDecoration(
                         color: isDark
                             ? AppColors.darkSurfaceElevated
@@ -163,34 +169,51 @@ class HealthScreen extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(p.name, style: AppTypography.labelMedium),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 6, vertical: 2),
-                                decoration: BoxDecoration(
-                                  color: p.statusColor.withOpacity(0.18),
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
+                              Expanded(
                                 child: Text(
-                                  p.status,
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    color: p.statusColor,
-                                    fontWeight: FontWeight.w700,
+                                  p.name,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppTypography.labelMedium,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              Flexible(
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 6, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: p.statusColor.withOpacity(0.18),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Text(
+                                    p.status,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: p.statusColor,
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
                                 ),
                               ),
                             ],
                           ),
-                          Text(
-                            '${p.value.toInt()} ${p.unit}',
-                            style: AppTypography.titleLarge.copyWith(
-                              fontWeight: FontWeight.w700,
-                              color: isDark
-                                  ? Colors.white
-                                  : AppColors.textLightPrimary,
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              '${p.value.toInt()} ${p.unit}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTypography.titleLarge.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: isDark
+                                    ? Colors.white
+                                    : AppColors.textLightPrimary,
+                              ),
                             ),
                           ),
                         ],
@@ -202,17 +225,21 @@ class HealthScreen extends ConsumerWidget {
 
                 // Pollen Count Section with Demo Data Badge
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Pollen Count',
-                      style: AppTypography.titleLarge.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: isDark
-                            ? AppColors.textDarkPrimary
-                            : AppColors.textLightPrimary,
+                    Expanded(
+                      child: Text(
+                        'Pollen Count',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTypography.titleLarge.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: isDark
+                              ? AppColors.textDarkPrimary
+                              : AppColors.textLightPrimary,
+                        ),
                       ),
                     ),
+                    const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 3),
@@ -249,44 +276,57 @@ class HealthScreen extends ConsumerWidget {
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              pollen.type,
-                              style: AppTypography.titleMedium.copyWith(
-                                color: isDark
-                                    ? AppColors.textDarkPrimary
-                                    : AppColors.textLightPrimary,
+                            Expanded(
+                              child: Text(
+                                pollen.type,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: AppTypography.titleMedium.copyWith(
+                                  color: isDark
+                                      ? AppColors.textDarkPrimary
+                                      : AppColors.textLightPrimary,
+                                ),
                               ),
                             ),
-                            Row(
-                              children: [
-                                Text(
-                                  '${pollen.count} grains/m³',
-                                  style: AppTypography.bodySmall.copyWith(
-                                    color: isDark
-                                        ? AppColors.textDarkMuted
-                                        : AppColors.textLightMuted,
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8, vertical: 3),
-                                  decoration: BoxDecoration(
-                                    color: pollen.levelColor.withOpacity(0.18),
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: Text(
-                                    pollen.level,
-                                    style: TextStyle(
-                                      color: pollen.levelColor,
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w700,
+                            const SizedBox(width: 8),
+                            Flexible(
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Flexible(
+                                    child: Text(
+                                      '${pollen.count} grains/m³',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: AppTypography.bodySmall.copyWith(
+                                        color: isDark
+                                            ? AppColors.textDarkMuted
+                                            : AppColors.textLightMuted,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                  const SizedBox(width: 6),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 3),
+                                    decoration: BoxDecoration(
+                                      color: pollen.levelColor.withOpacity(0.18),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: Text(
+                                      pollen.level,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: pollen.levelColor,
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -327,13 +367,17 @@ class HealthScreen extends ConsumerWidget {
                           const Icon(Icons.wb_sunny_rounded,
                               color: AppColors.statusWarning, size: 22),
                           const SizedBox(width: 10),
-                          Text(
-                            'UV Index: ${health.uvIndex} (${health.uvCategory})',
-                            style: AppTypography.titleMedium.copyWith(
-                              fontWeight: FontWeight.w700,
-                              color: isDark
-                                  ? Colors.white
-                                  : AppColors.textLightPrimary,
+                          Expanded(
+                            child: Text(
+                              'UV Index: ${health.uvIndex} (${health.uvCategory})',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTypography.titleMedium.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: isDark
+                                    ? Colors.white
+                                    : AppColors.textLightPrimary,
+                              ),
                             ),
                           ),
                         ],

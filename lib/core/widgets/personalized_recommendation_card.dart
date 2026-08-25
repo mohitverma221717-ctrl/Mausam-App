@@ -77,21 +77,23 @@ class PersonalizedRecommendationCard extends StatelessWidget {
                 ),
                 if (data.badgeText != null) ...[
                   const SizedBox(width: 8),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: accent.withOpacity(0.15),
-                      borderRadius: AppRadius.brPill,
-                      border: Border.all(color: accent.withOpacity(0.4)),
-                    ),
-                    child: Text(
-                      data.badgeText!,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTypography.labelSmall.copyWith(
-                        color: accent,
-                        fontWeight: FontWeight.w700,
+                  Flexible(
+                    child: Container(
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: accent.withOpacity(0.15),
+                        borderRadius: AppRadius.brPill,
+                        border: Border.all(color: accent.withOpacity(0.4)),
+                      ),
+                      child: Text(
+                        data.badgeText!,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTypography.labelSmall.copyWith(
+                          color: accent,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ),

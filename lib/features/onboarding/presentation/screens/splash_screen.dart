@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -17,6 +18,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   late Animation<double> _fadeAnimation;
+  Timer? _timer;
 
   @override
   void initState() {
@@ -36,7 +38,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
     _controller.forward();
 
-    Future.delayed(const Duration(milliseconds: 2400), () {
+    _timer = Timer(const Duration(milliseconds: 2400), () {
       if (!mounted) return;
       final authState = ref.read(authProvider);
       if (authState.isFirstTime) {
@@ -49,6 +51,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
   @override
   void dispose() {
+    _timer?.cancel();
     _controller.dispose();
     super.dispose();
   }
@@ -57,14 +60,16 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.darkBackground,
-      body: Center(
-        child: FadeTransition(
+      body: SafeArea(
+        child: Center(
+          child: FadeTransition(
           opacity: _fadeAnimation,
           child: ScaleTransition(
             scale: _scaleAnimation,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                const Spacer(),
                 // Weather Sun + Cloud Glow Icon
                 Container(
                   width: 120,
@@ -97,36 +102,50 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                 ),
                 const SizedBox(height: 28),
                 Text(
-                  'MAUSAM',
+                  'Mausam',
                   style: AppTypography.displaySmall.copyWith(
-                    letterSpacing: 4.0,
+                    letterSpacing: 2.0,
                     fontWeight: FontWeight.w800,
                     color: Colors.white,
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 8),
                 Text(
-                  'PERSONALIZED WEATHER',
+                  'Personalized Weather for You',
+                  style: AppTypography.titleMedium.copyWith(
+                    color: AppColors.textDarkSecondary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const Spacer(),
+                // Loading Text
+                Text(
+                  'Loading...',
                   style: AppTypography.labelMedium.copyWith(
-                    letterSpacing: 2.0,
-                    color: AppColors.accentCyan,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 64),
-                // Footer attribution
-                Text(
-                  'India Meteorological Department • MoES',
-                  style: AppTypography.labelSmall.copyWith(
                     color: AppColors.textDarkMuted,
-                    letterSpacing: 0.5,
+                    letterSpacing: 1.0,
                   ),
                 ),
+                const SizedBox(height: 16),
+                // Loading Progress Indicator
+                SizedBox(
+                  width: 160,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: const LinearProgressIndicator(
+                      minHeight: 4,
+                      backgroundColor: AppColors.darkSurfaceElevated,
+                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.accentCyan),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 48),
               ],
             ),
           ),
         ),
       ),
-    );
+    ),
+  );
   }
 }

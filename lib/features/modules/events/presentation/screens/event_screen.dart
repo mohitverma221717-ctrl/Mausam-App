@@ -38,13 +38,17 @@ class EventScreen extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Planned Events',
-                      style: AppTypography.titleLarge.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: isDark
-                            ? AppColors.textDarkPrimary
-                            : AppColors.textLightPrimary,
+                    Expanded(
+                      child: Text(
+                        'Planned Events',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTypography.titleLarge.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: isDark
+                              ? AppColors.textDarkPrimary
+                              : AppColors.textLightPrimary,
+                        ),
                       ),
                     ),
                     TextButton.icon(
@@ -80,45 +84,55 @@ class EventScreen extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    evt.title,
-                                    style: AppTypography.headlineSmall.copyWith(
-                                      fontWeight: FontWeight.w800,
-                                      color: isDark
-                                          ? AppColors.textDarkPrimary
-                                          : AppColors.textLightPrimary,
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      evt.title,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: AppTypography.headlineSmall.copyWith(
+                                        fontWeight: FontWeight.w800,
+                                        color: isDark
+                                            ? AppColors.textDarkPrimary
+                                            : AppColors.textLightPrimary,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    '${evt.eventDate.day} Aug 2026 • ${evt.location}',
-                                    style: AppTypography.bodySmall.copyWith(
-                                      color: isDark
-                                          ? AppColors.textDarkMuted
-                                          : AppColors.textLightMuted,
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      '${evt.eventDate.day} Aug 2026 • ${evt.location}',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: AppTypography.bodySmall.copyWith(
+                                        color: isDark
+                                            ? AppColors.textDarkMuted
+                                            : AppColors.textLightMuted,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 4),
-                                decoration: BoxDecoration(
-                                  color:
-                                      const Color(0xFFD500F9).withOpacity(0.18),
-                                  borderRadius: AppRadius.brPill,
+                                  ],
                                 ),
-                                child: Text(
-                                  evt.isOutdoor ? 'Outdoor' : 'Indoor',
-                                  style: const TextStyle(
-                                    color: Color(0xFFD500F9),
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 11,
+                              ),
+                              const SizedBox(width: 8),
+                              Flexible(
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        const Color(0xFFD500F9).withOpacity(0.18),
+                                    borderRadius: AppRadius.brPill,
+                                  ),
+                                  child: Text(
+                                    evt.isOutdoor ? 'Outdoor' : 'Indoor',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      color: Color(0xFFD500F9),
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 11,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -128,27 +142,34 @@ class EventScreen extends ConsumerWidget {
 
                           // Event Metrics Grid
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              _EventMetric(
-                                label: 'Rain Risk',
-                                value: '${evt.rainProbability}%',
-                                color: AppColors.primaryBlue,
+                              Expanded(
+                                child: _EventMetric(
+                                  label: 'Rain Risk',
+                                  value: '${evt.rainProbability}%',
+                                  color: AppColors.primaryBlue,
+                                ),
                               ),
-                              _EventMetric(
-                                label: 'Comfort Index',
-                                value: evt.comfortIndex,
-                                color: AppColors.statusSuccess,
+                              Expanded(
+                                child: _EventMetric(
+                                  label: 'Comfort',
+                                  value: evt.comfortIndex,
+                                  color: AppColors.statusSuccess,
+                                ),
                               ),
-                              _EventMetric(
-                                label: 'Expected Temp',
-                                value: '${evt.expectedTemp.toInt()}°C',
-                                color: const Color(0xFFFF9100),
+                              Expanded(
+                                child: _EventMetric(
+                                  label: 'Temp',
+                                  value: '${evt.expectedTemp.toInt()}°C',
+                                  color: const Color(0xFFFF9100),
+                                ),
                               ),
-                              _EventMetric(
-                                label: 'Wind Speed',
-                                value: '${evt.expectedWind.toInt()} km/h',
-                                color: AppColors.accentCyan,
+                              Expanded(
+                                child: _EventMetric(
+                                  label: 'Wind',
+                                  value: '${evt.expectedWind.toInt()} km/h',
+                                  color: AppColors.accentCyan,
+                                ),
                               ),
                             ],
                           ),
@@ -216,17 +237,25 @@ class _EventMetric extends StatelessWidget {
       children: [
         Text(
           label,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: AppTypography.labelSmall.copyWith(
             color: isDark ? AppColors.textDarkMuted : AppColors.textLightMuted,
             fontSize: 10,
           ),
         ),
         const SizedBox(height: 2),
-        Text(
-          value,
-          style: AppTypography.titleMedium.copyWith(
-            fontWeight: FontWeight.w800,
-            color: color,
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Text(
+            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTypography.titleMedium.copyWith(
+              fontWeight: FontWeight.w800,
+              color: color,
+            ),
           ),
         ),
       ],

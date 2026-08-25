@@ -94,13 +94,17 @@ class TravelScreen extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Trip Destinations',
-                      style: AppTypography.titleLarge.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: isDark
-                            ? AppColors.textDarkPrimary
-                            : AppColors.textLightPrimary,
+                    Expanded(
+                      child: Text(
+                        'Trip Destinations',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTypography.titleLarge.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: isDark
+                              ? AppColors.textDarkPrimary
+                              : AppColors.textLightPrimary,
+                        ),
                       ),
                     ),
                     TextButton.icon(
@@ -137,63 +141,68 @@ class TravelScreen extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    dest.city,
-                                    style: AppTypography.headlineSmall.copyWith(
-                                      fontWeight: FontWeight.w800,
-                                      color: isDark
-                                          ? AppColors.textDarkPrimary
-                                          : AppColors.textLightPrimary,
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      dest.city,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: AppTypography.headlineSmall.copyWith(
+                                        fontWeight: FontWeight.w800,
+                                        color: isDark
+                                            ? AppColors.textDarkPrimary
+                                            : AppColors.textLightPrimary,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    '${dest.country} • ${dest.travelDates}',
-                                    style: AppTypography.bodySmall.copyWith(
-                                      color: isDark
-                                          ? AppColors.textDarkMuted
-                                          : AppColors.textLightMuted,
+                                    Text(
+                                      '${dest.country} • ${dest.travelDates}',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: AppTypography.bodySmall.copyWith(
+                                        color: isDark
+                                            ? AppColors.textDarkMuted
+                                            : AppColors.textLightMuted,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                              Row(
-                                children: [
-                                  Text(
-                                    '${dest.currentTemp.toInt()}°C',
-                                    style:
-                                        AppTypography.headlineMedium.copyWith(
-                                      fontWeight: FontWeight.w800,
-                                      color: isDark
-                                          ? AppColors.textDarkPrimary
-                                          : AppColors.textLightPrimary,
-                                    ),
-                                  ),
-                                ],
+                              const SizedBox(width: 8),
+                              Text(
+                                '${dest.currentTemp.toInt()}°C',
+                                style: AppTypography.headlineMedium.copyWith(
+                                  fontWeight: FontWeight.w800,
+                                  color: isDark
+                                      ? AppColors.textDarkPrimary
+                                      : AppColors.textLightPrimary,
+                                ),
                               ),
                             ],
                           ),
                           const SizedBox(height: 12),
                           Row(
                             children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 3),
-                                decoration: BoxDecoration(
-                                  color:
-                                      AppColors.primaryBlue.withOpacity(0.18),
-                                  borderRadius: AppRadius.brPill,
-                                ),
-                                child: Text(
-                                  dest.condition,
-                                  style: const TextStyle(
-                                    color: AppColors.accentCyan,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w700,
+                              Flexible(
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 3),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        AppColors.primaryBlue.withOpacity(0.18),
+                                    borderRadius: AppRadius.brPill,
+                                  ),
+                                  child: Text(
+                                    dest.condition,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      color: AppColors.accentCyan,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -204,7 +213,7 @@ class TravelScreen extends ConsumerWidget {
                                       size: 12, color: AppColors.primaryBlue),
                                   const SizedBox(width: 2),
                                   Text(
-                                    '${dest.rainChance}% Rain Chance',
+                                    '${dest.rainChance}% Rain',
                                     style: AppTypography.labelSmall.copyWith(
                                       fontWeight: FontWeight.w600,
                                     ),
@@ -275,13 +284,17 @@ class TravelScreen extends ConsumerWidget {
                                         size: 14,
                                         color: AppColors.statusSuccess),
                                     const SizedBox(width: 6),
-                                    Text(
-                                      item,
-                                      style: AppTypography.bodySmall.copyWith(
-                                        fontSize: 11,
-                                        color: isDark
-                                            ? AppColors.textDarkPrimary
-                                            : AppColors.textLightPrimary,
+                                    Flexible(
+                                      child: Text(
+                                        item,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: AppTypography.bodySmall.copyWith(
+                                          fontSize: 11,
+                                          color: isDark
+                                              ? AppColors.textDarkPrimary
+                                              : AppColors.textLightPrimary,
+                                        ),
                                       ),
                                     ),
                                   ],

@@ -155,27 +155,27 @@ class AlertsScreen extends ConsumerWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Row(
-                                    children: [
-                                      Icon(Icons.warning_amber_rounded,
-                                          color: alert.severity.color,
-                                          size: 24),
-                                      const SizedBox(width: 10),
-                                      Text(
-                                        alert.title,
-                                        style:
-                                            AppTypography.titleLarge.copyWith(
-                                          fontWeight: FontWeight.w800,
-                                          color: isDark
-                                              ? AppColors.textDarkPrimary
-                                              : AppColors.textLightPrimary,
-                                        ),
+                                  Icon(Icons.warning_amber_rounded,
+                                      color: alert.severity.color,
+                                      size: 24),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Text(
+                                      alert.title,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style:
+                                          AppTypography.titleLarge.copyWith(
+                                        fontWeight: FontWeight.w800,
+                                        color: isDark
+                                            ? AppColors.textDarkPrimary
+                                            : AppColors.textLightPrimary,
                                       ),
-                                    ],
+                                    ),
                                   ),
+                                  const SizedBox(width: 8),
                                   SeverityBadge(severity: alert.severity),
                                 ],
                               ),
@@ -198,18 +198,21 @@ class AlertsScreen extends ConsumerWidget {
                               ),
                               const SizedBox(height: 12),
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    'Source: ${alert.source}',
-                                    style: AppTypography.labelSmall.copyWith(
-                                      color: isDark
-                                          ? AppColors.textDarkMuted
-                                          : AppColors.textLightMuted,
-                                      fontSize: 10,
+                                  Expanded(
+                                    child: Text(
+                                      'Source: ${alert.source}',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: AppTypography.labelSmall.copyWith(
+                                        color: isDark
+                                            ? AppColors.textDarkMuted
+                                            : AppColors.textLightMuted,
+                                        fontSize: 10,
+                                      ),
                                     ),
                                   ),
+                                  const SizedBox(width: 8),
                                   Text(
                                     'View Details ➔',
                                     style: AppTypography.labelSmall.copyWith(

@@ -51,11 +51,15 @@ class AgricultureScreen extends ConsumerWidget {
                       const Icon(Icons.sensors_rounded,
                           color: Color(0xFF76FF03), size: 16),
                       const SizedBox(width: 6),
-                      Text(
-                        'Agri-Meteorological Station Active',
-                        style: AppTypography.labelSmall.copyWith(
-                          color: const Color(0xFF76FF03),
-                          fontWeight: FontWeight.w700,
+                      Flexible(
+                        child: Text(
+                          'Agri-Meteorological Station Active',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTypography.labelSmall.copyWith(
+                            color: const Color(0xFF76FF03),
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
                     ],
@@ -70,7 +74,7 @@ class AgricultureScreen extends ConsumerWidget {
                   crossAxisCount: 2,
                   crossAxisSpacing: 12,
                   mainAxisSpacing: 12,
-                  childAspectRatio: 1.45,
+                  childAspectRatio: 1.1,
                   children: [
                     _AgriTile(
                       title: 'Rain Forecast',
@@ -125,13 +129,17 @@ class AgricultureScreen extends ConsumerWidget {
                           const Icon(Icons.tips_and_updates_rounded,
                               color: Color(0xFF76FF03)),
                           const SizedBox(width: 10),
-                          Text(
-                            'Seasonal Planting Advice',
-                            style: AppTypography.titleLarge.copyWith(
-                              fontWeight: FontWeight.w700,
-                              color: isDark
-                                  ? AppColors.textDarkPrimary
-                                  : AppColors.textLightPrimary,
+                          Expanded(
+                            child: Text(
+                              'Seasonal Planting Advice',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTypography.titleLarge.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: isDark
+                                    ? AppColors.textDarkPrimary
+                                    : AppColors.textLightPrimary,
+                              ),
                             ),
                           ),
                         ],
@@ -186,17 +194,21 @@ class AgricultureScreen extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                crop.cropName,
-                                style: AppTypography.titleLarge.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                  color: isDark
-                                      ? AppColors.textDarkPrimary
-                                      : AppColors.textLightPrimary,
+                              Expanded(
+                                child: Text(
+                                  crop.cropName,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppTypography.titleLarge.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                    color: isDark
+                                        ? AppColors.textDarkPrimary
+                                        : AppColors.textLightPrimary,
+                                  ),
                                 ),
                               ),
+                              const SizedBox(width: 8),
                               Container(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 8, vertical: 3),
@@ -231,11 +243,15 @@ class AgricultureScreen extends ConsumerWidget {
                               const Icon(Icons.shield_outlined,
                                   size: 14, color: AppColors.accentCyan),
                               const SizedBox(width: 4),
-                              Text(
-                                crop.risk,
-                                style: AppTypography.labelSmall.copyWith(
-                                  color: AppColors.accentCyan,
-                                  fontSize: 11,
+                              Expanded(
+                                child: Text(
+                                  crop.risk,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppTypography.labelSmall.copyWith(
+                                    color: AppColors.accentCyan,
+                                    fontSize: 11,
+                                  ),
                                 ),
                               ),
                             ],
@@ -287,7 +303,7 @@ class _AgriTile extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurfaceCard : AppColors.lightSurfaceCard,
         borderRadius: AppRadius.brLg,
@@ -299,33 +315,49 @@ class _AgriTile extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                title,
-                style: AppTypography.labelSmall.copyWith(
-                  color: isDark
-                      ? AppColors.textDarkMuted
-                      : AppColors.textLightMuted,
-                  fontSize: 10,
+              Expanded(
+                child: Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.labelSmall.copyWith(
+                    color: isDark
+                        ? AppColors.textDarkMuted
+                        : AppColors.textLightMuted,
+                    fontSize: 10,
+                  ),
                 ),
               ),
+              const SizedBox(width: 4),
               Icon(icon, size: 18, color: color),
             ],
           ),
-          Text(
-            value,
-            style: AppTypography.headlineSmall.copyWith(
-              fontWeight: FontWeight.w800,
-              color: isDark ? Colors.white : AppColors.textLightPrimary,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              value,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.headlineSmall.copyWith(
+                fontWeight: FontWeight.w800,
+                color: isDark ? Colors.white : AppColors.textLightPrimary,
+              ),
             ),
           ),
-          Text(
-            subtitle,
-            style: AppTypography.labelSmall.copyWith(
-              color: color,
-              fontWeight: FontWeight.w600,
-              fontSize: 10,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              subtitle,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.labelSmall.copyWith(
+                color: color,
+                fontWeight: FontWeight.w600,
+                fontSize: 10,
+              ),
             ),
           ),
         ],

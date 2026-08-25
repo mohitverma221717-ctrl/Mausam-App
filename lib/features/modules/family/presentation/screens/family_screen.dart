@@ -127,55 +127,57 @@ class FamilyScreen extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.primaryBlue
-                                          .withOpacity(0.15),
-                                      borderRadius: AppRadius.brSm,
-                                    ),
-                                    child: Icon(
-                                      member.category == 'School'
-                                          ? Icons.school_rounded
-                                          : (member.category == 'Work'
-                                              ? Icons.business_center_rounded
-                                              : Icons.home_rounded),
-                                      color: AppColors.accentCyan,
-                                      size: 18,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        member.name,
-                                        style:
-                                            AppTypography.titleMedium.copyWith(
-                                          fontWeight: FontWeight.w700,
-                                          color: isDark
-                                              ? AppColors.textDarkPrimary
-                                              : AppColors.textLightPrimary,
-                                        ),
-                                      ),
-                                      Text(
-                                        member.placeName,
-                                        style: AppTypography.bodySmall.copyWith(
-                                          color: isDark
-                                              ? AppColors.textDarkMuted
-                                              : AppColors.textLightMuted,
-                                          fontSize: 11,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                              Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: AppColors.primaryBlue
+                                      .withOpacity(0.15),
+                                  borderRadius: AppRadius.brSm,
+                                ),
+                                child: Icon(
+                                  member.category == 'School'
+                                      ? Icons.school_rounded
+                                      : (member.category == 'Work'
+                                          ? Icons.business_center_rounded
+                                          : Icons.home_rounded),
+                                  color: AppColors.accentCyan,
+                                  size: 18,
+                                ),
                               ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      member.name,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style:
+                                          AppTypography.titleMedium.copyWith(
+                                        fontWeight: FontWeight.w700,
+                                        color: isDark
+                                            ? AppColors.textDarkPrimary
+                                            : AppColors.textLightPrimary,
+                                      ),
+                                    ),
+                                    Text(
+                                      member.placeName,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: AppTypography.bodySmall.copyWith(
+                                        color: isDark
+                                            ? AppColors.textDarkMuted
+                                            : AppColors.textLightMuted,
+                                        fontSize: 11,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 8),
                               Text(
                                 '${member.currentTemp.toInt()}°C',
                                 style: AppTypography.titleLarge.copyWith(
@@ -189,7 +191,6 @@ class FamilyScreen extends ConsumerWidget {
                           ),
                           const SizedBox(height: 10),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
                                 children: [
@@ -197,7 +198,7 @@ class FamilyScreen extends ConsumerWidget {
                                       size: 12, color: AppColors.primaryBlue),
                                   const SizedBox(width: 2),
                                   Text(
-                                    '${member.rainChance}% Rain Chance',
+                                    '${member.rainChance}% Rain',
                                     style: AppTypography.labelSmall.copyWith(
                                       fontWeight: FontWeight.w600,
                                       color: isDark
@@ -207,20 +208,26 @@ class FamilyScreen extends ConsumerWidget {
                                   ),
                                 ],
                               ),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 3),
-                                decoration: BoxDecoration(
-                                  color:
-                                      AppColors.statusSuccess.withOpacity(0.18),
-                                  borderRadius: AppRadius.brPill,
-                                ),
-                                child: Text(
-                                  member.morningStatus,
-                                  style: const TextStyle(
-                                    color: AppColors.statusSuccess,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w700,
+                              const SizedBox(width: 8),
+                              const Spacer(),
+                              Flexible(
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 3),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        AppColors.statusSuccess.withOpacity(0.18),
+                                    borderRadius: AppRadius.brPill,
+                                  ),
+                                  child: Text(
+                                    member.morningStatus,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      color: AppColors.statusSuccess,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
                                 ),
                               ),

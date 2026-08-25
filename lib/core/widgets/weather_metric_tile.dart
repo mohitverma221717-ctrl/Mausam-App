@@ -34,7 +34,7 @@ class WeatherMetricTile extends StatelessWidget {
         borderRadius: AppRadius.brLg,
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 12.0),
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
           decoration: BoxDecoration(
             color:
                 isDark ? AppColors.darkSurfaceCard : AppColors.lightSurfaceCard,
@@ -68,15 +68,19 @@ class WeatherMetricTile extends StatelessWidget {
                   Icon(icon, size: 18, color: color),
                 ],
               ),
-              const SizedBox(height: 4),
-              Text(
-                value,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppTypography.metricValue.copyWith(
-                  color: isDark
-                      ? AppColors.textDarkPrimary
-                      : AppColors.textLightPrimary,
+              const SizedBox(height: 2),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  value,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.metricValue.copyWith(
+                    color: isDark
+                        ? AppColors.textDarkPrimary
+                        : AppColors.textLightPrimary,
+                  ),
                 ),
               ),
               if (subtitle != null)

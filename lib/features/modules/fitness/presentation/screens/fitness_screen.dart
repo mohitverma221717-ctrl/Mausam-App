@@ -189,30 +189,38 @@ class FitnessScreen extends ConsumerWidget {
                               children: [
                                 Row(
                                   children: [
-                                    Text(
-                                      window.timeRange,
-                                      style: AppTypography.titleMedium.copyWith(
-                                        fontWeight: FontWeight.w700,
-                                        color: isDark
-                                            ? AppColors.textDarkPrimary
-                                            : AppColors.textLightPrimary,
+                                    Expanded(
+                                      child: Text(
+                                        window.timeRange,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: AppTypography.titleMedium.copyWith(
+                                          fontWeight: FontWeight.w700,
+                                          color: isDark
+                                              ? AppColors.textDarkPrimary
+                                              : AppColors.textLightPrimary,
+                                        ),
                                       ),
                                     ),
                                     const SizedBox(width: 8),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 2),
-                                      decoration: BoxDecoration(
-                                        color: window.qualityColor
-                                            .withOpacity(0.18),
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
-                                      child: Text(
-                                        window.quality,
-                                        style: TextStyle(
-                                          color: window.qualityColor,
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w700,
+                                    Flexible(
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 2),
+                                        decoration: BoxDecoration(
+                                          color: window.qualityColor
+                                              .withOpacity(0.18),
+                                          borderRadius: BorderRadius.circular(4),
+                                        ),
+                                        child: Text(
+                                          window.quality,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            color: window.qualityColor,
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w700,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -289,30 +297,38 @@ class FitnessScreen extends ConsumerWidget {
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              e.key,
-                              style: AppTypography.titleMedium.copyWith(
-                                color: isDark
-                                    ? AppColors.textDarkPrimary
-                                    : AppColors.textLightPrimary,
+                            Expanded(
+                              child: Text(
+                                e.key,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: AppTypography.titleMedium.copyWith(
+                                  color: isDark
+                                      ? AppColors.textDarkPrimary
+                                      : AppColors.textLightPrimary,
+                                ),
                               ),
                             ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 4),
-                              decoration: BoxDecoration(
-                                color:
-                                    AppColors.statusSuccess.withOpacity(0.18),
-                                borderRadius: AppRadius.brPill,
-                              ),
-                              child: Text(
-                                e.value,
-                                style: const TextStyle(
-                                  color: AppColors.statusSuccess,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w700,
+                            const SizedBox(width: 8),
+                            Flexible(
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color:
+                                      AppColors.statusSuccess.withOpacity(0.18),
+                                  borderRadius: AppRadius.brPill,
+                                ),
+                                child: Text(
+                                  e.value,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    color: AppColors.statusSuccess,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                               ),
                             ),
@@ -350,7 +366,7 @@ class _FitnessMetricCard extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurfaceCard : AppColors.lightSurfaceCard,
         borderRadius: AppRadius.brMd,
@@ -363,23 +379,33 @@ class _FitnessMetricCard extends StatelessWidget {
         children: [
           Text(
             title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: AppTypography.labelSmall.copyWith(
               color:
                   isDark ? AppColors.textDarkMuted : AppColors.textLightMuted,
               fontSize: 10,
             ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            style: AppTypography.titleLarge.copyWith(
-              fontWeight: FontWeight.w800,
-              color: isDark ? Colors.white : AppColors.textLightPrimary,
+          const SizedBox(height: 2),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              value,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.titleLarge.copyWith(
+                fontWeight: FontWeight.w800,
+                color: isDark ? Colors.white : AppColors.textLightPrimary,
+              ),
             ),
           ),
           const SizedBox(height: 2),
           Text(
             subtitle,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: AppTypography.labelSmall.copyWith(
               color: color,
               fontWeight: FontWeight.w700,

@@ -54,36 +54,40 @@ class CommuteScreen extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            children: [
-                              const Icon(Icons.directions_car_rounded,
-                                  color: AppColors.accentCyan),
-                              const SizedBox(width: 10),
-                              Text(
-                                active.title,
-                                style: AppTypography.titleLarge.copyWith(
-                                  fontWeight: FontWeight.w800,
-                                  color: isDark
-                                      ? AppColors.textDarkPrimary
-                                      : AppColors.textLightPrimary,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFFFB300).withOpacity(0.18),
-                              borderRadius: AppRadius.brPill,
-                            ),
+                          const Icon(Icons.directions_car_rounded,
+                              color: AppColors.accentCyan),
+                          const SizedBox(width: 10),
+                          Expanded(
                             child: Text(
-                              active.conditionSummary,
-                              style: AppTypography.labelSmall.copyWith(
-                                color: const Color(0xFFFFB300),
-                                fontWeight: FontWeight.w700,
+                              active.title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTypography.titleLarge.copyWith(
+                                fontWeight: FontWeight.w800,
+                                color: isDark
+                                    ? AppColors.textDarkPrimary
+                                    : AppColors.textLightPrimary,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Flexible(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFFB300).withOpacity(0.18),
+                                borderRadius: AppRadius.brPill,
+                              ),
+                              child: Text(
+                                active.conditionSummary,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: AppTypography.labelSmall.copyWith(
+                                  color: const Color(0xFFFFB300),
+                                  fontWeight: FontWeight.w700,
+                                ),
                               ),
                             ),
                           ),
@@ -104,31 +108,38 @@ class CommuteScreen extends ConsumerWidget {
 
                       // Metrics Row
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          _CommuteStat(
-                            title: 'Traffic',
-                            value: active.trafficStatus,
-                            icon: Icons.traffic_rounded,
-                            color: const Color(0xFFFFB300),
+                          Expanded(
+                            child: _CommuteStat(
+                              title: 'Traffic',
+                              value: active.trafficStatus,
+                              icon: Icons.traffic_rounded,
+                              color: const Color(0xFFFFB300),
+                            ),
                           ),
-                          _CommuteStat(
-                            title: 'Rain Chance',
-                            value: '${active.rainChance}%',
-                            icon: Icons.water_drop_rounded,
-                            color: AppColors.primaryBlue,
+                          Expanded(
+                            child: _CommuteStat(
+                              title: 'Rain',
+                              value: '${active.rainChance}%',
+                              icon: Icons.water_drop_rounded,
+                              color: AppColors.primaryBlue,
+                            ),
                           ),
-                          _CommuteStat(
-                            title: 'Visibility',
-                            value: '${active.visibilityKm.toInt()} km',
-                            icon: Icons.visibility_rounded,
-                            color: AppColors.statusSuccess,
+                          Expanded(
+                            child: _CommuteStat(
+                              title: 'Visibility',
+                              value: '${active.visibilityKm.toInt()} km',
+                              icon: Icons.visibility_rounded,
+                              color: AppColors.statusSuccess,
+                            ),
                           ),
-                          _CommuteStat(
-                            title: 'Wind',
-                            value: '${active.windSpeed.toInt()} km/h',
-                            icon: Icons.air_rounded,
-                            color: AppColors.accentCyan,
+                          Expanded(
+                            child: _CommuteStat(
+                              title: 'Wind',
+                              value: '${active.windSpeed.toInt()} km/h',
+                              icon: Icons.air_rounded,
+                              color: AppColors.accentCyan,
+                            ),
                           ),
                         ],
                       ),
@@ -203,45 +214,55 @@ class CommuteScreen extends ConsumerWidget {
                                 : AppColors.lightBorder),
                       ),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                r.title,
-                                style: AppTypography.titleMedium.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                  color: isDark
-                                      ? AppColors.textDarkPrimary
-                                      : AppColors.textLightPrimary,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  r.title,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppTypography.titleMedium.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                    color: isDark
+                                        ? AppColors.textDarkPrimary
+                                        : AppColors.textLightPrimary,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                '${r.origin} ➔ ${r.destination}',
-                                style: AppTypography.bodySmall.copyWith(
-                                  color: isDark
-                                      ? AppColors.textDarkMuted
-                                      : AppColors.textLightMuted,
-                                  fontSize: 11,
+                                const SizedBox(height: 4),
+                                Text(
+                                  '${r.origin} ➔ ${r.destination}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppTypography.bodySmall.copyWith(
+                                    color: isDark
+                                        ? AppColors.textDarkMuted
+                                        : AppColors.textLightMuted,
+                                    fontSize: 11,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryBlue.withOpacity(0.18),
-                              borderRadius: AppRadius.brPill,
+                              ],
                             ),
-                            child: Text(
-                              r.conditionSummary,
-                              style: const TextStyle(
-                                color: AppColors.accentCyan,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w700,
+                          ),
+                          const SizedBox(width: 8),
+                          Flexible(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryBlue.withOpacity(0.18),
+                                borderRadius: AppRadius.brPill,
+                              ),
+                              child: Text(
+                                r.conditionSummary,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  color: AppColors.accentCyan,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w700,
+                                ),
                               ),
                             ),
                           ),
@@ -281,15 +302,23 @@ class _CommuteStat extends StatelessWidget {
       children: [
         Icon(icon, size: 20, color: color),
         const SizedBox(height: 6),
-        Text(
-          value,
-          style: AppTypography.titleMedium.copyWith(
-            fontWeight: FontWeight.w700,
-            color: isDark ? Colors.white : AppColors.textLightPrimary,
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.center,
+          child: Text(
+            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTypography.titleMedium.copyWith(
+              fontWeight: FontWeight.w700,
+              color: isDark ? Colors.white : AppColors.textLightPrimary,
+            ),
           ),
         ),
         Text(
           title,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: AppTypography.labelSmall.copyWith(
             color: isDark ? AppColors.textDarkMuted : AppColors.textLightMuted,
             fontSize: 10,

@@ -7,6 +7,17 @@ import 'package:mausam_app/core/widgets/weather_metric_tile.dart';
 import 'package:mausam_app/core/widgets/personalized_recommendation_card.dart';
 import 'package:mausam_app/features/weather/domain/models/weather_data.dart';
 import 'package:mausam_app/features/personalization/domain/models/personalization_models.dart';
+import 'package:mausam_app/features/onboarding/presentation/screens/splash_screen.dart';
+import 'package:mausam_app/features/explore/presentation/screens/explore_screen.dart';
+import 'package:mausam_app/features/alerts/presentation/screens/alerts_screen.dart';
+import 'package:mausam_app/features/modules/agriculture/presentation/screens/agriculture_screen.dart';
+import 'package:mausam_app/features/modules/commute/presentation/screens/commute_screen.dart';
+import 'package:mausam_app/features/modules/events/presentation/screens/event_screen.dart';
+import 'package:mausam_app/features/modules/family/presentation/screens/family_screen.dart';
+import 'package:mausam_app/features/modules/fitness/presentation/screens/fitness_screen.dart';
+import 'package:mausam_app/features/modules/health/presentation/screens/health_screen.dart';
+import 'package:mausam_app/features/modules/marine/presentation/screens/marine_screen.dart';
+import 'package:mausam_app/features/modules/travel/presentation/screens/travel_screen.dart';
 
 void main() {
   testWidgets('WeatherHeroCard renders temperature and condition',
@@ -158,5 +169,113 @@ void main() {
     expect(find.text('Sensor Connected'), findsOneWidget);
     expect(find.text('Open Agriculture & Farm Weather'), findsOneWidget);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('SplashScreen renders branding, subtitle, and loader without overflow',
+      (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(360, 800);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() => tester.view.resetPhysicalSize());
+
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MaterialApp(
+          home: Scaffold(
+            body: SplashScreen(),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Mausam'), findsOneWidget);
+    expect(find.text('Personalized Weather for You'), findsOneWidget);
+    expect(find.text('Loading...'), findsOneWidget);
+    expect(find.byType(LinearProgressIndicator), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets(
+      'ExploreScreen renders 8 specialized dashboard modules with zero overflow across 320px and 360px devices',
+      (WidgetTester tester) async {
+    for (final width in [320.0, 360.0, 412.0]) {
+      tester.view.physicalSize = Size(width, 800);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: MaterialApp(
+            home: ExploreScreen(),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+      expect(find.text('8 Specialized Weather Dashboards'), findsOneWidget);
+      expect(find.text('Health & AQI'), findsOneWidget);
+      expect(find.text('Fitness & Running'), findsOneWidget);
+      expect(find.text('Marine & Surfing'), findsOneWidget);
+      expect(find.text('Travel & Destinations'), findsOneWidget);
+      expect(tester.takeException(), isNull,
+          reason: 'Failed zero-overflow check at width $width');
+    }
+  });
+
+  testWidgets(
+      'AlertsScreen renders active warnings with zero overflow across 320px and 360px devices',
+      (WidgetTester tester) async {
+    for (final width in [320.0, 360.0, 412.0]) {
+      tester.view.physicalSize = Size(width, 800);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: MaterialApp(
+            home: AlertsScreen(),
+          ),
+        ),
+      );
+
+      await tester.pump(const Duration(milliseconds: 400));
+      await tester.pumpAndSettle();
+      expect(find.text('Weather Alerts'), findsOneWidget);
+      expect(tester.takeException(), isNull,
+          reason: 'Failed zero-overflow check on AlertsScreen at width $width');
+    }
+  });
+
+  testWidgets(
+      'All 8 Specialized Domain Module Screens render with zero overflow across multiple device widths',
+      (WidgetTester tester) async {
+    for (final width in [320.0, 360.0, 412.0]) {
+      tester.view.physicalSize = Size(width, 800);
+      tester.view.devicePixelRatio = 1.0;
+
+      final screens = <Widget>[
+        const AgricultureScreen(),
+        const CommuteScreen(),
+        const EventScreen(),
+        const FamilyScreen(),
+        const FitnessScreen(),
+        const HealthScreen(),
+        const MarineScreen(),
+        const TravelScreen(),
+      ];
+
+      for (final screen in screens) {
+        await tester.pumpWidget(
+          ProviderScope(
+            child: MaterialApp(
+              theme: AppTheme.darkTheme,
+              home: screen,
+            ),
+          ),
+        );
+
+        await tester.pump(const Duration(milliseconds: 100));
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull,
+            reason: 'Failed zero-overflow check on ${screen.runtimeType} at width $width');
+      }
+    }
   });
 }

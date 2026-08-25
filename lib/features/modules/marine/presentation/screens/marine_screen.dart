@@ -54,7 +54,9 @@ class MarineScreen extends ConsumerWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 4,
                               children: [
                                 Container(
                                   padding: const EdgeInsets.symmetric(
@@ -72,7 +74,6 @@ class MarineScreen extends ConsumerWidget {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 8),
                                 Container(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 8, vertical: 3),
@@ -145,7 +146,7 @@ class MarineScreen extends ConsumerWidget {
                   crossAxisCount: 2,
                   crossAxisSpacing: 12,
                   mainAxisSpacing: 12,
-                  childAspectRatio: 1.5,
+                  childAspectRatio: 1.2,
                   children: [
                     _MarineMetricCard(
                       title: 'Water Temperature',
@@ -203,31 +204,31 @@ class MarineScreen extends ConsumerWidget {
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
-                              children: [
-                                Icon(
-                                  tide.isHigh
-                                      ? Icons.arrow_upward_rounded
-                                      : Icons.arrow_downward_rounded,
-                                  color: tide.isHigh
-                                      ? AppColors.accentCyan
-                                      : AppColors.primaryBlueLight,
-                                  size: 20,
-                                ),
-                                const SizedBox(width: 10),
-                                Text(
-                                  tide.type,
-                                  style: AppTypography.titleMedium.copyWith(
-                                    fontWeight: FontWeight.w700,
-                                    color: isDark
-                                        ? AppColors.textDarkPrimary
-                                        : AppColors.textLightPrimary,
-                                  ),
-                                ),
-                              ],
+                            Icon(
+                              tide.isHigh
+                                  ? Icons.arrow_upward_rounded
+                                  : Icons.arrow_downward_rounded,
+                              color: tide.isHigh
+                                  ? AppColors.accentCyan
+                                  : AppColors.primaryBlueLight,
+                              size: 20,
                             ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                tide.type,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: AppTypography.titleMedium.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  color: isDark
+                                      ? AppColors.textDarkPrimary
+                                      : AppColors.textLightPrimary,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
                             Row(
                               children: [
                                 Text(
@@ -282,7 +283,7 @@ class _MarineMetricCard extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurfaceCard : AppColors.lightSurfaceCard,
         borderRadius: AppRadius.brLg,
@@ -294,27 +295,37 @@ class _MarineMetricCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                title,
-                style: AppTypography.labelSmall.copyWith(
-                  color: isDark
-                      ? AppColors.textDarkMuted
-                      : AppColors.textLightMuted,
-                  fontSize: 10,
+              Expanded(
+                child: Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.labelSmall.copyWith(
+                    color: isDark
+                        ? AppColors.textDarkMuted
+                        : AppColors.textLightMuted,
+                    fontSize: 10,
+                  ),
                 ),
               ),
+              const SizedBox(width: 4),
               Icon(icon, size: 18, color: AppColors.accentCyan),
             ],
           ),
-          Text(
-            value,
-            style: AppTypography.titleMedium.copyWith(
-              fontWeight: FontWeight.w800,
-              color: isDark
-                  ? AppColors.textDarkPrimary
-                  : AppColors.textLightPrimary,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              value,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.titleMedium.copyWith(
+                fontWeight: FontWeight.w800,
+                color: isDark
+                    ? AppColors.textDarkPrimary
+                    : AppColors.textLightPrimary,
+              ),
             ),
           ),
           Text(

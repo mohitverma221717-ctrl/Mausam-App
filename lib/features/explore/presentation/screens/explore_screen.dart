@@ -156,32 +156,41 @@ class ExploreScreen extends ConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      item.title,
-                                      style: AppTypography.titleLarge.copyWith(
-                                        fontWeight: FontWeight.w700,
-                                        color: isDark
-                                            ? AppColors.textDarkPrimary
-                                            : AppColors.textLightPrimary,
+                                    Expanded(
+                                      flex: 3,
+                                      child: Text(
+                                        item.title,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: AppTypography.titleLarge.copyWith(
+                                          fontWeight: FontWeight.w700,
+                                          color: isDark
+                                              ? AppColors.textDarkPrimary
+                                              : AppColors.textLightPrimary,
+                                        ),
                                       ),
                                     ),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 3),
-                                      decoration: BoxDecoration(
-                                        color: accent.withOpacity(0.15),
-                                        borderRadius: AppRadius.brPill,
-                                      ),
-                                      child: Text(
-                                        item.metric,
-                                        style:
-                                            AppTypography.labelSmall.copyWith(
-                                          color: accent,
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 10,
+                                    const SizedBox(width: 6),
+                                    Flexible(
+                                      flex: 2,
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 3),
+                                        decoration: BoxDecoration(
+                                          color: accent.withOpacity(0.15),
+                                          borderRadius: AppRadius.brPill,
+                                        ),
+                                        child: Text(
+                                          item.metric,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style:
+                                              AppTypography.labelSmall.copyWith(
+                                            color: accent,
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 10,
+                                          ),
                                         ),
                                       ),
                                     ),
