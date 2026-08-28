@@ -1,0 +1,1299 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ==========================================
+// ENUMS
+// ==========================================
+
+enum UserRoleType {
+  USER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  PENDING_VERIFICATION
+}
+
+enum PersonaType {
+  GENERAL
+  HEALTH_CONSCIOUS
+  OUTDOOR_FITNESS
+  BEACH_SURFER
+  TRAVELER
+  PARENT_FAMILY
+  AGRICULTURE_FARMER
+  COMMUTER
+  EVENT_PLANNER
+}
+
+enum WeatherCondition {
+  CLEAR
+  PARTLY_CLOUDY
+  CLOUDY
+  OVERCAST
+  FOG
+  DRIZZLE
+  RAIN
+  HEAVY_RAIN
+  THUNDERSTORM
+  SNOW
+  HAIL
+  DUST_STORM
+  CYCLONE
+}
+
+enum AQICategory {
+  GOOD
+  SATISFACTORY
+  MODERATE
+  POOR
+  VERY_POOR
+  SEVERE
+}
+
+enum UVCategory {
+  LOW
+  MODERATE
+  HIGH
+  VERY_HIGH
+  EXTREME
+}
+
+enum PollenLevel {
+  LOW
+  MODERATE
+  HIGH
+  VERY_HIGH
+}
+
+enum CardType {
+  CURRENT_WEATHER
+  HOURLY_FORECAST
+  DAILY_FORECAST
+  AIR_QUALITY
+  UV_INDEX
+  POLLEN_REPORT
+  HEALTH_ADVISORY
+  FITNESS_RUNNING_WINDOW
+  TRAVEL_PLANNER
+  FAMILY_SCHOOL_ADVISORY
+  FARM_AGRICULTURE
+  MARINE_COASTAL
+  COMMUTE_ROUTING
+  OUTDOOR_EVENTS
+  SEVERE_ALERTS
+  RECOMMENDATIONS
+}
+
+enum AlertSeverity {
+  INFO
+  WATCH
+  ADVISORY
+  WARNING
+  EMERGENCY
+}
+
+enum AlertCategory {
+  METEOROLOGICAL
+  AIR_QUALITY
+  HYDROLOGICAL
+  MARINE
+  GEOPHYSICAL
+  PUBLIC_SAFETY
+}
+
+enum RecommendationSeverity {
+  INFO
+  SUGGESTION
+  CAUTION
+  CRITICAL
+}
+
+enum NotificationType {
+  WEATHER_ALERT
+  AQI_WARNING
+  DAILY_FORECAST
+  RAIN_WARNING
+  OUTDOOR_RECOMMENDATION
+  ADMIN_BROADCAST
+  SYSTEM_UPDATE
+}
+
+enum DeliveryStatus {
+  PENDING
+  SENT
+  DELIVERED
+  FAILED
+  SKIPPED
+}
+
+enum DataSourceState {
+  HEALTHY
+  DEGRADED
+  DOWN
+  MAINTENANCE
+}
+
+// ==========================================
+// 1. AUTH & ACCESS CONTROL
+// ==========================================
+
+model User {
+  id              String         @id @default(uuid())
+  email           String         @unique
+  passwordHash    String
+  phoneNumber     String?        @unique
+  isVerified      Boolean        @default(false)
+  status          UserStatus     @default(ACTIVE)
+  lastLoginAt     DateTime?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  // Relationships
+  roles                  UserRole[]
+  refreshTokens          RefreshToken[]
+  sessions               LoginSession[]
+  deviceTokens           DeviceToken[]
+  profile                UserProfile?
+  preferences            UserPreference?
+  interests              UserInterest[]
+  savedLocations         SavedLocation[]
+  favoriteLocations      FavoriteLocation[]
+  personalizationProfile PersonalizationProfile?
+  cardPreferences        UserCardPreference[]
+  notifications          Notification[]
+  notificationPreference NotificationPreference?
+  analyticsEvents        AnalyticsEvent[]
+  userActivities         UserActivity[]
+  homepageInteractions   HomepageInteraction[]
+  auditLogs              AuditLog[]
+  adminActions           AdminAction[]
+  recommendationHistories RecommendationHistory[]
+  alertHistories         AlertHistory[]
+  healthPreference       HealthPreference?
+  fitnessPreference      FitnessPreference?
+  trips                  Trip[]
+  familyProfile          FamilyProfile?
+  farms                  Farm[]
+  commuteRoutes          CommuteRoute[]
+  outdoorEvents          OutdoorEvent[]
+
+  @@index([email])
+  @@index([status])
+  @@map("users")
+}
+
+model Role {
+  id          String           @id @default(uuid())
+  name        UserRoleType     @unique
+  description String?
+  createdAt   DateTime         @default(now())
+
+  users       UserRole[]
+  permissions RolePermission[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String           @id @default(uuid())
+  name        String           @unique
+  module      String
+  description String?
+  createdAt   DateTime         @default(now())
+
+  roles       RolePermission[]
+
+  @@index([module])
+  @@map("permissions")
+}
+
+model UserRole {
+  userId     String
+  roleId     String
+  assignedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+  @@map("user_roles")
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+  assignedAt   DateTime @default(now())
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+model RefreshToken {
+  id         String   @id @default(uuid())
+  tokenHash  String   @unique
+  userId     String
+  familyId   String   @default(uuid())
+  isRevoked  Boolean  @default(false)
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([tokenHash])
+  @@index([familyId])
+  @@map("refresh_tokens")
+}
+
+model LoginSession {
+  id           String   @id @default(uuid())
+  userId       String
+  ipAddress    String?
+  userAgent    String?
+  deviceType   String?
+  lastActiveAt DateTime @default(now())
+  createdAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("login_sessions")
+}
+
+model DeviceToken {
+  id         String   @id @default(uuid())
+  userId     String
+  token      String   @unique
+  platform   String   // android, ios, web
+  isActive   Boolean  @default(true)
+  lastSeenAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deliveries NotificationDelivery[]
+
+  @@index([userId])
+  @@index([token])
+  @@map("device_tokens")
+}
+
+// ==========================================
+// 2. USER PROFILE & PREFERENCES
+// ==========================================
+
+model UserProfile {
+  id          String      @id @default(uuid())
+  userId      String      @unique
+  fullName    String?
+  avatarUrl   String?
+  bio         String?
+  dateOfBirth DateTime?
+  gender      String?
+  persona     PersonaType @default(GENERAL)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([persona])
+  @@map("user_profiles")
+}
+
+model UserPreference {
+  id                  String   @id @default(uuid())
+  userId              String   @unique
+  tempUnit            String   @default("C") // C or F
+  windSpeedUnit       String   @default("km/h") // km/h, m/s, mph
+  pressureUnit        String   @default("hPa")
+  theme               String   @default("system") // light, dark, system
+  language            String   @default("en")
+  notifyWeatherAlerts Boolean  @default(true)
+  notifyDailySummary  Boolean  @default(true)
+  notifyAqiWarnings   Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_preferences")
+}
+
+model UserInterest {
+  id        String   @id @default(uuid())
+  userId    String
+  interest  String   // running, farming, surfing, astronomy, photography
+  priority  Int      @default(5)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, interest])
+  @@index([userId])
+  @@map("user_interests")
+}
+
+// ==========================================
+// 3. LOCATIONS & SPATIAL DATA
+// ==========================================
+
+model Location {
+  id                String   @id @default(uuid())
+  name              String
+  state             String?
+  district          String?
+  country           String   @default("India")
+  latitude          Float
+  longitude         Float
+  elevation         Float?
+  timezone          String   @default("Asia/Kolkata")
+  geohash           String?
+  isOfficialStation Boolean  @default(false)
+  stationCode       String?  @unique
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  savedByUsers           SavedLocation[]
+  favoritedByUsers       FavoriteLocation[]
+  weatherObservations    WeatherObservation[]
+  weatherForecasts       WeatherForecast[]
+  sunriseSunsets         SunriseSunset[]
+  aqiObservations        AQIObservation[]
+  uvObservations         UVObservation[]
+  pollenObservations     PollenObservation[]
+  visibilityObservations VisibilityObservation[]
+  recommendations        Recommendation[]
+  alerts                 Alert[]
+  schoolLocations        SchoolLocation[]
+  farms                  Farm[]
+  trips                  TripDestination[]
+
+  @@unique([latitude, longitude])
+  @@index([name])
+  @@index([state])
+  @@index([latitude, longitude])
+  @@index([geohash])
+  @@map("locations")
+}
+
+model SavedLocation {
+  id         String   @id @default(uuid())
+  userId     String
+  locationId String
+  customName String?
+  isHome     Boolean  @default(false)
+  isWork     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  location Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, locationId])
+  @@index([userId])
+  @@map("saved_locations")
+}
+
+model FavoriteLocation {
+  id         String   @id @default(uuid())
+  userId     String
+  locationId String
+  orderIndex Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  location Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, locationId])
+  @@index([userId])
+  @@map("favorite_locations")
+}
+
+// ==========================================
+// 4. WEATHER & METEOROLOGICAL OBSERVATIONS
+// ==========================================
+
+model WeatherObservation {
+  id                String           @id @default(uuid())
+  locationId        String
+  observationTime   DateTime
+  temperature       Float
+  feelsLike         Float
+  minTemp           Float?
+  maxTemp           Float?
+  humidity          Float
+  pressure          Float
+  windSpeed         Float
+  windDirection     Float
+  windGust          Float?
+  precipitation     Float            @default(0.0)
+  precipitationProb Float            @default(0.0)
+  cloudCover        Float            @default(0.0)
+  uvIndex           Float            @default(0.0)
+  visibility        Float            @default(10.0)
+  condition         WeatherCondition @default(CLEAR)
+  conditionCode     Int              @default(800)
+  iconCode          String           @default("01d")
+  dataSource        String           @default("IMD")
+  isMock            Boolean          @default(false)
+  createdAt         DateTime         @default(now())
+
+  location Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+
+  @@index([locationId, observationTime])
+  @@map("weather_observations")
+}
+
+model WeatherForecast {
+  id           String   @id @default(uuid())
+  locationId   String
+  forecastDate DateTime
+  dataSource   String   @default("IMD")
+  createdAt    DateTime @default(now())
+
+  location        Location         @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  hourlyForecasts HourlyForecast[]
+  dailyForecasts  DailyForecast[]
+
+  @@unique([locationId, forecastDate])
+  @@index([locationId])
+  @@map("weather_forecasts")
+}
+
+model HourlyForecast {
+  id                String           @id @default(uuid())
+  forecastId        String
+  time              DateTime
+  temperature       Float
+  feelsLike         Float
+  humidity          Float
+  precipitationProb Float
+  precipitation     Float
+  windSpeed         Float
+  windDirection     Float
+  condition         WeatherCondition
+  iconCode          String
+  uvIndex           Float            @default(0.0)
+  createdAt         DateTime         @default(now())
+
+  forecast WeatherForecast @relation(fields: [forecastId], references: [id], onDelete: Cascade)
+
+  @@index([forecastId, time])
+  @@map("hourly_forecasts")
+}
+
+model DailyForecast {
+  id               String           @id @default(uuid())
+  forecastId       String
+  date             DateTime
+  minTemp          Float
+  maxTemp          Float
+  condition        WeatherCondition
+  precipitationProb Float
+  precipitationSum Float
+  sunrise          DateTime?
+  sunset           DateTime?
+  uvMax            Float            @default(0.0)
+  windMax          Float            @default(0.0)
+  createdAt        DateTime         @default(now())
+
+  forecast WeatherForecast @relation(fields: [forecastId], references: [id], onDelete: Cascade)
+
+  @@index([forecastId, date])
+  @@map("daily_forecasts")
+}
+
+model SunriseSunset {
+  id               String   @id @default(uuid())
+  locationId       String
+  date             DateTime
+  sunrise          DateTime
+  sunset           DateTime
+  solarNoon        DateTime?
+  dayLengthSeconds Int?
+  dawn             DateTime?
+  dusk             DateTime?
+  createdAt        DateTime @default(now())
+
+  location Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+
+  @@unique([locationId, date])
+  @@index([locationId])
+  @@map("sunrise_sunsets")
+}
+
+// ==========================================
+// 5. ENVIRONMENT (AQI, UV, POLLEN, VISIBILITY)
+// ==========================================
+
+model AQIObservation {
+  id                 String      @id @default(uuid())
+  locationId         String
+  observationTime    DateTime
+  aqi                Int
+  category           AQICategory
+  pm25               Float?
+  pm10               Float?
+  o3                 Float?
+  no2                Float?
+  so2                Float?
+  co                 Float?
+  dominantPollutant  String?
+  healthAdvisory     String?
+  dataSource         String      @default("CPCB_IMD")
+  isMock             Boolean     @default(false)
+  createdAt          DateTime    @default(now())
+
+  location Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+
+  @@index([locationId, observationTime])
+  @@map("aqi_observations")
+}
+
+model UVObservation {
+  id               String     @id @default(uuid())
+  locationId       String
+  observationTime  DateTime
+  uvIndex          Float
+  maxUvIndex       Float?
+  category         UVCategory
+  exposureAdvisory String?
+  dataSource       String     @default("IMD")
+  createdAt        DateTime   @default(now())
+
+  location Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+
+  @@index([locationId, observationTime])
+  @@map("uv_observations")
+}
+
+model PollenObservation {
+  id              String      @id @default(uuid())
+  locationId      String
+  observationTime DateTime
+  grassPollen     Float?
+  treePollen      Float?
+  weedPollen      Float?
+  olivePollen     Float?
+  overallCategory PollenLevel @default(LOW)
+  advisory        String?
+  dataSource      String      @default("OPEN_METEO")
+  isMock          Boolean     @default(false)
+  createdAt       DateTime    @default(now())
+
+  location Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+
+  @@index([locationId, observationTime])
+  @@map("pollen_observations")
+}
+
+model VisibilityObservation {
+  id              String   @id @default(uuid())
+  locationId      String
+  observationTime DateTime
+  visibilityKm    Float
+  category        String   // Clear, Fog, Dense Fog, Smog
+  fogRisk         Boolean  @default(false)
+  dataSource      String   @default("IMD")
+  createdAt       DateTime @default(now())
+
+  location Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+
+  @@index([locationId, observationTime])
+  @@map("visibility_observations")
+}
+
+// ==========================================
+// 6. PERSONALIZATION & HOMEPAGE RANKING ENGINE
+// ==========================================
+
+model PersonalizationProfile {
+  id                   String      @id @default(uuid())
+  userId               String      @unique
+  personaType          PersonaType @default(GENERAL)
+  dynamicScoreWeights  Json?       // Dynamic weights per card type
+  lastEvaluatedAt      DateTime    @default(now())
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime    @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("personalization_profiles")
+}
+
+model PersonalizationRule {
+  id                  String       @id @default(uuid())
+  name                String
+  targetPersona       PersonaType?
+  conditionExpression String       // e.g. "weather.temp > 35 || aqi.value > 250"
+  cardType            CardType
+  priorityScore       Int          // 1 to 100
+  isActive            Boolean      @default(true)
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+
+  @@index([targetPersona])
+  @@index([cardType])
+  @@map("personalization_rules")
+}
+
+model HomepageCard {
+  id              String   @id @default(uuid())
+  cardType        CardType @unique
+  title           String
+  description     String?
+  defaultPriority Int      @default(10)
+  isEnabled       Boolean  @default(true)
+  configSchema    Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("homepage_cards")
+}
+
+model CardPriority {
+  id               String      @id @default(uuid())
+  personaType      PersonaType
+  cardType         CardType
+  basePriority     Int         // 1 to 10
+  weightMultiplier Float       @default(1.0)
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  @@unique([personaType, cardType])
+  @@index([personaType])
+  @@map("card_priorities")
+}
+
+model UserCardPreference {
+  id          String   @id @default(uuid())
+  userId      String
+  cardType    CardType
+  isHidden    Boolean  @default(false)
+  customOrder Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, cardType])
+  @@index([userId])
+  @@map("user_card_preferences")
+}
+
+model PersonalizationEvent {
+  id        String   @id @default(uuid())
+  userId    String?
+  eventType String   // IMPRESSION, CLICK, EXPAND, DISMISS
+  cardType  CardType
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([cardType])
+  @@map("personalization_events")
+}
+
+// ==========================================
+// 7. RECOMMENDATIONS ENGINE
+// ==========================================
+
+model Recommendation {
+  id            String                 @id @default(uuid())
+  type          String                 // RAIN_GEAR, FITNESS_HOUR, HEAT_CAUTION, AGRI_IRRIGATION
+  severity      RecommendationSeverity @default(INFO)
+  title         String
+  description   String
+  reason        String
+  validFrom     DateTime
+  validUntil    DateTime
+  source        String                 @default("IMD_RECOMMENDER")
+  confidence    Float                  @default(1.0)
+  targetPersona PersonaType?
+  locationId    String?
+  createdAt     DateTime               @default(now())
+
+  location   Location?               @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  histories  RecommendationHistory[]
+
+  @@index([locationId])
+  @@index([type])
+  @@index([targetPersona])
+  @@map("recommendations")
+}
+
+model RecommendationRule {
+  id             String   @id @default(uuid())
+  name           String
+  ruleType       String
+  criteriaJson   Json     // Threshold rules in JSON
+  actionTemplate Json     // Template payload
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("recommendation_rules")
+}
+
+model RecommendationHistory {
+  id               String   @id @default(uuid())
+  userId           String
+  recommendationId String
+  action           String   // VIEWED, CLICKED, DISMISSED, ACTIONED
+  interactedAt     DateTime @default(now())
+
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recommendation Recommendation @relation(fields: [recommendationId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([recommendationId])
+  @@map("recommendation_histories")
+}
+
+// ==========================================
+// 8. HEALTH & FITNESS DOMAINS
+// ==========================================
+
+model HealthPreference {
+  id                   String   @id @default(uuid())
+  userId               String   @unique
+  hasAsthma            Boolean  @default(false)
+  hasRespiratoryIssues Boolean  @default(false)
+  hasPollenAllergy     Boolean  @default(false)
+  hasHeartCondition    Boolean  @default(false)
+  elderlyInHousehold   Boolean  @default(false)
+  childrenInHousehold  Boolean  @default(false)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("health_preferences")
+}
+
+model HealthAdvisory {
+  id              String   @id @default(uuid())
+  condition       String   // ASTHMA, HEAT_STROKE, POLLEN_SENSITIVITY
+  riskLevel       String   // LOW, MEDIUM, HIGH, SEVERE
+  advisoryText    String
+  recommendedCare String
+  createdAt       DateTime @default(now())
+
+  @@map("health_advisories")
+}
+
+model FitnessPreference {
+  id                   String   @id @default(uuid())
+  userId               String   @unique
+  preferredActivity    String   @default("RUNNING") // RUNNING, CYCLING, WALKING, YOGA
+  preferredTimeSlot    String   @default("MORNING") // MORNING, EVENING
+  targetDistanceKm     Float?
+  maxAcceptableTemp    Float    @default(34.0)
+  minAcceptableTemp    Float    @default(10.0)
+  maxAcceptableAqi     Int      @default(150)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("fitness_preferences")
+}
+
+model RunningWindow {
+  id             String   @id @default(uuid())
+  locationId     String
+  startTime      DateTime
+  endTime        DateTime
+  suitabilityScore Int    // 0 to 100
+  summary        String
+  createdAt      DateTime @default(now())
+
+  @@index([locationId, startTime])
+  @@map("running_windows")
+}
+
+model OutdoorScore {
+  id          String   @id @default(uuid())
+  locationId  String
+  date        DateTime
+  score       Int      // 0 to 100
+  breakdown   Json     // Factors like weather, aqi, uv, wind
+  description String?
+  createdAt   DateTime @default(now())
+
+  @@index([locationId, date])
+  @@map("outdoor_scores")
+}
+
+// ==========================================
+// 9. TRAVEL, FAMILY & AGRICULTURE DOMAINS
+// ==========================================
+
+model Trip {
+  id           String   @id @default(uuid())
+  userId       String
+  tripName     String
+  startDate    DateTime
+  endDate      DateTime
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  destinations TripDestination[]
+
+  @@index([userId])
+  @@map("trips")
+}
+
+model TripDestination {
+  id           String   @id @default(uuid())
+  tripId       String
+  locationId   String
+  visitDate    DateTime
+  activityPlan String?
+  createdAt    DateTime @default(now())
+
+  trip     Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  location Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+
+  packingRecommendations PackingRecommendation[]
+
+  @@index([tripId])
+  @@map("trip_destinations")
+}
+
+model PackingRecommendation {
+  id                String   @id @default(uuid())
+  tripDestinationId String
+  item              String   // Umbrella, Light cottons, Heavy jacket, Sunscreen
+  category          String   // CLOTHING, ACCESSORIES, GEAR, MEDICINE
+  reason            String
+  createdAt         DateTime @default(now())
+
+  tripDestination TripDestination @relation(fields: [tripDestinationId], references: [id], onDelete: Cascade)
+
+  @@index([tripDestinationId])
+  @@map("packing_recommendations")
+}
+
+model FamilyProfile {
+  id                  String   @id @default(uuid())
+  userId              String   @unique
+  childrenCount       Int      @default(0)
+  elderlyCount        Int      @default(0)
+  infantPresent       Boolean  @default(false)
+  notifySchoolWeather Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  schoolLocations SchoolLocation[]
+
+  @@map("family_profiles")
+}
+
+model SchoolLocation {
+  id              String   @id @default(uuid())
+  familyProfileId String
+  locationId      String
+  schoolName      String
+  startHour       String   @default("08:00")
+  endHour         String   @default("14:00")
+  createdAt       DateTime @default(now())
+
+  familyProfile FamilyProfile @relation(fields: [familyProfileId], references: [id], onDelete: Cascade)
+  location      Location      @relation(fields: [locationId], references: [id], onDelete: Cascade)
+
+  advisories SchoolWeatherAdvisory[]
+
+  @@index([familyProfileId])
+  @@map("school_locations")
+}
+
+model SchoolWeatherAdvisory {
+  id               String   @id @default(uuid())
+  schoolLocationId String
+  date             DateTime
+  advisoryText     String
+  riskLevel        String
+  createdAt        DateTime @default(now())
+
+  schoolLocation SchoolLocation @relation(fields: [schoolLocationId], references: [id], onDelete: Cascade)
+
+  @@index([schoolLocationId, date])
+  @@map("school_weather_advisories")
+}
+
+model Farm {
+  id             String   @id @default(uuid())
+  userId         String
+  locationId     String
+  farmName       String
+  cropType       String   // Rice, Wheat, Cotton, Mustard, Sugarcane
+  soilType       String   // Alluvial, Black, Red, Sandy
+  sowingDate     DateTime?
+  irrigationType String?  // Drip, Sprinkler, Canal, Rainfed
+  areaInAcres    Float?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  location Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+
+  soilObservations SoilObservation[]
+  farmingAdvisories FarmingAdvisory[]
+
+  @@index([userId])
+  @@index([locationId])
+  @@map("farms")
+}
+
+model SoilObservation {
+  id              String   @id @default(uuid())
+  farmId          String
+  observationTime DateTime
+  soilMoisture    Float    // Percentage
+  soilTemperature Float    // Celsius
+  createdAt       DateTime @default(now())
+
+  farm Farm @relation(fields: [farmId], references: [id], onDelete: Cascade)
+
+  @@index([farmId, observationTime])
+  @@map("soil_observations")
+}
+
+model FarmingAdvisory {
+  id              String   @id @default(uuid())
+  farmId          String
+  advisoryType    String   // IRRIGATION, PESTICIDE_SPRAY, HARVEST, FROST_PROTECTION
+  recommendation  String
+  cropStage       String?
+  validUntil      DateTime
+  createdAt       DateTime @default(now())
+
+  farm Farm @relation(fields: [farmId], references: [id], onDelete: Cascade)
+
+  @@index([farmId])
+  @@map("farming_advisories")
+}
+
+// ==========================================
+// 10. MARINE, COMMUTE & OUTDOOR EVENTS
+// ==========================================
+
+model MarineObservation {
+  id              String   @id @default(uuid())
+  locationId      String
+  observationTime DateTime
+  waveHeightM     Float
+  wavePeriodSec   Float
+  waveDirection   Float
+  seaTempCelsius  Float
+  tideType        String   // HIGH_TIDE, LOW_TIDE, NORMAL
+  tideHeightM     Float
+  seaCondition    String   // CALM, MODERATE, ROUGH, VERY_ROUGH
+  swimmingSafety  Boolean  @default(true)
+  dataSource      String   @default("INCOIS_IMD")
+  createdAt       DateTime @default(now())
+
+  @@index([locationId, observationTime])
+  @@map("marine_observations")
+}
+
+model CommuteRoute {
+  id              String   @id @default(uuid())
+  userId          String
+  routeName       String
+  originLat       Float
+  originLon       Float
+  originName      String?
+  destLat         Float
+  destLon         Float
+  destName        String?
+  departureTime   String   @default("08:30")
+  returnTime      String   @default("17:30")
+  notifyAdvisories Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("commute_routes")
+}
+
+model OutdoorEvent {
+  id          String   @id @default(uuid())
+  userId      String
+  eventName   String
+  eventDate   DateTime
+  locationLat Float
+  locationLon Float
+  venueName   String?
+  eventType   String   // Wedding, Sports, Concert, Trekking
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("outdoor_events")
+}
+
+// ==========================================
+// 11. ALERTS & PUSH NOTIFICATIONS
+// ==========================================
+
+model Alert {
+  id              String        @id @default(uuid())
+  title           String
+  description     String
+  severity        AlertSeverity @default(ADVISORY)
+  category        AlertCategory @default(METEOROLOGICAL)
+  eventType       String        // HEAVY_RAIN, CYCLONE, HEATWAVE, DENSE_FOG, SEVERE_AQI
+  effectiveFrom   DateTime
+  expiresAt       DateTime
+  sender          String        @default("IMD_OFFICIAL")
+  areaDescription String?
+  latitude        Float?
+  longitude       Float?
+  radiusKm        Float?
+  locationId      String?
+  isApproved      Boolean       @default(true)
+  createdAt       DateTime      @default(now())
+
+  location  Location?      @relation(fields: [locationId], references: [id], onDelete: SetNull)
+  targets   AlertTarget[]
+  histories AlertHistory[]
+
+  @@index([severity])
+  @@index([category])
+  @@index([locationId])
+  @@index([effectiveFrom, expiresAt])
+  @@map("alerts")
+}
+
+model AlertRule {
+  id              String        @id @default(uuid())
+  name            String
+  metric          String        // rainfall_24h, temp_max, aqi_value, wind_speed
+  operator        String        // >, >=, <, <=, ==
+  threshold       Float
+  severity        AlertSeverity
+  messageTemplate String
+  isActive        Boolean       @default(true)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@map("alert_rules")
+}
+
+model AlertTarget {
+  id          String   @id @default(uuid())
+  alertId     String
+  targetType  String   // STATE, DISTRICT, GEO_RADIUS, ALL
+  targetValue String
+  createdAt   DateTime @default(now())
+
+  alert Alert @relation(fields: [alertId], references: [id], onDelete: Cascade)
+
+  @@index([alertId])
+  @@map("alert_targets")
+}
+
+model AlertHistory {
+  id          String   @id @default(uuid())
+  alertId     String
+  userId      String
+  deliveredAt DateTime @default(now())
+  status      String   @default("DELIVERED")
+
+  alert Alert @relation(fields: [alertId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([alertId])
+  @@index([userId])
+  @@map("alert_histories")
+}
+
+model Notification {
+  id          String           @id @default(uuid())
+  userId      String
+  title       String
+  body        String
+  type        NotificationType @default(WEATHER_ALERT)
+  dataPayload Json?
+  isRead      Boolean          @default(false)
+  readAt      DateTime?
+  createdAt   DateTime         @default(now())
+
+  user       User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deliveries NotificationDelivery[]
+
+  @@index([userId, isRead])
+  @@map("notifications")
+}
+
+model NotificationPreference {
+  id               String   @id @default(uuid())
+  userId           String   @unique
+  weatherAlerts    Boolean  @default(true)
+  dailyBriefing    Boolean  @default(true)
+  aqiWarnings      Boolean  @default(true)
+  rainPredictions  Boolean  @default(true)
+  quietHoursStart  String?  // e.g. "22:00"
+  quietHoursEnd    String?  // e.g. "06:00"
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notification_preferences")
+}
+
+model NotificationDelivery {
+  id             String         @id @default(uuid())
+  notificationId String
+  deviceTokenId  String?
+  status         DeliveryStatus @default(PENDING)
+  retryCount     Int            @default(0)
+  fcmMessageId   String?
+  errorMessage   String?
+  sentAt         DateTime?
+  createdAt      DateTime       @default(now())
+
+  notification Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  deviceToken  DeviceToken? @relation(fields: [deviceTokenId], references: [id], onDelete: SetNull)
+
+  @@index([notificationId])
+  @@index([status])
+  @@map("notification_deliveries")
+}
+
+// ==========================================
+// 12. ANALYTICS, AUDIT LOGS & ADMIN
+// ==========================================
+
+model AnalyticsEvent {
+  id         String   @id @default(uuid())
+  userId     String?
+  eventName  String   // APP_OPEN, HOMEPAGE_VIEW, CARD_CLICK, ALERT_OPEN
+  category   String   // ENGAGEMENT, WEATHER, ALERT, PERSONALIZATION
+  platform   String   // android, ios, web
+  appVersion String?
+  metadata   Json?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([eventName])
+  @@index([createdAt])
+  @@map("analytics_events")
+}
+
+model UserActivity {
+  id              String   @id @default(uuid())
+  userId          String
+  activityType    String
+  durationSeconds Int      @default(0)
+  metadata        Json?
+  createdAt       DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("user_activities")
+}
+
+model HomepageInteraction {
+  id              String   @id @default(uuid())
+  userId          String
+  cardType        CardType
+  interactionType String   // VIEW, CLICK, EXPAND, DISMISS
+  dwellTimeMs     Int?
+  createdAt       DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([cardType])
+  @@map("homepage_interactions")
+}
+
+model AdminAction {
+  id             String   @id @default(uuid())
+  adminId        String
+  action         String   // CREATE_ALERT, UPDATE_RULE, TOGGLE_CARD, BAN_USER
+  targetResource String
+  targetId       String?
+  changesJson    Json?
+  ipAddress      String?
+  createdAt      DateTime @default(now())
+
+  admin User @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@index([adminId])
+  @@index([action])
+  @@map("admin_actions")
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  action    String
+  entity    String
+  entityId  String?
+  payload   Json?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([entity])
+  @@map("audit_logs")
+}
+
+model SystemSetting {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  value       String
+  description String?
+  isPublic    Boolean  @default(false)
+  updatedAt   DateTime @updatedAt
+
+  @@map("system_settings")
+}
+
+model DataSourceStatus {
+  id             String          @id @default(uuid())
+  providerName   String          @unique // IMD, OPEN_METEO, CPCB, INCOIS
+  serviceType    String          // WEATHER, AQI, MARINE, RADAR
+  status         DataSourceState @default(HEALTHY)
+  responseTimeMs Int             @default(0)
+  lastSyncAt     DateTime        @default(now())
+  errorMessage   String?
+  failureCount   Int             @default(0)
+  updatedAt      DateTime        @updatedAt
+
+  @@map("data_source_statuses")
+}
