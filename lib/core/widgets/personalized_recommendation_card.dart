@@ -79,8 +79,8 @@ class PersonalizedRecommendationCard extends StatelessWidget {
                   const SizedBox(width: 8),
                   Flexible(
                     child: Container(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
                         color: accent.withOpacity(0.15),
                         borderRadius: AppRadius.brPill,

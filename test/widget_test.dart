@@ -181,7 +181,8 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('SplashScreen renders branding, subtitle, and loader without overflow',
+  testWidgets(
+      'SplashScreen renders branding, subtitle, and loader without overflow',
       (WidgetTester tester) async {
     tester.view.physicalSize = const Size(360, 800);
     tester.view.devicePixelRatio = 1.0;
@@ -284,7 +285,8 @@ void main() {
         await tester.pump(const Duration(milliseconds: 100));
         await tester.pumpAndSettle();
         expect(tester.takeException(), isNull,
-            reason: 'Failed zero-overflow check on ${screen.runtimeType} at width $width');
+            reason:
+                'Failed zero-overflow check on ${screen.runtimeType} at width $width');
       }
     }
   });
@@ -350,7 +352,8 @@ void main() {
       expect(find.text('Event Planner'), findsOneWidget);
 
       expect(tester.takeException(), isNull,
-          reason: 'Failed zero-overflow check on MausamModuleDrawer at width $width');
+          reason:
+              'Failed zero-overflow check on MausamModuleDrawer at width $width');
 
       await tester.pump(const Duration(milliseconds: 300));
       await tester.pumpAndSettle();
@@ -388,7 +391,8 @@ void main() {
         await tester.pump(const Duration(milliseconds: 100));
         await tester.pumpAndSettle();
         expect(tester.takeException(), isNull,
-            reason: 'Failed zero-overflow check on ${screen.runtimeType} at width $width');
+            reason:
+                'Failed zero-overflow check on ${screen.runtimeType} at width $width');
       }
     }
   });

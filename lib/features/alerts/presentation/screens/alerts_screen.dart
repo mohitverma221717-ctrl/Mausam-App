@@ -48,7 +48,8 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
           case AlertCategoryFilter.all:
             return true;
           case AlertCategoryFilter.severe:
-            return a.severity == AlertSeverity.high || a.severity == AlertSeverity.extreme;
+            return a.severity == AlertSeverity.high ||
+                a.severity == AlertSeverity.extreme;
           case AlertCategoryFilter.rain:
             return a.type.toLowerCase().contains('rain') ||
                 a.type.toLowerCase().contains('thunder') ||
@@ -65,15 +66,18 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
       }).toList();
     }
 
-    final hasSevereAlert = alertsState.activeAlerts
-        .any((a) => a.severity == AlertSeverity.high || a.severity == AlertSeverity.extreme);
+    final hasSevereAlert = alertsState.activeAlerts.any((a) =>
+        a.severity == AlertSeverity.high ||
+        a.severity == AlertSeverity.extreme);
     final severeAlert = hasSevereAlert
-        ? alertsState.activeAlerts.firstWhere(
-            (a) => a.severity == AlertSeverity.high || a.severity == AlertSeverity.extreme)
+        ? alertsState.activeAlerts.firstWhere((a) =>
+            a.severity == AlertSeverity.high ||
+            a.severity == AlertSeverity.extreme)
         : null;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor:
+          isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: AppBar(
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,7 +86,8 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
             Text(
               '${location.name}, ${location.state}',
               style: AppTypography.labelSmall.copyWith(
-                color: isDark ? AppColors.textDarkMuted : AppColors.textLightMuted,
+                color:
+                    isDark ? AppColors.textDarkMuted : AppColors.textLightMuted,
                 fontSize: 11,
               ),
             ),
@@ -122,13 +127,15 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
           onRefresh: () => alertsNotifier.loadAlerts(),
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // 1. Dynamic Overall Threat / Status Banner
                 if (alertsState.activeAlerts.isEmpty)
-                  _AllClearStatusBanner(isDark: isDark, locationName: location.name)
+                  _AllClearStatusBanner(
+                      isDark: isDark, locationName: location.name)
                 else if (hasSevereAlert && severeAlert != null)
                   _SevereEmergencyBanner(
                     isDark: isDark,
@@ -175,9 +182,11 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
                           color: Colors.transparent,
                           child: InkWell(
                             borderRadius: AppRadius.brPill,
-                            onTap: () => setState(() => _selectedFilter = filter),
+                            onTap: () =>
+                                setState(() => _selectedFilter = filter),
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 14, vertical: 7),
                               decoration: BoxDecoration(
                                 color: isSelected
                                     ? AppColors.primaryBlue
@@ -188,16 +197,22 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
                                 border: Border.all(
                                   color: isSelected
                                       ? AppColors.primaryBlue
-                                      : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                                      : (isDark
+                                          ? AppColors.darkBorder
+                                          : AppColors.lightBorder),
                                 ),
                               ),
                               child: Text(
                                 labelText,
                                 style: AppTypography.labelSmall.copyWith(
-                                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                                  fontWeight: isSelected
+                                      ? FontWeight.w700
+                                      : FontWeight.w500,
                                   color: isSelected
                                       ? Colors.white
-                                      : (isDark ? Colors.white : AppColors.textLightPrimary),
+                                      : (isDark
+                                          ? Colors.white
+                                          : AppColors.textLightPrimary),
                                 ),
                               ),
                             ),
@@ -221,13 +236,16 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
                         overflow: TextOverflow.ellipsis,
                         style: AppTypography.titleLarge.copyWith(
                           fontWeight: FontWeight.w700,
-                          color: isDark ? AppColors.textDarkPrimary : AppColors.textLightPrimary,
+                          color: isDark
+                              ? AppColors.textDarkPrimary
+                              : AppColors.textLightPrimary,
                         ),
                       ),
                     ),
                     const SizedBox(width: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
                         color: AppColors.accentCyan.withOpacity(0.15),
                         borderRadius: AppRadius.brPill,
@@ -247,7 +265,8 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
 
                 // 4. Alert Cards List
                 if (displayAlerts.isEmpty)
-                  _NoAlertsMatchingFilter(isDark: isDark, filterLabel: _selectedFilter.label)
+                  _NoAlertsMatchingFilter(
+                      isDark: isDark, filterLabel: _selectedFilter.label)
                 else
                   ListView.separated(
                     shrinkWrap: true,
@@ -317,7 +336,8 @@ class _SevereEmergencyBanner extends StatelessWidget {
                   color: AppColors.statusDanger,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.warning_amber_rounded, size: 20, color: Colors.white),
+                child: const Icon(Icons.warning_amber_rounded,
+                    size: 20, color: Colors.white),
               ),
               const SizedBox(width: 10),
               Expanded(
@@ -341,7 +361,8 @@ class _SevereEmergencyBanner extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: AppTypography.titleMedium.copyWith(
                         fontWeight: FontWeight.w800,
-                        color: isDark ? Colors.white : AppColors.textLightPrimary,
+                        color:
+                            isDark ? Colors.white : AppColors.textLightPrimary,
                       ),
                     ),
                   ],
@@ -371,7 +392,9 @@ class _SevereEmergencyBanner extends StatelessWidget {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: AppTypography.bodySmall.copyWith(
-              color: isDark ? AppColors.textDarkSecondary : AppColors.textLightSecondary,
+              color: isDark
+                  ? AppColors.textDarkSecondary
+                  : AppColors.textLightSecondary,
             ),
           ),
           const SizedBox(height: 12),
@@ -400,7 +423,8 @@ class _SevereEmergencyBanner extends StatelessWidget {
                     ),
                   ),
                   SizedBox(width: 6),
-                  Icon(Icons.arrow_forward_rounded, size: 14, color: Colors.white),
+                  Icon(Icons.arrow_forward_rounded,
+                      size: 14, color: Colors.white),
                 ],
               ),
             ),
@@ -433,7 +457,8 @@ class _ModerateStatusBanner extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(Icons.info_outline_rounded, color: AppColors.statusWarning, size: 24),
+          const Icon(Icons.info_outline_rounded,
+              color: AppColors.statusWarning, size: 24),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -454,7 +479,9 @@ class _ModerateStatusBanner extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTypography.bodySmall.copyWith(
-                    color: isDark ? AppColors.textDarkSecondary : AppColors.textLightSecondary,
+                    color: isDark
+                        ? AppColors.textDarkSecondary
+                        : AppColors.textLightSecondary,
                     fontSize: 11,
                   ),
                 ),
@@ -487,7 +514,8 @@ class _AllClearStatusBanner extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(Icons.check_circle_outline_rounded, color: AppColors.statusSuccess, size: 28),
+          const Icon(Icons.check_circle_outline_rounded,
+              color: AppColors.statusSuccess, size: 28),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -508,7 +536,9 @@ class _AllClearStatusBanner extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTypography.bodySmall.copyWith(
-                    color: isDark ? AppColors.textDarkSecondary : AppColors.textLightSecondary,
+                    color: isDark
+                        ? AppColors.textDarkSecondary
+                        : AppColors.textLightSecondary,
                     fontSize: 11,
                   ),
                 ),
@@ -544,7 +574,8 @@ class _AlertProductionCard extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: isDark ? AppColors.darkSurfaceCard : AppColors.lightSurfaceCard,
+            color:
+                isDark ? AppColors.darkSurfaceCard : AppColors.lightSurfaceCard,
             borderRadius: AppRadius.brXl,
             border: Border.all(
               color: isExpired
@@ -569,8 +600,12 @@ class _AlertProductionCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Icon(
-                    isExpired ? Icons.history_rounded : Icons.warning_amber_rounded,
-                    color: isExpired ? AppColors.textDarkMuted : alert.severity.color,
+                    isExpired
+                        ? Icons.history_rounded
+                        : Icons.warning_amber_rounded,
+                    color: isExpired
+                        ? AppColors.textDarkMuted
+                        : alert.severity.color,
                     size: 22,
                   ),
                   const SizedBox(width: 8),
@@ -581,7 +616,9 @@ class _AlertProductionCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: AppTypography.titleMedium.copyWith(
                         fontWeight: FontWeight.w800,
-                        color: isDark ? AppColors.textDarkPrimary : AppColors.textLightPrimary,
+                        color: isDark
+                            ? AppColors.textDarkPrimary
+                            : AppColors.textLightPrimary,
                       ),
                     ),
                   ),
@@ -589,10 +626,13 @@ class _AlertProductionCard extends StatelessWidget {
                   SeverityBadge(severity: alert.severity),
                   const SizedBox(width: 6),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
                       color: isExpired
-                          ? (isDark ? AppColors.darkBorder : AppColors.lightBorder)
+                          ? (isDark
+                              ? AppColors.darkBorder
+                              : AppColors.lightBorder)
                           : AppColors.statusSuccess.withOpacity(0.18),
                       borderRadius: AppRadius.brPill,
                     ),
@@ -601,7 +641,9 @@ class _AlertProductionCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 9,
                         fontWeight: FontWeight.w800,
-                        color: isExpired ? AppColors.textDarkMuted : AppColors.statusSuccess,
+                        color: isExpired
+                            ? AppColors.textDarkMuted
+                            : AppColors.statusSuccess,
                       ),
                     ),
                   ),
@@ -612,7 +654,8 @@ class _AlertProductionCard extends StatelessWidget {
               // Location & Time Window Metadata (Clean Bounded Rows)
               Row(
                 children: [
-                  const Icon(Icons.location_on_outlined, size: 14, color: AppColors.accentCyan),
+                  const Icon(Icons.location_on_outlined,
+                      size: 14, color: AppColors.accentCyan),
                   const SizedBox(width: 4),
                   Expanded(
                     child: Text(
@@ -620,7 +663,9 @@ class _AlertProductionCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: AppTypography.labelSmall.copyWith(
-                        color: isDark ? AppColors.textDarkSecondary : AppColors.textLightSecondary,
+                        color: isDark
+                            ? AppColors.textDarkSecondary
+                            : AppColors.textLightSecondary,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -630,7 +675,8 @@ class _AlertProductionCard extends StatelessWidget {
               const SizedBox(height: 3),
               Row(
                 children: [
-                  const Icon(Icons.schedule_rounded, size: 13, color: AppColors.textDarkMuted),
+                  const Icon(Icons.schedule_rounded,
+                      size: 13, color: AppColors.textDarkMuted),
                   const SizedBox(width: 4),
                   Expanded(
                     child: Text(
@@ -653,25 +699,33 @@ class _AlertProductionCard extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: AppTypography.bodySmall.copyWith(
-                  color: isDark ? AppColors.textDarkSecondary : AppColors.textLightSecondary,
+                  color: isDark
+                      ? AppColors.textDarkSecondary
+                      : AppColors.textLightSecondary,
                 ),
               ),
               const SizedBox(height: 10),
 
               // Safety Directive Box
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                 decoration: BoxDecoration(
-                  color: isDark ? AppColors.darkSurfaceElevated : AppColors.lightBackgroundSecondary,
+                  color: isDark
+                      ? AppColors.darkSurfaceElevated
+                      : AppColors.lightBackgroundSecondary,
                   borderRadius: AppRadius.brSm,
                   border: Border.all(
-                    color: isDark ? AppColors.darkBorderSubtle : AppColors.lightBorderSubtle,
+                    color: isDark
+                        ? AppColors.darkBorderSubtle
+                        : AppColors.lightBorderSubtle,
                   ),
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(Icons.shield_outlined, size: 16, color: AppColors.accentCyan),
+                    const Icon(Icons.shield_outlined,
+                        size: 16, color: AppColors.accentCyan),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
@@ -679,7 +733,9 @@ class _AlertProductionCard extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: AppTypography.labelSmall.copyWith(
-                          color: isDark ? AppColors.textDarkPrimary : AppColors.textLightPrimary,
+                          color: isDark
+                              ? AppColors.textDarkPrimary
+                              : AppColors.textLightPrimary,
                           fontWeight: FontWeight.w600,
                           fontSize: 11,
                         ),
@@ -699,7 +755,9 @@ class _AlertProductionCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: AppTypography.labelSmall.copyWith(
-                        color: isDark ? AppColors.textDarkMuted : AppColors.textLightMuted,
+                        color: isDark
+                            ? AppColors.textDarkMuted
+                            : AppColors.textLightMuted,
                         fontSize: 10,
                       ),
                     ),
@@ -739,12 +797,14 @@ class _NoAlertsMatchingFilter extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurfaceCard : AppColors.lightSurfaceCard,
         borderRadius: AppRadius.brXl,
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+        border: Border.all(
+            color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
       ),
       child: Center(
         child: Column(
           children: [
-            const Icon(Icons.check_circle_outline_rounded, size: 44, color: AppColors.statusSuccess),
+            const Icon(Icons.check_circle_outline_rounded,
+                size: 44, color: AppColors.statusSuccess),
             const SizedBox(height: 12),
             Text(
               'No $filterLabel Alerts',
@@ -758,7 +818,8 @@ class _NoAlertsMatchingFilter extends StatelessWidget {
               'No active weather warnings match this selected filter.',
               textAlign: TextAlign.center,
               style: AppTypography.bodySmall.copyWith(
-                color: isDark ? AppColors.textDarkMuted : AppColors.textLightMuted,
+                color:
+                    isDark ? AppColors.textDarkMuted : AppColors.textLightMuted,
               ),
             ),
           ],

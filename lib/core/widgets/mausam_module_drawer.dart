@@ -100,7 +100,8 @@ class MausamModuleDrawer extends ConsumerWidget {
     }
 
     return Drawer(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor:
+          isDark ? AppColors.darkBackground : AppColors.lightBackground,
       child: SafeArea(
         child: Column(
           children: [
@@ -108,10 +109,13 @@ class MausamModuleDrawer extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
               decoration: BoxDecoration(
-                color: isDark ? AppColors.darkSurfaceCard : AppColors.lightSurfaceCard,
+                color: isDark
+                    ? AppColors.darkSurfaceCard
+                    : AppColors.lightSurfaceCard,
                 border: Border(
                   bottom: BorderSide(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color:
+                        isDark ? AppColors.darkBorder : AppColors.lightBorder,
                     width: 1,
                   ),
                 ),
@@ -162,14 +166,18 @@ class MausamModuleDrawer extends ConsumerWidget {
                                   style: AppTypography.titleLarge.copyWith(
                                     fontWeight: FontWeight.w900,
                                     letterSpacing: 1.2,
-                                    color: isDark ? Colors.white : AppColors.textLightPrimary,
+                                    color: isDark
+                                        ? Colors.white
+                                        : AppColors.textLightPrimary,
                                   ),
                                 ),
                                 const SizedBox(width: 6),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 6, vertical: 1),
                                   decoration: BoxDecoration(
-                                    color: AppColors.accentCyan.withOpacity(0.18),
+                                    color:
+                                        AppColors.accentCyan.withOpacity(0.18),
                                     borderRadius: AppRadius.brPill,
                                   ),
                                   child: const Text(
@@ -187,7 +195,9 @@ class MausamModuleDrawer extends ConsumerWidget {
                             Text(
                               'Personalized Weather',
                               style: AppTypography.labelSmall.copyWith(
-                                color: isDark ? AppColors.textDarkMuted : AppColors.textLightMuted,
+                                color: isDark
+                                    ? AppColors.textDarkMuted
+                                    : AppColors.textLightMuted,
                                 fontSize: 11,
                               ),
                             ),
@@ -200,12 +210,17 @@ class MausamModuleDrawer extends ConsumerWidget {
 
                   // Location & Current Weather Pill
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
-                      color: isDark ? AppColors.darkSurfaceElevated : AppColors.lightBackgroundSecondary,
+                      color: isDark
+                          ? AppColors.darkSurfaceElevated
+                          : AppColors.lightBackgroundSecondary,
                       borderRadius: AppRadius.brMd,
                       border: Border.all(
-                        color: isDark ? AppColors.darkBorderSubtle : AppColors.lightBorderSubtle,
+                        color: isDark
+                            ? AppColors.darkBorderSubtle
+                            : AppColors.lightBorderSubtle,
                       ),
                     ),
                     child: Row(
@@ -223,7 +238,9 @@ class MausamModuleDrawer extends ConsumerWidget {
                             overflow: TextOverflow.ellipsis,
                             style: AppTypography.labelSmall.copyWith(
                               fontWeight: FontWeight.w700,
-                              color: isDark ? Colors.white : AppColors.textLightPrimary,
+                              color: isDark
+                                  ? Colors.white
+                                  : AppColors.textLightPrimary,
                             ),
                           ),
                         ),
@@ -247,14 +264,18 @@ class MausamModuleDrawer extends ConsumerWidget {
             // 2. Specialized Modules List
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                     child: Text(
                       'SPECIALIZED MODULES',
                       style: AppTypography.labelSmall.copyWith(
-                        color: isDark ? AppColors.textDarkMuted : AppColors.textLightMuted,
+                        color: isDark
+                            ? AppColors.textDarkMuted
+                            : AppColors.textLightMuted,
                         fontWeight: FontWeight.w800,
                         letterSpacing: 1.0,
                         fontSize: 10,
@@ -279,7 +300,8 @@ class MausamModuleDrawer extends ConsumerWidget {
                             }
                           },
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 10),
                             decoration: BoxDecoration(
                               color: isCurrentRoute
                                   ? (isDark
@@ -300,7 +322,8 @@ class MausamModuleDrawer extends ConsumerWidget {
                                   width: 36,
                                   height: 36,
                                   decoration: BoxDecoration(
-                                    color: module.accentColor.withOpacity(isDark ? 0.16 : 0.12),
+                                    color: module.accentColor
+                                        .withOpacity(isDark ? 0.16 : 0.12),
                                     borderRadius: AppRadius.brMd,
                                   ),
                                   child: Center(
@@ -314,17 +337,25 @@ class MausamModuleDrawer extends ConsumerWidget {
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         module.title,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
-                                        style: AppTypography.titleSmall.copyWith(
-                                          fontWeight: isCurrentRoute ? FontWeight.w800 : FontWeight.w700,
+                                        style:
+                                            AppTypography.titleSmall.copyWith(
+                                          fontWeight: isCurrentRoute
+                                              ? FontWeight.w800
+                                              : FontWeight.w700,
                                           color: isCurrentRoute
-                                              ? (isDark ? Colors.white : AppColors.primaryBlue)
-                                              : (isDark ? AppColors.textDarkPrimary : AppColors.textLightPrimary),
+                                              ? (isDark
+                                                  ? Colors.white
+                                                  : AppColors.primaryBlue)
+                                              : (isDark
+                                                  ? AppColors.textDarkPrimary
+                                                  : AppColors.textLightPrimary),
                                           fontSize: 13,
                                         ),
                                       ),
@@ -334,7 +365,9 @@ class MausamModuleDrawer extends ConsumerWidget {
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: AppTypography.bodySmall.copyWith(
-                                          color: isDark ? AppColors.textDarkMuted : AppColors.textLightMuted,
+                                          color: isDark
+                                              ? AppColors.textDarkMuted
+                                              : AppColors.textLightMuted,
                                           fontSize: 10,
                                         ),
                                       ),
@@ -347,7 +380,9 @@ class MausamModuleDrawer extends ConsumerWidget {
                                   size: 18,
                                   color: isCurrentRoute
                                       ? AppColors.accentCyan
-                                      : (isDark ? AppColors.textDarkMuted : AppColors.textLightMuted),
+                                      : (isDark
+                                          ? AppColors.textDarkMuted
+                                          : AppColors.textLightMuted),
                                 ),
                               ],
                             ),
@@ -358,7 +393,9 @@ class MausamModuleDrawer extends ConsumerWidget {
                   }),
                   const SizedBox(height: 8),
                   Divider(
-                    color: isDark ? AppColors.darkBorderSubtle : AppColors.lightBorderSubtle,
+                    color: isDark
+                        ? AppColors.darkBorderSubtle
+                        : AppColors.lightBorderSubtle,
                     height: 1,
                   ),
                   const SizedBox(height: 8),
@@ -445,14 +482,17 @@ class _DrawerSecondaryTile extends StatelessWidget {
               Icon(
                 icon,
                 size: 18,
-                color: isDark ? AppColors.textDarkMuted : AppColors.textLightMuted,
+                color:
+                    isDark ? AppColors.textDarkMuted : AppColors.textLightMuted,
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
                   title,
                   style: AppTypography.labelSmall.copyWith(
-                    color: isDark ? AppColors.textDarkSecondary : AppColors.textLightSecondary,
+                    color: isDark
+                        ? AppColors.textDarkSecondary
+                        : AppColors.textLightSecondary,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -460,7 +500,8 @@ class _DrawerSecondaryTile extends StatelessWidget {
               Icon(
                 Icons.chevron_right_rounded,
                 size: 16,
-                color: isDark ? AppColors.textDarkMuted : AppColors.textLightMuted,
+                color:
+                    isDark ? AppColors.textDarkMuted : AppColors.textLightMuted,
               ),
             ],
           ),

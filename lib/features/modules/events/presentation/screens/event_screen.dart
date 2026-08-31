@@ -93,7 +93,8 @@ class EventScreen extends ConsumerWidget {
                                       evt.title,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: AppTypography.headlineSmall.copyWith(
+                                      style:
+                                          AppTypography.headlineSmall.copyWith(
                                         fontWeight: FontWeight.w800,
                                         color: isDark
                                             ? AppColors.textDarkPrimary
@@ -120,8 +121,8 @@ class EventScreen extends ConsumerWidget {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 10, vertical: 4),
                                   decoration: BoxDecoration(
-                                    color:
-                                        const Color(0xFFD500F9).withOpacity(0.18),
+                                    color: const Color(0xFFD500F9)
+                                        .withOpacity(0.18),
                                     borderRadius: AppRadius.brPill,
                                   ),
                                   child: Text(

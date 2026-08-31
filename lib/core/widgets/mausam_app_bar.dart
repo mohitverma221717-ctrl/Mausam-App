@@ -138,7 +138,8 @@ class MausamAppBar extends ConsumerWidget implements PreferredSizeWidget {
                     top: 8,
                     right: 8,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 4, vertical: 2),
                       decoration: BoxDecoration(
                         color: AppColors.statusDanger,
                         borderRadius: BorderRadius.circular(8),

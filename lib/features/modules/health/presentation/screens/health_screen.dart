@@ -152,7 +152,8 @@ class HealthScreen extends ConsumerWidget {
                   itemBuilder: (context, index) {
                     final p = health.pollutants[index];
                     return Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 8),
                       decoration: BoxDecoration(
                         color: isDark
                             ? AppColors.darkSurfaceElevated
@@ -311,7 +312,8 @@ class HealthScreen extends ConsumerWidget {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 8, vertical: 3),
                                     decoration: BoxDecoration(
-                                      color: pollen.levelColor.withOpacity(0.18),
+                                      color:
+                                          pollen.levelColor.withOpacity(0.18),
                                       borderRadius: BorderRadius.circular(4),
                                     ),
                                     child: Text(

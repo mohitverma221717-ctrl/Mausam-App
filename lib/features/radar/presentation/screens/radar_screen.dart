@@ -8,10 +8,12 @@ import '../../../../core/theme/app_typography.dart';
 import '../../../location/presentation/providers/location_provider.dart';
 
 enum RadarLayer {
-  rain('Rain / Precipitation', Icons.grain_rounded, 'Doppler Reflectivity (dBZ)'),
+  rain('Rain / Precipitation', Icons.grain_rounded,
+      'Doppler Reflectivity (dBZ)'),
   storm('Storm & Lightning', Icons.bolt_rounded, 'Convective Storm Cells'),
   wind('Wind Streamlines', Icons.air_rounded, 'Surface & Upper Wind Vectors'),
-  temperature('Temperature Map', Icons.thermostat_rounded, 'Thermal Isotherms (°C)'),
+  temperature(
+      'Temperature Map', Icons.thermostat_rounded, 'Thermal Isotherms (°C)'),
   cloud('Satellite Cloud', Icons.cloud_rounded, 'Infrared Cloud Cover');
 
   final String label;
@@ -143,7 +145,8 @@ class _RadarScreenState extends ConsumerState<RadarScreen>
 
   void _startPlaybackTimer() {
     _playbackTimer?.cancel();
-    _playbackTimer = Timer.periodic(const Duration(milliseconds: 1200), (timer) {
+    _playbackTimer =
+        Timer.periodic(const Duration(milliseconds: 1200), (timer) {
       if (!mounted) return;
       setState(() {
         _currentFrameIndex = (_currentFrameIndex + 1) % _frames.length;
@@ -156,7 +159,8 @@ class _RadarScreenState extends ConsumerState<RadarScreen>
       _togglePlayback();
     }
     setState(() {
-      _currentFrameIndex = (_currentFrameIndex + step).clamp(0, _frames.length - 1);
+      _currentFrameIndex =
+          (_currentFrameIndex + step).clamp(0, _frames.length - 1);
     });
   }
 
@@ -207,7 +211,8 @@ class _RadarScreenState extends ConsumerState<RadarScreen>
         shape: const RoundedRectangleBorder(borderRadius: AppRadius.brLg),
         title: Row(
           children: [
-            const Icon(Icons.warning_amber_rounded, color: AppColors.statusWarning, size: 28),
+            const Icon(Icons.warning_amber_rounded,
+                color: AppColors.statusWarning, size: 28),
             const SizedBox(width: 10),
             Expanded(
               child: Text(
@@ -226,7 +231,8 @@ class _RadarScreenState extends ConsumerState<RadarScreen>
           children: [
             Text(
               message,
-              style: AppTypography.bodyMedium.copyWith(color: AppColors.textDarkSecondary),
+              style: AppTypography.bodyMedium
+                  .copyWith(color: AppColors.textDarkSecondary),
             ),
             const SizedBox(height: 12),
             Container(
@@ -248,7 +254,8 @@ class _RadarScreenState extends ConsumerState<RadarScreen>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Dismiss', style: TextStyle(color: AppColors.accentCyan)),
+            child: const Text('Dismiss',
+                style: TextStyle(color: AppColors.accentCyan)),
           ),
         ],
       ),
@@ -262,7 +269,8 @@ class _RadarScreenState extends ConsumerState<RadarScreen>
     final currentFrame = _frames[_currentFrameIndex];
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor:
+          isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: AppBar(
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -279,7 +287,8 @@ class _RadarScreenState extends ConsumerState<RadarScreen>
                 ),
                 const SizedBox(width: 6),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: currentFrame.isForecast
                         ? AppColors.statusWarning.withOpacity(0.18)
@@ -302,7 +311,8 @@ class _RadarScreenState extends ConsumerState<RadarScreen>
             Text(
               '${location.name}, ${location.state} • 250km Scan',
               style: AppTypography.labelSmall.copyWith(
-                color: isDark ? AppColors.textDarkMuted : AppColors.textLightMuted,
+                color:
+                    isDark ? AppColors.textDarkMuted : AppColors.textLightMuted,
                 fontSize: 11,
               ),
             ),
@@ -396,7 +406,8 @@ class _RadarScreenState extends ConsumerState<RadarScreen>
                         borderRadius: AppRadius.brPill,
                         onTap: () => setState(() => _selectedLayer = layer),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 7),
                           decoration: BoxDecoration(
                             color: isSelected
                                 ? AppColors.primaryBlue
@@ -407,7 +418,9 @@ class _RadarScreenState extends ConsumerState<RadarScreen>
                             border: Border.all(
                               color: isSelected
                                   ? AppColors.primaryBlue
-                                  : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                                  : (isDark
+                                      ? AppColors.darkBorder
+                                      : AppColors.lightBorder),
                             ),
                             boxShadow: [
                               BoxShadow(
@@ -424,16 +437,22 @@ class _RadarScreenState extends ConsumerState<RadarScreen>
                                 size: 14,
                                 color: isSelected
                                     ? Colors.white
-                                    : (isDark ? AppColors.accentCyan : AppColors.primaryBlue),
+                                    : (isDark
+                                        ? AppColors.accentCyan
+                                        : AppColors.primaryBlue),
                               ),
                               const SizedBox(width: 6),
                               Text(
                                 layer.label.split(' ').first,
                                 style: AppTypography.labelSmall.copyWith(
-                                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                                  fontWeight: isSelected
+                                      ? FontWeight.w700
+                                      : FontWeight.w500,
                                   color: isSelected
                                       ? Colors.white
-                                      : (isDark ? Colors.white : AppColors.textLightPrimary),
+                                      : (isDark
+                                          ? Colors.white
+                                          : AppColors.textLightPrimary),
                                 ),
                               ),
                             ],
@@ -518,13 +537,16 @@ class _RadarScreenState extends ConsumerState<RadarScreen>
                         currentFrame.time,
                         style: AppTypography.titleSmall.copyWith(
                           fontWeight: FontWeight.w800,
-                          color: isDark ? Colors.white : AppColors.textLightPrimary,
+                          color: isDark
+                              ? Colors.white
+                              : AppColors.textLightPrimary,
                         ),
                       ),
                       const SizedBox(width: 6),
                       Flexible(
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
                             color: currentFrame.isForecast
                                 ? AppColors.statusWarning.withOpacity(0.18)
@@ -552,7 +574,9 @@ class _RadarScreenState extends ConsumerState<RadarScreen>
                         '${currentFrame.dbz.toInt()} dBZ',
                         style: AppTypography.labelSmall.copyWith(
                           fontWeight: FontWeight.w700,
-                          color: isDark ? AppColors.textDarkPrimary : AppColors.textLightPrimary,
+                          color: isDark
+                              ? AppColors.textDarkPrimary
+                              : AppColors.textLightPrimary,
                         ),
                       ),
                     ],
@@ -564,7 +588,9 @@ class _RadarScreenState extends ConsumerState<RadarScreen>
                     children: [
                       IconButton(
                         icon: const Icon(Icons.skip_previous_rounded, size: 24),
-                        color: isDark ? Colors.white70 : AppColors.textLightSecondary,
+                        color: isDark
+                            ? Colors.white70
+                            : AppColors.textLightSecondary,
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
                         onPressed: () => _stepFrame(-1),
@@ -585,7 +611,9 @@ class _RadarScreenState extends ConsumerState<RadarScreen>
                       const SizedBox(width: 8),
                       IconButton(
                         icon: const Icon(Icons.skip_next_rounded, size: 24),
-                        color: isDark ? Colors.white70 : AppColors.textLightSecondary,
+                        color: isDark
+                            ? Colors.white70
+                            : AppColors.textLightSecondary,
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
                         onPressed: () => _stepFrame(1),
@@ -594,7 +622,8 @@ class _RadarScreenState extends ConsumerState<RadarScreen>
                         child: SliderTheme(
                           data: SliderTheme.of(context).copyWith(
                             trackHeight: 4,
-                            thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 7),
+                            thumbShape: const RoundSliderThumbShape(
+                                enabledThumbRadius: 7),
                           ),
                           child: Slider(
                             value: _currentFrameIndex.toDouble(),
@@ -604,7 +633,9 @@ class _RadarScreenState extends ConsumerState<RadarScreen>
                             activeColor: currentFrame.isForecast
                                 ? AppColors.statusWarning
                                 : AppColors.accentCyan,
-                            inactiveColor: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                            inactiveColor: isDark
+                                ? AppColors.darkBorder
+                                : AppColors.lightBorder,
                             onChanged: (val) {
                               if (_isPlaying) _togglePlayback();
                               setState(() => _currentFrameIndex = val.toInt());
@@ -629,7 +660,8 @@ class _RadarScreenState extends ConsumerState<RadarScreen>
                             overflow: TextOverflow.clip,
                             style: TextStyle(
                               fontSize: 8,
-                              fontWeight: isCur ? FontWeight.w800 : FontWeight.w500,
+                              fontWeight:
+                                  isCur ? FontWeight.w800 : FontWeight.w500,
                               color: isCur
                                   ? (e.value.isForecast
                                       ? AppColors.statusWarning
@@ -654,11 +686,15 @@ class _RadarScreenState extends ConsumerState<RadarScreen>
                         'Intensity:',
                         style: AppTypography.labelSmall.copyWith(
                           fontSize: 10,
-                          color: isDark ? AppColors.textDarkMuted : AppColors.textLightMuted,
+                          color: isDark
+                              ? AppColors.textDarkMuted
+                              : AppColors.textLightMuted,
                         ),
                       ),
                       const SizedBox(width: 8),
-                      Text('Light', style: AppTypography.labelSmall.copyWith(fontSize: 10)),
+                      Text('Light',
+                          style:
+                              AppTypography.labelSmall.copyWith(fontSize: 10)),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Container(
@@ -679,14 +715,17 @@ class _RadarScreenState extends ConsumerState<RadarScreen>
                         ),
                       ),
                       const SizedBox(width: 4),
-                      Text('Extreme', style: AppTypography.labelSmall.copyWith(fontSize: 10)),
+                      Text('Extreme',
+                          style:
+                              AppTypography.labelSmall.copyWith(fontSize: 10)),
                     ],
                   ),
                   const SizedBox(height: 8),
 
                   // Current Weather Movement & Freshness Summary
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
                       color: isDark
                           ? AppColors.darkSurfaceElevated
@@ -695,7 +734,8 @@ class _RadarScreenState extends ConsumerState<RadarScreen>
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.navigation_rounded, size: 14, color: AppColors.accentCyan),
+                        const Icon(Icons.navigation_rounded,
+                            size: 14, color: AppColors.accentCyan),
                         const SizedBox(width: 6),
                         Expanded(
                           child: Text(
@@ -705,7 +745,9 @@ class _RadarScreenState extends ConsumerState<RadarScreen>
                             style: AppTypography.bodySmall.copyWith(
                               fontSize: 11,
                               fontWeight: FontWeight.w600,
-                              color: isDark ? AppColors.textDarkPrimary : AppColors.textLightPrimary,
+                              color: isDark
+                                  ? AppColors.textDarkPrimary
+                                  : AppColors.textLightPrimary,
                             ),
                           ),
                         ),
@@ -714,7 +756,9 @@ class _RadarScreenState extends ConsumerState<RadarScreen>
                           'Demo Radar',
                           style: AppTypography.labelSmall.copyWith(
                             fontSize: 9,
-                            color: isDark ? AppColors.textDarkMuted : AppColors.textLightMuted,
+                            color: isDark
+                                ? AppColors.textDarkMuted
+                                : AppColors.textLightMuted,
                           ),
                         ),
                       ],
@@ -869,7 +913,9 @@ class _RadarLayerPickerSheet extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: isSelected
                       ? AppColors.primaryBlue.withOpacity(0.2)
-                      : (isDark ? AppColors.darkSurfaceElevated : Colors.grey.shade100),
+                      : (isDark
+                          ? AppColors.darkSurfaceElevated
+                          : Colors.grey.shade100),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
@@ -889,11 +935,14 @@ class _RadarLayerPickerSheet extends StatelessWidget {
               subtitle: Text(
                 layer.subtitle,
                 style: AppTypography.bodySmall.copyWith(
-                  color: isDark ? AppColors.textDarkMuted : AppColors.textLightMuted,
+                  color: isDark
+                      ? AppColors.textDarkMuted
+                      : AppColors.textLightMuted,
                 ),
               ),
               trailing: isSelected
-                  ? const Icon(Icons.check_circle_rounded, color: AppColors.accentCyan)
+                  ? const Icon(Icons.check_circle_rounded,
+                      color: AppColors.accentCyan)
                   : null,
               onTap: () => onSelect(layer),
             );
@@ -920,7 +969,8 @@ class _RadarInfoSheet extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.info_outline_rounded, color: AppColors.accentCyan),
+              const Icon(Icons.info_outline_rounded,
+                  color: AppColors.accentCyan),
               const SizedBox(width: 10),
               Text(
                 'How Weather Radar Works',
@@ -935,39 +985,50 @@ class _RadarInfoSheet extends StatelessWidget {
           Text(
             '• Doppler Radar detects precipitation (rain, hail, snow) by emitting electromagnetic pulses and measuring return signals.',
             style: AppTypography.bodyMedium.copyWith(
-              color: isDark ? AppColors.textDarkSecondary : AppColors.textLightSecondary,
+              color: isDark
+                  ? AppColors.textDarkSecondary
+                  : AppColors.textLightSecondary,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             '• Colors represent Reflectivity (dBZ): Cyan/Green = Light Rain, Yellow/Orange = Moderate Rain, Red/Purple = Severe Thunderstorms & Hail.',
             style: AppTypography.bodyMedium.copyWith(
-              color: isDark ? AppColors.textDarkSecondary : AppColors.textLightSecondary,
+              color: isDark
+                  ? AppColors.textDarkSecondary
+                  : AppColors.textLightSecondary,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             '• Timeline: Frames marked [OBSERVED] represent recorded radar scans. Frames marked [NOWCAST] indicate high-resolution predictive storm motion vectors.',
             style: AppTypography.bodyMedium.copyWith(
-              color: isDark ? AppColors.textDarkSecondary : AppColors.textLightSecondary,
+              color: isDark
+                  ? AppColors.textDarkSecondary
+                  : AppColors.textLightSecondary,
             ),
           ),
           const SizedBox(height: 16),
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: isDark ? AppColors.darkSurfaceElevated : AppColors.lightBackgroundSecondary,
+              color: isDark
+                  ? AppColors.darkSurfaceElevated
+                  : AppColors.lightBackgroundSecondary,
               borderRadius: AppRadius.brMd,
             ),
             child: Row(
               children: [
-                const Icon(Icons.verified_user_outlined, size: 18, color: AppColors.accentCyan),
+                const Icon(Icons.verified_user_outlined,
+                    size: 18, color: AppColors.accentCyan),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     'Data Transparency: Synthetic Doppler simulation model for SIH prototype validation.',
                     style: AppTypography.labelSmall.copyWith(
-                      color: isDark ? AppColors.textDarkMuted : AppColors.textLightMuted,
+                      color: isDark
+                          ? AppColors.textDarkMuted
+                          : AppColors.textLightMuted,
                     ),
                   ),
                 ),
@@ -1027,9 +1088,12 @@ class _AdvancedRadarMapPainter extends CustomPainter {
     final riverPath = Path();
     riverPath.moveTo(size.width * 0.1, size.height * 0.15);
     riverPath.cubicTo(
-      size.width * 0.35, size.height * 0.35,
-      size.width * 0.45, size.height * 0.60,
-      size.width * 0.90, size.height * 0.85,
+      size.width * 0.35,
+      size.height * 0.35,
+      size.width * 0.45,
+      size.height * 0.60,
+      size.width * 0.90,
+      size.height * 0.85,
     );
     canvas.drawPath(riverPath, riverPaint);
 
@@ -1159,16 +1223,25 @@ class _AdvancedRadarMapPainter extends CustomPainter {
       final cloudPaint = Paint()
         ..color = const Color(0x88CFD8DC)
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 36);
-      canvas.drawCircle(Offset(center.dx - 40 + driftX, center.dy - 30 + driftY), 100, cloudPaint);
-      canvas.drawCircle(Offset(center.dx + 50 + driftX, center.dy + 40 + driftY), 90, cloudPaint);
+      canvas.drawCircle(
+          Offset(center.dx - 40 + driftX, center.dy - 30 + driftY),
+          100,
+          cloudPaint);
+      canvas.drawCircle(
+          Offset(center.dx + 50 + driftX, center.dy + 40 + driftY),
+          90,
+          cloudPaint);
     }
 
     // 7. Surrounding Regional City Landmarks
-    _drawCityPin(canvas, center.translate(-70, -110), 'Sitapur', '28°C', isDark);
-    _drawCityPin(canvas, center.translate(110, -50), 'Barabanki', '29°C', isDark);
+    _drawCityPin(
+        canvas, center.translate(-70, -110), 'Sitapur', '28°C', isDark);
+    _drawCityPin(
+        canvas, center.translate(110, -50), 'Barabanki', '29°C', isDark);
     _drawCityPin(canvas, center.translate(-110, 80), 'Kanpur', '31°C', isDark);
     _drawCityPin(canvas, center.translate(140, 70), 'Ayodhya', '29°C', isDark);
-    _drawCityPin(canvas, center.translate(30, 140), 'Rae Bareli', '30°C', isDark);
+    _drawCityPin(
+        canvas, center.translate(30, 140), 'Rae Bareli', '30°C', isDark);
 
     // 8. User Current Location Pin with Pulsing Ripple
     final pulsePaint = Paint()
@@ -1195,10 +1268,12 @@ class _AdvancedRadarMapPainter extends CustomPainter {
       ),
     );
     textPainter.layout();
-    textPainter.paint(canvas, Offset(center.dx - (textPainter.width / 2), center.dy + 14));
+    textPainter.paint(
+        canvas, Offset(center.dx - (textPainter.width / 2), center.dy + 14));
   }
 
-  void _drawCityPin(Canvas canvas, Offset offset, String name, String temp, bool isDark) {
+  void _drawCityPin(
+      Canvas canvas, Offset offset, String name, String temp, bool isDark) {
     final dotPaint = Paint()
       ..color = isDark ? const Color(0xFF6E8EAF) : const Color(0xFF4A658A);
     canvas.drawCircle(offset, 4, dotPaint);

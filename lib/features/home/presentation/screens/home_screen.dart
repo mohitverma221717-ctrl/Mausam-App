@@ -203,6 +203,84 @@ class HomeScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 24),
 
+              // Advanced Weather Intelligence Quick Bar
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Advanced Intelligence',
+                    style: AppTypography.headlineSmall.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: isDark
+                          ? AppColors.textDarkPrimary
+                          : AppColors.textLightPrimary,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () => context.push('/explore'),
+                    child: Text(
+                      'View All',
+                      style: AppTypography.labelMedium.copyWith(
+                        color: AppColors.accentCyan,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    _buildHomeQuickAction(
+                      context,
+                      title: 'Live Earth',
+                      icon: Icons.public_rounded,
+                      color: const Color(0xFF06B6D4),
+                      route: '/advanced/live-earth',
+                    ),
+                    _buildHomeQuickAction(
+                      context,
+                      title: 'Disaster Hub',
+                      icon: Icons.health_and_safety_rounded,
+                      color: const Color(0xFFDC2626),
+                      route: '/advanced/disaster-hub',
+                    ),
+                    _buildHomeQuickAction(
+                      context,
+                      title: 'Mausam AI',
+                      icon: Icons.smart_toy_rounded,
+                      color: const Color(0xFF3B82F6),
+                      route: '/advanced/ai-assistant',
+                    ),
+                    _buildHomeQuickAction(
+                      context,
+                      title: 'Cyclone',
+                      icon: Icons.cyclone,
+                      color: const Color(0xFFEF4444),
+                      route: '/advanced/cyclone-tracker',
+                    ),
+                    _buildHomeQuickAction(
+                      context,
+                      title: 'Nowcast',
+                      icon: Icons.umbrella_rounded,
+                      color: const Color(0xFF0284C7),
+                      route: '/advanced/nowcast',
+                    ),
+                    _buildHomeQuickAction(
+                      context,
+                      title: 'Earthquake',
+                      icon: Icons.vibration_rounded,
+                      color: const Color(0xFFF59E0B),
+                      route: '/advanced/earthquake-monitor',
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+
               // Hourly Forecast Strip
               HourlyForecastRow(
                 hourlyForecasts: weatherState.hourlyForecast,
@@ -271,6 +349,44 @@ class HomeScreen extends ConsumerWidget {
                 ),
 
               const SizedBox(height: 20),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHomeQuickAction(
+    BuildContext context, {
+    required String title,
+    required IconData icon,
+    required Color color,
+    required String route,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 10),
+      child: InkWell(
+        onTap: () => context.push(route),
+        borderRadius: BorderRadius.circular(14),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          decoration: BoxDecoration(
+            color: AppColors.darkBackgroundSecondary,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: color.withOpacity(0.4)),
+          ),
+          child: Row(
+            children: [
+              Icon(icon, color: color, size: 18),
+              const SizedBox(width: 8),
+              Text(
+                title,
+                style: const TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
         ),

@@ -80,8 +80,7 @@ class AppTheme {
         ),
         focusedBorder: const OutlineInputBorder(
           borderRadius: AppRadius.brMd,
-          borderSide:
-              BorderSide(color: AppColors.primaryBlue, width: 1.5),
+          borderSide: BorderSide(color: AppColors.primaryBlue, width: 1.5),
         ),
         errorBorder: const OutlineInputBorder(
           borderRadius: AppRadius.brMd,
@@ -176,8 +175,7 @@ class AppTheme {
         ),
         focusedBorder: const OutlineInputBorder(
           borderRadius: AppRadius.brMd,
-          borderSide:
-              BorderSide(color: AppColors.primaryBlue, width: 1.5),
+          borderSide: BorderSide(color: AppColors.primaryBlue, width: 1.5),
         ),
         errorBorder: const OutlineInputBorder(
           borderRadius: AppRadius.brMd,

@@ -63,107 +63,108 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       body: SafeArea(
         child: Center(
           child: FadeTransition(
-          opacity: _fadeAnimation,
-          child: ScaleTransition(
-            scale: _scaleAnimation,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Spacer(),
-                // Weather Sun + Cloud Glow Icon
-                Container(
-                  width: 120,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        AppColors.primaryBlue,
-                        AppColors.accentCyan,
-                      ],
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.accentCyan.withOpacity(0.4),
-                        blurRadius: 32,
-                        spreadRadius: 4,
+            opacity: _fadeAnimation,
+            child: ScaleTransition(
+              scale: _scaleAnimation,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Spacer(),
+                  // Weather Sun + Cloud Glow Icon
+                  Container(
+                    width: 120,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          AppColors.primaryBlue,
+                          AppColors.accentCyan,
+                        ],
                       ),
-                    ],
-                  ),
-                  child: const Center(
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Positioned(
-                          top: 18,
-                          right: 20,
-                          child: Icon(
-                            Icons.wb_sunny_rounded,
-                            size: 46,
-                            color: Color(0xFFFFB300),
-                          ),
-                        ),
-                        Positioned(
-                          bottom: 20,
-                          left: 18,
-                          child: Icon(
-                            Icons.cloud_rounded,
-                            size: 56,
-                            color: Colors.white,
-                          ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.accentCyan.withOpacity(0.4),
+                          blurRadius: 32,
+                          spreadRadius: 4,
                         ),
                       ],
                     ),
-                  ),
-                ),
-                const SizedBox(height: 28),
-                Text(
-                  'Mausam',
-                  style: AppTypography.displaySmall.copyWith(
-                    letterSpacing: 2.0,
-                    fontWeight: FontWeight.w800,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Personalized Weather for You',
-                  style: AppTypography.titleMedium.copyWith(
-                    color: AppColors.textDarkSecondary,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const Spacer(),
-                // Loading Text
-                Text(
-                  'Loading...',
-                  style: AppTypography.labelMedium.copyWith(
-                    color: AppColors.textDarkMuted,
-                    letterSpacing: 1.0,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                // Loading Progress Indicator
-                SizedBox(
-                  width: 160,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: const LinearProgressIndicator(
-                      minHeight: 4,
-                      backgroundColor: AppColors.darkSurfaceElevated,
-                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.accentCyan),
+                    child: const Center(
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Positioned(
+                            top: 18,
+                            right: 20,
+                            child: Icon(
+                              Icons.wb_sunny_rounded,
+                              size: 46,
+                              color: Color(0xFFFFB300),
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 20,
+                            left: 18,
+                            child: Icon(
+                              Icons.cloud_rounded,
+                              size: 56,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 48),
-              ],
+                  const SizedBox(height: 28),
+                  Text(
+                    'Mausam',
+                    style: AppTypography.displaySmall.copyWith(
+                      letterSpacing: 2.0,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Personalized Weather for You',
+                    style: AppTypography.titleMedium.copyWith(
+                      color: AppColors.textDarkSecondary,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const Spacer(),
+                  // Loading Text
+                  Text(
+                    'Loading...',
+                    style: AppTypography.labelMedium.copyWith(
+                      color: AppColors.textDarkMuted,
+                      letterSpacing: 1.0,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  // Loading Progress Indicator
+                  SizedBox(
+                    width: 160,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: const LinearProgressIndicator(
+                        minHeight: 4,
+                        backgroundColor: AppColors.darkSurfaceElevated,
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(AppColors.accentCyan),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 48),
+                ],
+              ),
             ),
           ),
         ),
       ),
-    ),
-  );
+    );
   }
 }

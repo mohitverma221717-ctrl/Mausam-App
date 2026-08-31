@@ -150,7 +150,8 @@ class TravelScreen extends ConsumerWidget {
                                       dest.city,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: AppTypography.headlineSmall.copyWith(
+                                      style:
+                                          AppTypography.headlineSmall.copyWith(
                                         fontWeight: FontWeight.w800,
                                         color: isDark
                                             ? AppColors.textDarkPrimary

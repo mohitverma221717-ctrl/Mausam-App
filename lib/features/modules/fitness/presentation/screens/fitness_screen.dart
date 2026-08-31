@@ -194,7 +194,8 @@ class FitnessScreen extends ConsumerWidget {
                                         window.timeRange,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
-                                        style: AppTypography.titleMedium.copyWith(
+                                        style:
+                                            AppTypography.titleMedium.copyWith(
                                           fontWeight: FontWeight.w700,
                                           color: isDark
                                               ? AppColors.textDarkPrimary
@@ -210,7 +211,8 @@ class FitnessScreen extends ConsumerWidget {
                                         decoration: BoxDecoration(
                                           color: window.qualityColor
                                               .withOpacity(0.18),
-                                          borderRadius: BorderRadius.circular(4),
+                                          borderRadius:
+                                              BorderRadius.circular(4),
                                         ),
                                         child: Text(
                                           window.quality,

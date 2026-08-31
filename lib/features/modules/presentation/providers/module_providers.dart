@@ -73,8 +73,7 @@ final commuteDataProvider = FutureProvider<CommuteData>((ref) async {
 
 // Events
 final eventPlannerRepositoryProvider = Provider((ref) => MockEventRepository());
-final eventPlannerDataProvider =
-    FutureProvider<EventPlannerData>((ref) async {
+final eventPlannerDataProvider = FutureProvider<EventPlannerData>((ref) async {
   final repo = ref.watch(eventPlannerRepositoryProvider);
   return repo.getEventPlannerData();
 });

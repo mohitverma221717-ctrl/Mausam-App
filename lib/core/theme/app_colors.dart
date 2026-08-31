@@ -37,6 +37,13 @@ class AppColors {
   static const Color textDarkMuted = Color(0xFF64748B);
   static const Color textDarkDisabled = Color(0xFF475569);
 
+  // Convenient Aliases
+  static const Color cyanAccent = Color(0xFF00E5FF);
+  static const Color textPrimary = Color(0xFFFFFFFF);
+  static const Color textSecondary = Color(0xFF94A3B8);
+  static const Color textMuted = Color(0xFF64748B);
+  static const Color glassBorder = Color(0xFF1E2C4A);
+
   // Text Colors - Light Mode
   static const Color textLightPrimary = Color(0xFF0A0E17);
   static const Color textLightSecondary = Color(0xFF475569);

@@ -34,11 +34,14 @@ class _AodScreenState extends ConsumerState<AodScreen> {
     final weatherState = ref.watch(weatherProvider);
     final currentWeather = weatherState.currentWeather;
 
-    final temp = currentWeather != null ? '${currentWeather.temperature.round()}°' : '29°';
+    final temp = currentWeather != null
+        ? '${currentWeather.temperature.round()}°'
+        : '29°';
     final condition = currentWeather?.condition ?? 'Partly Cloudy';
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor:
+          isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: AppBar(
         title: const Text('Always-On Display (AOD)'),
         leading: IconButton(
@@ -140,7 +143,8 @@ class _AodScreenState extends ConsumerState<AodScreen> {
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.bolt_rounded, size: 14, color: AppColors.statusSuccess),
+                          Icon(Icons.bolt_rounded,
+                              size: 14, color: AppColors.statusSuccess),
                           SizedBox(width: 4),
                           Text(
                             '85% • Charging',
@@ -160,7 +164,9 @@ class _AodScreenState extends ConsumerState<AodScreen> {
 
             // 2. AOD Activation Switch
             Material(
-              color: isDark ? AppColors.darkSurfaceCard : AppColors.lightSurfaceCard,
+              color: isDark
+                  ? AppColors.darkSurfaceCard
+                  : AppColors.lightSurfaceCard,
               shape: RoundedRectangleBorder(
                 borderRadius: AppRadius.brXl,
                 side: BorderSide(
@@ -175,13 +181,17 @@ class _AodScreenState extends ConsumerState<AodScreen> {
                   'Ambient Weather Display',
                   style: AppTypography.titleMedium.copyWith(
                     fontWeight: FontWeight.w700,
-                    color: isDark ? AppColors.textDarkPrimary : AppColors.textLightPrimary,
+                    color: isDark
+                        ? AppColors.textDarkPrimary
+                        : AppColors.textLightPrimary,
                   ),
                 ),
                 subtitle: Text(
                   'Shows time, temperature, and live weather conditions on standby',
                   style: AppTypography.bodySmall.copyWith(
-                    color: isDark ? AppColors.textDarkMuted : AppColors.textLightMuted,
+                    color: isDark
+                        ? AppColors.textDarkMuted
+                        : AppColors.textLightMuted,
                   ),
                 ),
                 onChanged: (val) => setState(() => _aodEnabled = val),
@@ -194,12 +204,16 @@ class _AodScreenState extends ConsumerState<AodScreen> {
               'Display Style',
               style: AppTypography.titleMedium.copyWith(
                 fontWeight: FontWeight.w700,
-                color: isDark ? AppColors.textDarkPrimary : AppColors.textLightPrimary,
+                color: isDark
+                    ? AppColors.textDarkPrimary
+                    : AppColors.textLightPrimary,
               ),
             ),
             const SizedBox(height: 8),
             Material(
-              color: isDark ? AppColors.darkSurfaceCard : AppColors.lightSurfaceCard,
+              color: isDark
+                  ? AppColors.darkSurfaceCard
+                  : AppColors.lightSurfaceCard,
               shape: RoundedRectangleBorder(
                 borderRadius: AppRadius.brXl,
                 side: BorderSide(
@@ -214,12 +228,16 @@ class _AodScreenState extends ConsumerState<AodScreen> {
                     title: Text(
                       _styles[index],
                       style: AppTypography.bodyMedium.copyWith(
-                        fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                        color: isDark ? AppColors.textDarkPrimary : AppColors.textLightPrimary,
+                        fontWeight:
+                            isSelected ? FontWeight.w700 : FontWeight.w500,
+                        color: isDark
+                            ? AppColors.textDarkPrimary
+                            : AppColors.textLightPrimary,
                       ),
                     ),
                     trailing: isSelected
-                        ? const Icon(Icons.check_circle_rounded, color: AppColors.accentCyan)
+                        ? const Icon(Icons.check_circle_rounded,
+                            color: AppColors.accentCyan)
                         : null,
                   );
                 }),
@@ -232,12 +250,16 @@ class _AodScreenState extends ConsumerState<AodScreen> {
               'Customization & Power Saving',
               style: AppTypography.titleMedium.copyWith(
                 fontWeight: FontWeight.w700,
-                color: isDark ? AppColors.textDarkPrimary : AppColors.textLightPrimary,
+                color: isDark
+                    ? AppColors.textDarkPrimary
+                    : AppColors.textLightPrimary,
               ),
             ),
             const SizedBox(height: 8),
             Material(
-              color: isDark ? AppColors.darkSurfaceCard : AppColors.lightSurfaceCard,
+              color: isDark
+                  ? AppColors.darkSurfaceCard
+                  : AppColors.lightSurfaceCard,
               shape: RoundedRectangleBorder(
                 borderRadius: AppRadius.brXl,
                 side: BorderSide(
@@ -250,7 +272,8 @@ class _AodScreenState extends ConsumerState<AodScreen> {
                     value: _showWeather,
                     activeColor: AppColors.primaryBlue,
                     title: const Text('Show Live Weather Glance'),
-                    subtitle: const Text('Displays current temperature and sky condition'),
+                    subtitle: const Text(
+                        'Displays current temperature and sky condition'),
                     onChanged: (v) => setState(() => _showWeather = v),
                   ),
                   const Divider(height: 1),
@@ -258,7 +281,8 @@ class _AodScreenState extends ConsumerState<AodScreen> {
                     value: _showBattery,
                     activeColor: AppColors.primaryBlue,
                     title: const Text('Show Battery Status'),
-                    subtitle: const Text('Battery percentage & charging indicator'),
+                    subtitle:
+                        const Text('Battery percentage & charging indicator'),
                     onChanged: (v) => setState(() => _showBattery = v),
                   ),
                   const Divider(height: 1),
@@ -266,7 +290,8 @@ class _AodScreenState extends ConsumerState<AodScreen> {
                     value: _nightDimming,
                     activeColor: AppColors.primaryBlue,
                     title: const Text('Night Auto-Dimming'),
-                    subtitle: const Text('Dims display brightness between 11 PM and 6 AM'),
+                    subtitle: const Text(
+                        'Dims display brightness between 11 PM and 6 AM'),
                     onChanged: (v) => setState(() => _nightDimming = v),
                   ),
                 ],

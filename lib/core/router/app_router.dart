@@ -47,6 +47,20 @@ import '../../features/modules/agriculture/presentation/screens/agriculture_scre
 import '../../features/modules/commute/presentation/screens/commute_screen.dart';
 import '../../features/modules/events/presentation/screens/event_screen.dart';
 
+// Advanced Weather Intelligence & Earth Monitoring Screens
+import '../../features/advanced/disaster/presentation/screens/disaster_hub_screen.dart';
+import '../../features/advanced/disaster/presentation/screens/disaster_detail_screen.dart';
+import '../../features/advanced/cyclone/presentation/screens/cyclone_tracker_screen.dart';
+import '../../features/advanced/earthquake/presentation/screens/earthquake_screen.dart';
+import '../../features/advanced/lightning/presentation/screens/lightning_monitor_screen.dart';
+import '../../features/advanced/air_quality/presentation/screens/air_quality_map_screen.dart';
+import '../../features/advanced/nowcast/presentation/screens/weather_nowcast_screen.dart';
+import '../../features/advanced/earth/presentation/screens/live_earth_screen.dart';
+import '../../features/advanced/ai_assistant/presentation/screens/mausam_ai_assistant_screen.dart';
+import '../../features/advanced/smart_route/presentation/screens/smart_route_weather_screen.dart';
+import '../../features/advanced/event_intelligence/presentation/screens/event_intelligence_screen.dart';
+import '../../features/advanced/weather_widgets/presentation/screens/weather_widgets_screen.dart';
+
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> _shellNavigatorHome =
     GlobalKey<NavigatorState>();
@@ -227,6 +241,59 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/explore/event-planner',
       builder: (context, state) => const EventScreen(),
+    ),
+
+    // Advanced Weather Intelligence & Earth Monitoring Routes
+    GoRoute(
+      path: '/advanced/disaster-hub',
+      builder: (context, state) => const DisasterHubScreen(),
+    ),
+    GoRoute(
+      path: '/advanced/disaster/:id',
+      builder: (context, state) {
+        final id = state.pathParameters['id'] ?? 'disaster-1';
+        return DisasterDetailScreen(disasterId: id);
+      },
+    ),
+    GoRoute(
+      path: '/advanced/cyclone-tracker',
+      builder: (context, state) => const CycloneTrackerScreen(),
+    ),
+    GoRoute(
+      path: '/advanced/earthquake-monitor',
+      builder: (context, state) => const EarthquakeScreen(),
+    ),
+    GoRoute(
+      path: '/advanced/lightning-monitor',
+      builder: (context, state) => const LightningMonitorScreen(),
+    ),
+    GoRoute(
+      path: '/advanced/air-quality-map',
+      builder: (context, state) => const AirQualityMapScreen(),
+    ),
+    GoRoute(
+      path: '/advanced/nowcast',
+      builder: (context, state) => const WeatherNowcastScreen(),
+    ),
+    GoRoute(
+      path: '/advanced/live-earth',
+      builder: (context, state) => const LiveEarthScreen(),
+    ),
+    GoRoute(
+      path: '/advanced/ai-assistant',
+      builder: (context, state) => const MausamAiAssistantScreen(),
+    ),
+    GoRoute(
+      path: '/advanced/smart-route',
+      builder: (context, state) => const SmartRouteWeatherScreen(),
+    ),
+    GoRoute(
+      path: '/advanced/event-planner',
+      builder: (context, state) => const EventIntelligenceScreen(),
+    ),
+    GoRoute(
+      path: '/advanced/widgets-setup',
+      builder: (context, state) => const WeatherWidgetsScreen(),
     ),
 
     // Main App Shell with 5 Bottom Navigation Branches

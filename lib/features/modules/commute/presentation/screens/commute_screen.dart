@@ -77,7 +77,8 @@ class CommuteScreen extends ConsumerWidget {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 4),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFFFB300).withOpacity(0.18),
+                                color:
+                                    const Color(0xFFFFB300).withOpacity(0.18),
                                 borderRadius: AppRadius.brPill,
                               ),
                               child: Text(

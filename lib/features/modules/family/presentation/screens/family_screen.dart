@@ -131,8 +131,8 @@ class FamilyScreen extends ConsumerWidget {
                               Container(
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
-                                  color: AppColors.primaryBlue
-                                      .withOpacity(0.15),
+                                  color:
+                                      AppColors.primaryBlue.withOpacity(0.15),
                                   borderRadius: AppRadius.brSm,
                                 ),
                                 child: Icon(
@@ -148,15 +148,13 @@ class FamilyScreen extends ConsumerWidget {
                               const SizedBox(width: 10),
                               Expanded(
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       member.name,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style:
-                                          AppTypography.titleMedium.copyWith(
+                                      style: AppTypography.titleMedium.copyWith(
                                         fontWeight: FontWeight.w700,
                                         color: isDark
                                             ? AppColors.textDarkPrimary
@@ -215,8 +213,8 @@ class FamilyScreen extends ConsumerWidget {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 8, vertical: 3),
                                   decoration: BoxDecoration(
-                                    color:
-                                        AppColors.statusSuccess.withOpacity(0.18),
+                                    color: AppColors.statusSuccess
+                                        .withOpacity(0.18),
                                     borderRadius: AppRadius.brPill,
                                   ),
                                   child: Text(
