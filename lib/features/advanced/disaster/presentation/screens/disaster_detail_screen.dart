@@ -31,6 +31,8 @@ class DisasterDetailScreen extends ConsumerWidget {
         ),
         title: const Text(
           'Disaster Advisory Detail',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
             color: AppColors.textPrimary,
             fontSize: 18,
@@ -38,26 +40,27 @@ class DisasterDetailScreen extends ConsumerWidget {
           ),
         ),
       ),
-      body: disastersAsync.when(
-        data: (alerts) {
-          final alert = alerts.firstWhere(
-            (a) => a.id == disasterId,
-            orElse: () => alerts.first,
-          );
+      body: SafeArea(
+        child: disastersAsync.when(
+          data: (alerts) {
+            final alert = alerts.firstWhere(
+              (a) => a.id == disasterId,
+              orElse: () => alerts.first,
+            );
 
-          final timeStr =
-              DateFormat('EEEE, MMM d, yyyy • h:mm a').format(alert.startTime);
-          final updatedStr = DateFormat('h:mm a').format(alert.lastUpdated);
+            final timeStr =
+                DateFormat('EEEE, MMM d, yyyy • h:mm a').format(alert.startTime);
+            final updatedStr = DateFormat('h:mm a').format(alert.lastUpdated);
 
-          return ListView(
-            padding: const EdgeInsets.all(16),
-            children: [
-              // Header Card
-              Container(
-                padding: const EdgeInsets.all(18),
-                decoration: BoxDecoration(
-                  color: AppColors.darkBackgroundSecondary,
-                  borderRadius: BorderRadius.circular(16),
+            return ListView(
+              padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 36),
+              children: [
+                // Header Card
+                Container(
+                  padding: const EdgeInsets.all(18),
+                  decoration: BoxDecoration(
+                    color: AppColors.darkBackgroundSecondary,
+                    borderRadius: BorderRadius.circular(16),
                   border:
                       Border.all(color: alert.severity.color.withOpacity(0.6)),
                 ),
@@ -165,8 +168,9 @@ class DisasterDetailScreen extends ConsumerWidget {
           onRetry: () => ref.refresh(activeDisastersProvider),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildInfoRow(IconData icon, String label, String value) {
     return Row(
@@ -174,21 +178,27 @@ class DisasterDetailScreen extends ConsumerWidget {
       children: [
         Icon(icon, size: 16, color: AppColors.cyanAccent),
         const SizedBox(width: 8),
-        Text(
-          '$label: ',
-          style: const TextStyle(
-            color: AppColors.textMuted,
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
         Expanded(
-          child: Text(
-            value,
-            style: const TextStyle(
-              color: AppColors.textPrimary,
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
+          child: Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: '$label: ',
+                  style: const TextStyle(
+                    color: AppColors.textMuted,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                TextSpan(
+                  text: value,
+                  style: const TextStyle(
+                    color: AppColors.textPrimary,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -216,12 +226,14 @@ class DisasterDetailScreen extends ConsumerWidget {
             children: [
               Icon(icon, color: iconColor, size: 20),
               const SizedBox(width: 10),
-              Text(
-                title,
-                style: const TextStyle(
-                  color: AppColors.textPrimary,
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
+              Expanded(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    color: AppColors.textPrimary,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],

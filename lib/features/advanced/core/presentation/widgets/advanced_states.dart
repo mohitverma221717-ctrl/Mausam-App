@@ -199,14 +199,17 @@ class DataSourceBadge extends StatelessWidget {
             color: isDemo ? Colors.orangeAccent : AppColors.cyanAccent,
           ),
           const SizedBox(width: 6),
-          Text(
-            isDemo
-                ? 'Demo Data • Source: $source'
-                : 'Source: $source • $lastUpdated',
-            style: TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.w600,
-              color: isDemo ? Colors.orangeAccent : AppColors.textSecondary,
+          Flexible(
+            child: Text(
+              isDemo
+                  ? 'Demo Data • Source: $source'
+                  : 'Source: $source • $lastUpdated',
+              softWrap: true,
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+                color: isDemo ? Colors.orangeAccent : AppColors.textSecondary,
+              ),
             ),
           ),
         ],
