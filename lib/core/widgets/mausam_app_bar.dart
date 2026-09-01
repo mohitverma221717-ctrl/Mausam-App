@@ -34,44 +34,81 @@ class MausamAppBar extends ConsumerWidget implements PreferredSizeWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return AppBar(
-      backgroundColor:
-          isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       elevation: 0,
       scrolledUnderElevation: 0,
       centerTitle: false,
+      titleSpacing: showBackButton || showDrawerButton ? 0 : 16,
       leading: showBackButton
-          ? IconButton(
-              icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
-              tooltip: 'Back',
-              onPressed: () => context.pop(),
+          ? Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: IconButton(
+                icon: Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  size: 18,
+                  color: isDark ? AppColors.textDarkPrimary : AppColors.textLightPrimary,
+                ),
+                tooltip: 'Back',
+                onPressed: () => context.pop(),
+              ),
             )
           : (showDrawerButton
               ? Builder(
-                  builder: (ctx) => IconButton(
-                    icon: const Icon(Icons.menu_rounded, size: 24),
-                    tooltip: 'Open navigation menu',
-                    onPressed: () {
-                      Scaffold.of(ctx).openDrawer();
-                    },
+                  builder: (ctx) => Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: IconButton(
+                      icon: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: isDark
+                              ? AppColors.darkSurfaceCard
+                              : AppColors.lightSurface,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                            width: 1,
+                          ),
+                        ),
+                        child: Icon(
+                          Icons.menu_rounded,
+                          size: 20,
+                          color: isDark ? AppColors.textDarkPrimary : AppColors.textLightPrimary,
+                        ),
+                      ),
+                      tooltip: 'Open navigation menu',
+                      onPressed: () {
+                        Scaffold.of(ctx).openDrawer();
+                      },
+                    ),
                   ),
                 )
               : null),
       title: showLocationPicker
           ? InkWell(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(16),
               onTap: onLocationTap ?? () => context.push('/locations/select'),
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
+                padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(
-                      Icons.location_on_rounded,
-                      color: AppColors.primaryBlue,
-                      size: 20,
+                    Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: isDark
+                            ? const Color(0xFF261D11)
+                            : const Color(0xFFFEF3C7),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Icon(
+                        Icons.location_on_rounded,
+                        color: Color(0xFFD97706),
+                        size: 18,
+                      ),
                     ),
-                    const SizedBox(width: 6),
+                    const SizedBox(width: 8),
                     Flexible(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,19 +124,26 @@ class MausamAppBar extends ConsumerWidget implements PreferredSizeWidget {
                                   overflow: TextOverflow.ellipsis,
                                   style: AppTypography.titleLarge.copyWith(
                                     fontWeight: FontWeight.w700,
+                                    fontSize: 17,
+                                    letterSpacing: -0.2,
+                                    color: isDark
+                                        ? AppColors.textDarkPrimary
+                                        : AppColors.textLightPrimary,
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 4),
-                              const Icon(
+                              const SizedBox(width: 2),
+                              Icon(
                                 Icons.keyboard_arrow_down_rounded,
                                 size: 18,
-                                color: AppColors.accentCyan,
+                                color: isDark
+                                    ? AppColors.accentCyan
+                                    : const Color(0xFFD97706),
                               ),
                             ],
                           ),
                           Text(
-                            locationState.selectedLocation.state,
+                            '${locationState.selectedLocation.state} · Updated 4m ago',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: AppTypography.bodySmall.copyWith(
@@ -107,6 +151,7 @@ class MausamAppBar extends ConsumerWidget implements PreferredSizeWidget {
                                   ? AppColors.textDarkMuted
                                   : AppColors.textLightMuted,
                               fontSize: 11,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ],
@@ -120,52 +165,96 @@ class MausamAppBar extends ConsumerWidget implements PreferredSizeWidget {
               title ?? '',
               style: AppTypography.headlineSmall.copyWith(
                 fontWeight: FontWeight.w700,
+                fontSize: 20,
+                color: isDark
+                    ? AppColors.textDarkPrimary
+                    : AppColors.textLightPrimary,
               ),
             ),
       actions: actions ??
           [
-            // Notification Center with Dynamic Badge
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.notifications_outlined, size: 24),
-                  tooltip: 'Open notifications',
-                  onPressed: () => context.push('/alerts/notifications'),
-                ),
-                if (alertsState.unreadNotificationsCount > 0)
-                  Positioned(
-                    top: 8,
-                    right: 8,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 4, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: AppColors.statusDanger,
-                        borderRadius: BorderRadius.circular(8),
+            Padding(
+              padding: const EdgeInsets.only(right: 14.0),
+              child: InkWell(
+                onTap: () => context.push('/alerts/notifications'),
+                borderRadius: BorderRadius.circular(24),
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: isDark
+                        ? AppColors.darkSurfaceCard
+                        : AppColors.lightSurface,
+                    border: Border.all(
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightBorder,
+                      width: 1,
+                    ),
+                    boxShadow: isDark
+                        ? null
+                        : [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.04),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                  ),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Icon(
+                        Icons.notifications_none_rounded,
+                        size: 20,
+                        color: isDark
+                            ? AppColors.textDarkPrimary
+                            : AppColors.textLightPrimary,
                       ),
-                      constraints: const BoxConstraints(
-                        minWidth: 16,
-                        minHeight: 16,
-                      ),
-                      child: Center(
-                        child: Text(
-                          alertsState.unreadNotificationsCount > 99
-                              ? '99+'
-                              : '${alertsState.unreadNotificationsCount}',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 9,
-                            fontWeight: FontWeight.w800,
+                      if (alertsState.unreadNotificationsCount > 0)
+                        Positioned(
+                          top: 2,
+                          right: 2,
+                          child: Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFEF4444),
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: isDark
+                                    ? AppColors.darkSurfaceCard
+                                    : AppColors.lightSurface,
+                                width: 1.5,
+                              ),
+                            ),
+                            constraints: const BoxConstraints(
+                              minWidth: 16,
+                              minHeight: 16,
+                            ),
+                            child: Center(
+                              child: Text(
+                                alertsState.unreadNotificationsCount > 99
+                                    ? '99+'
+                                    : '${alertsState.unreadNotificationsCount}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 8.5,
+                                  fontWeight: FontWeight.w800,
+                                  height: 1.0,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
+                    ],
                   ),
-              ],
+                ),
+              ),
             ),
-            const SizedBox(width: 4),
           ],
     );
   }
+
 }
+

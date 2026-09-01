@@ -31,19 +31,26 @@ class AppShadows {
 
   static const List<BoxShadow> lightCard = [
     BoxShadow(
-      color: Color(0x0F0A0E17),
-      offset: Offset(0, 4),
-      blurRadius: 12,
+      color: Color(0x060F172A),
+      offset: Offset(0, 2),
+      blurRadius: 8,
       spreadRadius: 0,
+    ),
+    BoxShadow(
+      color: Color(0x0A0F172A),
+      offset: Offset(0, 6),
+      blurRadius: 16,
+      spreadRadius: -2,
     ),
   ];
 
   static const List<BoxShadow> bottomNav = [
     BoxShadow(
-      color: Color(0x66000000),
+      color: Color(0x0D000000),
       offset: Offset(0, -4),
-      blurRadius: 20,
+      blurRadius: 16,
       spreadRadius: 0,
     ),
   ];
 }
+

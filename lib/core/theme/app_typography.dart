@@ -106,13 +106,35 @@ class AppTypography {
         letterSpacing: 0.4,
       );
 
-  // Weather Metric Specific Styles
-  static TextStyle get temperatureHero => GoogleFonts.inter(
+  // Weather & Hero Display Serif Styles (Matching design reference)
+  static TextStyle get serifHeroTemperature => GoogleFonts.newsreader(
         fontSize: 72,
-        fontWeight: FontWeight.w700,
-        letterSpacing: -2.0,
+        fontWeight: FontWeight.w500,
+        letterSpacing: -1.0,
         height: 1.0,
       );
+
+  static TextStyle get serifHeader => GoogleFonts.newsreader(
+        fontSize: 26,
+        fontWeight: FontWeight.w600,
+        letterSpacing: -0.5,
+        height: 1.2,
+      );
+
+  static TextStyle get serifTitle => GoogleFonts.newsreader(
+        fontSize: 20,
+        fontWeight: FontWeight.w600,
+        letterSpacing: -0.3,
+      );
+
+  static TextStyle get serifMetricValue => GoogleFonts.newsreader(
+        fontSize: 22,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.5,
+      );
+
+  // Weather Metric Specific Styles
+  static TextStyle get temperatureHero => serifHeroTemperature;
 
   static TextStyle get temperatureCard => GoogleFonts.inter(
         fontSize: 28,
@@ -133,3 +155,4 @@ class AppTypography {
         color: AppColors.textDarkSecondary,
       );
 }
+

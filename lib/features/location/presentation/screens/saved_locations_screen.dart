@@ -188,13 +188,13 @@ class _SavedLocationsScreenState extends ConsumerState<SavedLocationsScreen> {
                   onDismissed: (_) {
                     locationNotifier.removeLocation(loc.id);
                   },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: isDark
-                          ? AppColors.darkSurfaceCard
-                          : AppColors.lightSurfaceCard,
+                  child: Material(
+                    color: isDark
+                        ? AppColors.darkSurfaceCard
+                        : AppColors.lightSurfaceCard,
+                    shape: RoundedRectangleBorder(
                       borderRadius: AppRadius.brLg,
-                      border: Border.all(
+                      side: BorderSide(
                         color: isSelected
                             ? AppColors.primaryBlue
                             : (isDark
@@ -203,6 +203,7 @@ class _SavedLocationsScreenState extends ConsumerState<SavedLocationsScreen> {
                         width: isSelected ? 2.0 : 1.0,
                       ),
                     ),
+                    clipBehavior: Clip.antiAlias,
                     child: ListTile(
                       onTap: () {
                         locationNotifier.selectLocation(loc);

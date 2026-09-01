@@ -6,6 +6,7 @@ import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/widgets/weather_hero_card.dart';
 import '../../../../core/widgets/weather_chart.dart';
+import '../../../../core/widgets/weather_3d_background_layer.dart';
 import '../providers/weather_provider.dart';
 
 class WeatherDetailsScreen extends ConsumerWidget {
@@ -35,82 +36,84 @@ class WeatherDetailsScreen extends ConsumerWidget {
           onPressed: () => context.pop(),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            WeatherHeroCard(weather: weather),
-            const SizedBox(height: 20),
+      body: Weather3dBackgroundLayer(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              WeatherHeroCard(weather: weather),
+              const SizedBox(height: 20),
 
-            // Temperature Curve Chart
-            WeatherTemperatureChart(hourlyList: weatherState.hourlyForecast),
-            const SizedBox(height: 20),
+              // Temperature Curve Chart
+              WeatherTemperatureChart(hourlyList: weatherState.hourlyForecast),
+              const SizedBox(height: 20),
 
-            Text(
-              'Atmospheric & Climate Metrics',
-              style: AppTypography.titleLarge.copyWith(
-                fontWeight: FontWeight.w700,
-                color: isDark
-                    ? AppColors.textDarkPrimary
-                    : AppColors.textLightPrimary,
+              Text(
+                'Atmospheric & Climate Metrics',
+                style: AppTypography.titleLarge.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: isDark
+                      ? AppColors.textDarkPrimary
+                      : AppColors.textLightPrimary,
+                ),
               ),
-            ),
-            const SizedBox(height: 14),
+              const SizedBox(height: 14),
 
-            // Deep Dive Detail Cards
-            _DetailTile(
-              title: 'Humidity & Dew Point',
-              value: '${weather.humidity}% Humidity',
-              detail:
-                  'Dew point is 21°C. Relative moisture is balanced for comfortable respiration.',
-              icon: Icons.water_drop_rounded,
-              color: AppColors.primaryBlue,
-            ),
-            const SizedBox(height: 12),
+              // Deep Dive Detail Cards
+              _DetailTile(
+                title: 'Humidity & Dew Point',
+                value: '${weather.humidity}% Humidity',
+                detail:
+                    'Dew point is 21°C. Relative moisture is balanced for comfortable respiration.',
+                icon: Icons.water_drop_rounded,
+                color: AppColors.primaryBlue,
+              ),
+              const SizedBox(height: 12),
 
-            _DetailTile(
-              title: 'Wind & Gusts',
-              value:
-                  '${weather.windSpeed.toInt()} km/h (${weather.windDirection})',
-              detail:
-                  'Gentle breeze. Peak gusts estimated at 22 km/h around open highway sectors.',
-              icon: Icons.air_rounded,
-              color: AppColors.accentCyan,
-            ),
-            const SizedBox(height: 12),
+              _DetailTile(
+                title: 'Wind & Gusts',
+                value:
+                    '${weather.windSpeed.toInt()} km/h (${weather.windDirection})',
+                detail:
+                    'Gentle breeze. Peak gusts estimated at 22 km/h around open highway sectors.',
+                icon: Icons.air_rounded,
+                color: AppColors.accentCyan,
+              ),
+              const SizedBox(height: 12),
 
-            _DetailTile(
-              title: 'Barometric Pressure',
-              value: '${weather.pressure} hPa',
-              detail:
-                  'Steady barometric pressure indicates continuous stable atmospheric conditions.',
-              icon: Icons.compress_rounded,
-              color: AppColors.accentIndigo,
-            ),
-            const SizedBox(height: 12),
+              _DetailTile(
+                title: 'Barometric Pressure',
+                value: '${weather.pressure} hPa',
+                detail:
+                    'Steady barometric pressure indicates continuous stable atmospheric conditions.',
+                icon: Icons.compress_rounded,
+                color: AppColors.accentIndigo,
+              ),
+              const SizedBox(height: 12),
 
-            _DetailTile(
-              title: 'Cloud Cover & Visibility',
-              value:
-                  '${weather.cloudCover}% Cloudiness • ${weather.visibility.toInt()} km Visibility',
-              detail:
-                  'High altitude cirrus and cumulus clouds. Clear sightlines for road and air travel.',
-              icon: Icons.visibility_rounded,
-              color: AppColors.statusSuccess,
-            ),
-            const SizedBox(height: 12),
+              _DetailTile(
+                title: 'Cloud Cover & Visibility',
+                value:
+                    '${weather.cloudCover}% Cloudiness • ${weather.visibility.toInt()} km Visibility',
+                detail:
+                    'High altitude cirrus and cumulus clouds. Clear sightlines for road and air travel.',
+                icon: Icons.visibility_rounded,
+                color: AppColors.statusSuccess,
+              ),
+              const SizedBox(height: 12),
 
-            _DetailTile(
-              title: 'Solar & Daylight Cycle',
-              value: 'Sunrise: ${weather.sunrise} • Sunset: ${weather.sunset}',
-              detail:
-                  'Daylight duration: 12 hrs 42 mins. Peak UV index expected at 12:45 PM.',
-              icon: Icons.wb_twilight_rounded,
-              color: const Color(0xFFFF9100),
-            ),
-            const SizedBox(height: 24),
-          ],
+              _DetailTile(
+                title: 'Solar & Daylight Cycle',
+                value: 'Sunrise: ${weather.sunrise} • Sunset: ${weather.sunset}',
+                detail:
+                    'Daylight duration: 12 hrs 42 mins. Peak UV index expected at 12:45 PM.',
+                icon: Icons.wb_twilight_rounded,
+                color: const Color(0xFFFF9100),
+              ),
+              const SizedBox(height: 24),
+            ],
+          ),
         ),
       ),
     );

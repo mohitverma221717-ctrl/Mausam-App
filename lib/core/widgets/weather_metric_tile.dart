@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
-import '../theme/app_radius.dart';
 import '../theme/app_typography.dart';
 
 class WeatherMetricTile extends StatelessWidget {
@@ -31,18 +30,27 @@ class WeatherMetricTile extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        borderRadius: AppRadius.brLg,
+        borderRadius: BorderRadius.circular(20),
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
+          padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 12.0),
           decoration: BoxDecoration(
             color:
                 isDark ? AppColors.darkSurfaceCard : AppColors.lightSurfaceCard,
-            borderRadius: AppRadius.brLg,
+            borderRadius: BorderRadius.circular(20),
             border: Border.all(
               color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
               width: 1,
             ),
+            boxShadow: isDark
+                ? null
+                : [
+                    const BoxShadow(
+                      color: Color(0x060F172A),
+                      blurRadius: 10,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,22 +58,31 @@ class WeatherMetricTile extends StatelessWidget {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Expanded(
                     child: Text(
                       title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: AppTypography.labelSmall.copyWith(
+                      style: AppTypography.bodySmall.copyWith(
                         color: isDark
-                            ? AppColors.textDarkMuted
-                            : AppColors.textLightMuted,
+                            ? AppColors.textDarkSecondary
+                            : AppColors.textLightSecondary,
                         fontWeight: FontWeight.w600,
+                        fontSize: 12,
                       ),
                     ),
                   ),
                   const SizedBox(width: 4),
-                  Icon(icon, size: 18, color: color),
+                  Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: color.withOpacity(0.12),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(icon, size: 15, color: color),
+                  ),
                 ],
               ),
               const SizedBox(height: 2),
@@ -76,39 +93,46 @@ class WeatherMetricTile extends StatelessWidget {
                   value,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: AppTypography.metricValue.copyWith(
+                  style: AppTypography.serifMetricValue.copyWith(
                     color: isDark
                         ? AppColors.textDarkPrimary
                         : AppColors.textLightPrimary,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.3,
                   ),
                 ),
               ),
-              if (subtitle != null)
+              if (subtitle != null) ...[
+                const SizedBox(height: 2),
                 Text(
                   subtitle!,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTypography.bodySmall.copyWith(
-                    color: color,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
+                    color: (accentColor != null && accentColor != AppColors.primaryBlue)
+                        ? accentColor
+                        : (isDark
+                            ? AppColors.textDarkMuted
+                            : AppColors.textLightMuted),
+                    fontSize: 10.5,
+                    fontWeight: FontWeight.w500,
+                    height: 1.2,
                   ),
                 ),
-              if (progress != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 4.0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: LinearProgressIndicator(
-                      value: progress,
-                      minHeight: 4,
-                      backgroundColor: isDark
-                          ? AppColors.darkSurfaceElevated
-                          : AppColors.lightBorder,
-                      valueColor: AlwaysStoppedAnimation<Color>(color),
-                    ),
-                  ),
+              ],
+              const SizedBox(height: 6),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: LinearProgressIndicator(
+                  value: progress ?? 0.45,
+                  minHeight: 4,
+                  backgroundColor: isDark
+                      ? AppColors.darkSurfaceElevated
+                      : const Color(0xFFE2E8F0),
+                  valueColor: AlwaysStoppedAnimation<Color>(color),
                 ),
+              ),
             ],
           ),
         ),
@@ -116,3 +140,5 @@ class WeatherMetricTile extends StatelessWidget {
     );
   }
 }
+
+

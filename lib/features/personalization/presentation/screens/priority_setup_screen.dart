@@ -71,21 +71,23 @@ class PrioritySetupScreen extends ConsumerWidget {
                     final interest = rule.interest;
                     final accent = interest.accentColor;
 
-                    return Container(
+                    return Padding(
                       key: ValueKey(interest.name),
-                      margin: const EdgeInsets.only(bottom: 12),
-                      decoration: BoxDecoration(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: Material(
                         color: isDark
                             ? AppColors.darkSurfaceCard
                             : AppColors.lightSurfaceCard,
-                        borderRadius: AppRadius.brLg,
-                        border: Border.all(
-                          color: isDark
-                              ? AppColors.darkBorder
-                              : AppColors.lightBorder,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: AppRadius.brLg,
+                          side: BorderSide(
+                            color: isDark
+                                ? AppColors.darkBorder
+                                : AppColors.lightBorder,
+                          ),
                         ),
-                      ),
-                      child: ListTile(
+                        clipBehavior: Clip.antiAlias,
+                        child: ListTile(
                         contentPadding: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 8),
                         leading: Row(
@@ -145,8 +147,9 @@ class PrioritySetupScreen extends ConsumerWidget {
                           color: AppColors.accentCyan,
                         ),
                       ),
-                    );
-                  },
+                    ),
+                  );
+                },
                 ),
               ),
 

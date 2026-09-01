@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
-import '../theme/app_radius.dart';
 import '../theme/app_typography.dart';
 import '../../features/weather/domain/models/weather_data.dart';
 
@@ -24,14 +23,23 @@ class _DailyForecastCardState extends State<DailyForecastCard> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurfaceCard : AppColors.lightSurfaceCard,
-        borderRadius: AppRadius.brXl,
+        borderRadius: BorderRadius.circular(24),
         border: Border.all(
           color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
           width: 1,
         ),
+        boxShadow: isDark
+            ? null
+            : [
+                const BoxShadow(
+                  color: Color(0x060F172A),
+                  blurRadius: 12,
+                  offset: Offset(0, 4),
+                ),
+              ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,7 +52,7 @@ class _DailyForecastCardState extends State<DailyForecastCard> {
                   '7-Day Forecast',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: AppTypography.titleLarge.copyWith(
+                  style: AppTypography.serifHeader.copyWith(
                     fontWeight: FontWeight.w700,
                     color: isDark
                         ? AppColors.textDarkPrimary
@@ -56,7 +64,7 @@ class _DailyForecastCardState extends State<DailyForecastCard> {
               const Icon(
                 Icons.calendar_month_outlined,
                 size: 20,
-                color: AppColors.accentCyan,
+                color: Color(0xFF0284C7),
               ),
             ],
           ),
@@ -90,7 +98,7 @@ class _DailyForecastCardState extends State<DailyForecastCard> {
                               item.dayName,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: AppTypography.titleMedium.copyWith(
+                              style: AppTypography.bodyMedium.copyWith(
                                 color: isDark
                                     ? AppColors.textDarkPrimary
                                     : AppColors.textLightPrimary,
@@ -113,10 +121,10 @@ class _DailyForecastCardState extends State<DailyForecastCard> {
                             size: 22,
                             color:
                                 item.conditionType == WeatherConditionType.sunny
-                                    ? const Color(0xFFFFB300)
+                                    ? const Color(0xFFF59E0B)
                                     : (isDark
                                         ? AppColors.accentCyan
-                                        : AppColors.primaryBlue),
+                                        : const Color(0xFF0284C7)),
                           ),
                           Row(
                             mainAxisSize: MainAxisSize.min,
@@ -124,7 +132,7 @@ class _DailyForecastCardState extends State<DailyForecastCard> {
                               const Icon(
                                 Icons.water_drop_rounded,
                                 size: 12,
-                                color: AppColors.primaryBlue,
+                                color: Color(0xFF0284C7),
                               ),
                               const SizedBox(width: 2),
                               Text(
@@ -143,7 +151,8 @@ class _DailyForecastCardState extends State<DailyForecastCard> {
                             children: [
                               Text(
                                 '${item.tempMax.toInt()}°',
-                                style: AppTypography.titleMedium.copyWith(
+                                style: AppTypography.serifMetricValue.copyWith(
+                                  fontSize: 16,
                                   fontWeight: FontWeight.w700,
                                   color: isDark
                                       ? AppColors.textDarkPrimary
@@ -165,12 +174,12 @@ class _DailyForecastCardState extends State<DailyForecastCard> {
                       if (isExpanded) ...[
                         const SizedBox(height: 8),
                         Container(
-                          padding: const EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
                             color: isDark
                                 ? AppColors.darkSurfaceElevated
-                                : AppColors.lightBackgroundSecondary,
-                            borderRadius: AppRadius.brSm,
+                                : const Color(0xFFF1F5F9),
+                            borderRadius: BorderRadius.circular(14),
                           ),
                           child: Row(
                             children: [
@@ -191,7 +200,7 @@ class _DailyForecastCardState extends State<DailyForecastCard> {
                                   Text(
                                     'Wind: ${item.windSpeed.toInt()} km/h',
                                     style: AppTypography.labelSmall.copyWith(
-                                      color: AppColors.primaryBlueLight,
+                                      color: const Color(0xFF0284C7),
                                       fontSize: 10,
                                     ),
                                   ),

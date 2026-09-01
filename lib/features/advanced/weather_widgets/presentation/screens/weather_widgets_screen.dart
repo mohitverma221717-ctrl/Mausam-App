@@ -104,15 +104,17 @@ class _WeatherWidgetsScreenState extends ConsumerState<WeatherWidgetsScreen> {
         },
         itemBuilder: (context, index) {
           final item = _widgets[index];
-          return Container(
+          return Padding(
             key: ValueKey(item.id),
-            margin: const EdgeInsets.only(bottom: 10),
-            decoration: BoxDecoration(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Material(
               color: AppColors.darkBackgroundSecondary,
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: AppColors.glassBorder.withOpacity(0.5)),
-            ),
-            child: ListTile(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+                side: BorderSide(color: AppColors.glassBorder.withOpacity(0.5)),
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: ListTile(
               leading: Icon(item.icon, color: AppColors.cyanAccent, size: 22),
               title: Text(
                 item.title,
@@ -142,10 +144,11 @@ class _WeatherWidgetsScreenState extends ConsumerState<WeatherWidgetsScreen> {
                   const Icon(Icons.drag_handle_rounded,
                       color: AppColors.textMuted),
                 ],
-              ),
             ),
-          );
-        },
+          ),
+        ),
+      );
+    },
       ),
     );
   }

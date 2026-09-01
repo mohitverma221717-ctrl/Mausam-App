@@ -5,6 +5,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/widgets/weather_chart.dart';
+import '../../../../core/widgets/hourly_forecast_detail_sheet.dart';
 import '../../../weather/presentation/providers/weather_provider.dart';
 import '../../../weather/domain/models/weather_data.dart';
 
@@ -54,96 +55,104 @@ class HourlyForecastScreen extends ConsumerWidget {
               itemBuilder: (context, index) {
                 final item = weatherState.hourlyForecast[index];
 
-                return Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                  decoration: BoxDecoration(
-                    color: isDark
-                        ? AppColors.darkSurfaceCard
-                        : AppColors.lightSurfaceCard,
+                return Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () => HourlyForecastDetailSheet.show(context, item),
                     borderRadius: AppRadius.brLg,
-                    border: Border.all(
-                      color:
-                          isDark ? AppColors.darkBorder : AppColors.lightBorder,
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 60,
-                        child: Text(
-                          item.time,
-                          style: AppTypography.titleMedium.copyWith(
-                            fontWeight: FontWeight.w700,
-                            color: isDark
-                                ? AppColors.textDarkPrimary
-                                : AppColors.textLightPrimary,
-                          ),
+                    child: Ink(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 14),
+                      decoration: BoxDecoration(
+                        color: isDark
+                            ? AppColors.darkSurfaceCard
+                            : AppColors.lightSurfaceCard,
+                        borderRadius: AppRadius.brLg,
+                        border: Border.all(
+                          color: isDark
+                              ? AppColors.darkBorder
+                              : AppColors.lightBorder,
                         ),
                       ),
-                      Icon(
-                        item.conditionType == WeatherConditionType.sunny
-                            ? Icons.wb_sunny_rounded
-                            : (item.conditionType == WeatherConditionType.rainy
-                                ? Icons.grain_rounded
-                                : Icons.cloud_rounded),
-                        size: 24,
-                        color: item.conditionType == WeatherConditionType.sunny
-                            ? const Color(0xFFFFB300)
-                            : AppColors.accentCyan,
-                      ),
-                      const SizedBox(width: 14),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              item.condition,
-                              style: AppTypography.titleSmall.copyWith(
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 60,
+                            child: Text(
+                              item.time,
+                              style: AppTypography.titleMedium.copyWith(
+                                fontWeight: FontWeight.w700,
                                 color: isDark
                                     ? AppColors.textDarkPrimary
                                     : AppColors.textLightPrimary,
                               ),
                             ),
-                            Row(
+                          ),
+                          Icon(
+                            item.conditionType == WeatherConditionType.sunny
+                                ? Icons.wb_sunny_rounded
+                                : (item.conditionType == WeatherConditionType.rainy
+                                    ? Icons.grain_rounded
+                                    : Icons.cloud_rounded),
+                            size: 24,
+                            color: item.conditionType == WeatherConditionType.sunny
+                                ? const Color(0xFFFFB300)
+                                : AppColors.accentCyan,
+                          ),
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Icon(Icons.water_drop_rounded,
-                                    size: 12, color: AppColors.primaryBlue),
-                                const SizedBox(width: 2),
                                 Text(
-                                  '${item.rainProbability}% Rain',
-                                  style: AppTypography.labelSmall.copyWith(
+                                  item.condition,
+                                  style: AppTypography.titleSmall.copyWith(
                                     color: isDark
-                                        ? AppColors.textDarkSecondary
-                                        : AppColors.textLightSecondary,
-                                    fontSize: 11,
+                                        ? AppColors.textDarkPrimary
+                                        : AppColors.textLightPrimary,
                                   ),
                                 ),
-                                const SizedBox(width: 10),
-                                Text(
-                                  'Wind: ${item.windSpeed.toInt()} km/h',
-                                  style: AppTypography.labelSmall.copyWith(
-                                    color: isDark
-                                        ? AppColors.textDarkMuted
-                                        : AppColors.textLightMuted,
-                                    fontSize: 11,
-                                  ),
+                                Row(
+                                  children: [
+                                    const Icon(Icons.water_drop_rounded,
+                                        size: 12, color: AppColors.primaryBlue),
+                                    const SizedBox(width: 2),
+                                    Text(
+                                      '${item.rainProbability}% Rain',
+                                      style: AppTypography.labelSmall.copyWith(
+                                        color: isDark
+                                            ? AppColors.textDarkSecondary
+                                            : AppColors.textLightSecondary,
+                                        fontSize: 11,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      'Wind: ${item.windSpeed.toInt()} km/h',
+                                      style: AppTypography.labelSmall.copyWith(
+                                        color: isDark
+                                            ? AppColors.textDarkMuted
+                                            : AppColors.textLightMuted,
+                                        fontSize: 11,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                          ],
-                        ),
+                          ),
+                          Text(
+                            '${item.temperature.toInt()}°C',
+                            style: AppTypography.headlineSmall.copyWith(
+                              fontWeight: FontWeight.w800,
+                              color: isDark
+                                  ? AppColors.textDarkPrimary
+                                  : AppColors.textLightPrimary,
+                            ),
+                          ),
+                        ],
                       ),
-                      Text(
-                        '${item.temperature.toInt()}°C',
-                        style: AppTypography.headlineSmall.copyWith(
-                          fontWeight: FontWeight.w800,
-                          color: isDark
-                              ? AppColors.textDarkPrimary
-                              : AppColors.textLightPrimary,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 );
               },

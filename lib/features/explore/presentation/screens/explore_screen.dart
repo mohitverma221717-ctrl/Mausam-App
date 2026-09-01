@@ -370,8 +370,10 @@ class ExploreScreen extends ConsumerWidget {
                           item.title,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            color: AppColors.textDarkPrimary,
+                          style: TextStyle(
+                            color: isDark
+                                ? AppColors.textDarkPrimary
+                                : AppColors.textLightPrimary,
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
                           ),
@@ -381,12 +383,15 @@ class ExploreScreen extends ConsumerWidget {
                           item.description,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            color: AppColors.textDarkMuted,
+                          style: TextStyle(
+                            color: isDark
+                                ? AppColors.textDarkMuted
+                                : AppColors.textLightMuted,
                             fontSize: 10,
                             height: 1.2,
                           ),
                         ),
+
                       ],
                     ),
                   ),

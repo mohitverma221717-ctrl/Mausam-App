@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mausam_app/core/theme/app_colors.dart';
 import 'package:mausam_app/features/advanced/core/presentation/widgets/advanced_states.dart';
-import 'package:mausam_app/features/advanced/cyclone/domain/models/cyclone_model.dart';
 import 'package:mausam_app/features/advanced/cyclone/domain/repositories/cyclone_repository.dart';
 
 class CycloneTrackerScreen extends ConsumerWidget {
@@ -47,7 +46,7 @@ class CycloneTrackerScreen extends ConsumerWidget {
 
           return RefreshIndicator(
             onRefresh: () async {
-              ref.refresh(activeCyclonesProvider);
+              ref.invalidate(activeCyclonesProvider);
             },
             color: AppColors.cyanAccent,
             child: ListView(
@@ -72,8 +71,11 @@ class CycloneTrackerScreen extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      Wrap(
+                        alignment: WrapAlignment.spaceBetween,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: 8,
+                        runSpacing: 6,
                         children: [
                           Container(
                             padding: const EdgeInsets.symmetric(
@@ -84,16 +86,19 @@ class CycloneTrackerScreen extends ConsumerWidget {
                               border: Border.all(color: cyclone.categoryColor),
                             ),
                             child: Row(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 const Icon(Icons.cyclone,
                                     color: Colors.white, size: 14),
                                 const SizedBox(width: 6),
-                                Text(
-                                  cyclone.category.toUpperCase(),
-                                  style: TextStyle(
-                                    color: cyclone.categoryColor,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w800,
+                                Flexible(
+                                  child: Text(
+                                    cyclone.category.toUpperCase(),
+                                    style: TextStyle(
+                                      color: cyclone.categoryColor,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w800,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -169,17 +174,19 @@ class CycloneTrackerScreen extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: const [
+                      const Row(
+                        children: [
                           Icon(Icons.pin_drop_rounded,
                               color: Colors.redAccent, size: 20),
                           SizedBox(width: 8),
-                          Text(
-                            'Expected Landfall Prediction',
-                            style: TextStyle(
-                              color: AppColors.textPrimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
+                          Expanded(
+                            child: Text(
+                              'Expected Landfall Prediction',
+                              style: TextStyle(
+                                color: AppColors.textPrimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ],
@@ -304,7 +311,7 @@ class CycloneTrackerScreen extends ConsumerWidget {
         ),
         error: (err, _) => AdvancedErrorState(
           error: err.toString(),
-          onRetry: () => ref.refresh(activeCyclonesProvider),
+          onRetry: () => ref.invalidate(activeCyclonesProvider),
         ),
       ),
     );
@@ -334,6 +341,9 @@ class CycloneTrackerScreen extends ConsumerWidget {
                 ),
                 Text(
                   value,
+                  softWrap: true,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     color: AppColors.textPrimary,
                     fontSize: 13,
@@ -360,48 +370,55 @@ class CycloneTrackerScreen extends ConsumerWidget {
           color: isForecast
               ? Colors.cyan.withOpacity(0.4)
               : Colors.blue.withOpacity(0.4),
-          style: isForecast ? BorderStyle.solid : BorderStyle.solid,
+          style: BorderStyle.solid,
         ),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Row(
-            children: [
-              Icon(
-                isForecast ? Icons.timeline_rounded : Icons.my_location_rounded,
-                size: 16,
-                color: isForecast ? AppColors.cyanAccent : Colors.blueAccent,
-              ),
-              const SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      color: isForecast
-                          ? AppColors.cyanAccent
-                          : AppColors.textPrimary,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    coords,
-                    style: const TextStyle(
-                        color: AppColors.textMuted, fontSize: 11),
-                  ),
-                ],
-              ),
-            ],
+          Icon(
+            isForecast ? Icons.timeline_rounded : Icons.my_location_rounded,
+            size: 16,
+            color: isForecast ? AppColors.cyanAccent : Colors.blueAccent,
           ),
-          Text(
-            detail,
-            style: const TextStyle(
-              color: AppColors.textSecondary,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
+          const SizedBox(width: 10),
+          Expanded(
+            flex: 3,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  softWrap: true,
+                  style: TextStyle(
+                    color: isForecast
+                        ? AppColors.cyanAccent
+                        : AppColors.textPrimary,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  coords,
+                  style: const TextStyle(
+                      color: AppColors.textMuted, fontSize: 11),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          Flexible(
+            flex: 2,
+            child: Text(
+              detail,
+              textAlign: TextAlign.end,
+              softWrap: true,
+              style: const TextStyle(
+                color: AppColors.textSecondary,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ],
@@ -409,3 +426,4 @@ class CycloneTrackerScreen extends ConsumerWidget {
     );
   }
 }
+

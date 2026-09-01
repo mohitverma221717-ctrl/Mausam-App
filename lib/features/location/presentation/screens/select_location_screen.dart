@@ -239,15 +239,16 @@ class _LocationListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurfaceCard : AppColors.lightSurfaceCard,
+    return Material(
+      color: isDark ? AppColors.darkSurfaceCard : AppColors.lightSurfaceCard,
+      shape: RoundedRectangleBorder(
         borderRadius: AppRadius.brMd,
-        border: Border.all(
+        side: BorderSide(
           color:
               isDark ? AppColors.darkBorderSubtle : AppColors.lightBorderSubtle,
         ),
       ),
+      clipBehavior: Clip.antiAlias,
       child: ListTile(
         onTap: onTap,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
