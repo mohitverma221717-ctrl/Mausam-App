@@ -45,7 +45,7 @@ class DisasterHubScreen extends ConsumerWidget {
           }
           return RefreshIndicator(
             onRefresh: () async {
-              ref.refresh(activeDisastersProvider);
+              ref.invalidate(activeDisastersProvider);
             },
             color: AppColors.cyanAccent,
             child: ListView(
@@ -78,10 +78,10 @@ class DisasterHubScreen extends ConsumerWidget {
                             color: Colors.white, size: 28),
                       ),
                       const SizedBox(width: 14),
-                      Expanded(
+                      const Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
+                          children: [
                             Text(
                               'EMERGENCY ADVISORY',
                               style: TextStyle(
@@ -131,7 +131,7 @@ class DisasterHubScreen extends ConsumerWidget {
         ),
         error: (err, stack) => AdvancedErrorState(
           error: err.toString(),
-          onRetry: () => ref.refresh(activeDisastersProvider),
+          onRetry: () => ref.invalidate(activeDisastersProvider),
         ),
       ),
     );

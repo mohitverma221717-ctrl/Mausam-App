@@ -46,7 +46,7 @@ class EarthquakeScreen extends ConsumerWidget {
 
           return RefreshIndicator(
             onRefresh: () async {
-              ref.refresh(recentEarthquakesProvider);
+              ref.invalidate(recentEarthquakesProvider);
             },
             color: AppColors.cyanAccent,
             child: ListView(

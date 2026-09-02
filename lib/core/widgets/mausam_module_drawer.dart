@@ -129,15 +129,7 @@ class MausamModuleDrawer extends ConsumerWidget {
                         width: 44,
                         height: 44,
                         decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: const LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              AppColors.primaryBlue,
-                              AppColors.accentCyan,
-                            ],
-                          ),
+                          borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
                               color: AppColors.primaryBlue.withOpacity(0.3),
@@ -146,11 +138,11 @@ class MausamModuleDrawer extends ConsumerWidget {
                             ),
                           ],
                         ),
-                        child: const Center(
-                          child: Icon(
-                            Icons.wb_sunny_rounded,
-                            color: Colors.white,
-                            size: 26,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.asset(
+                            'assets/images/mausam_logo.jpg',
+                            fit: BoxFit.cover,
                           ),
                         ),
                       ),

@@ -38,7 +38,7 @@ class AirQualityMapScreen extends ConsumerWidget {
 
           return RefreshIndicator(
             onRefresh: () async {
-              ref.refresh(airQualityDataProvider);
+              ref.invalidate(airQualityDataProvider);
             },
             color: AppColors.cyanAccent,
             child: ListView(

@@ -47,7 +47,7 @@ class WeatherNowcastScreen extends ConsumerWidget {
 
           return RefreshIndicator(
             onRefresh: () async {
-              ref.refresh(nowcastDataProvider);
+              ref.invalidate(nowcastDataProvider);
             },
             color: AppColors.cyanAccent,
             child: ListView(

@@ -31,7 +31,9 @@ class EarthGlobeCanvas extends StatefulWidget {
   final Offset panOffset;
   final double yawAngle;
   final double pitchAngle;
+  final List<EarthGlobeMarker> markers;
   final ValueChanged<Offset>? onPanUpdate;
+  final ValueChanged<double>? onZoomChanged;
   final ValueChanged<EarthGlobeMarker>? onMarkerTap;
 
   const EarthGlobeCanvas({
@@ -43,7 +45,9 @@ class EarthGlobeCanvas extends StatefulWidget {
     required this.panOffset,
     required this.yawAngle,
     required this.pitchAngle,
+    this.markers = const [],
     this.onPanUpdate,
+    this.onZoomChanged,
     this.onMarkerTap,
   });
 
@@ -54,54 +58,7 @@ class EarthGlobeCanvas extends StatefulWidget {
 class _EarthGlobeCanvasState extends State<EarthGlobeCanvas>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
-
-  static const List<EarthGlobeMarker> defaultMarkers = [
-    EarthGlobeMarker(
-      id: 'marker-user',
-      title: 'Current Location',
-      subtitle: 'New Delhi • 32°C Sunny',
-      lat: 28.61,
-      lon: 77.20,
-      icon: Icons.my_location_rounded,
-      color: AppColors.cyanAccent,
-    ),
-    EarthGlobeMarker(
-      id: 'marker-mumbai',
-      title: 'Mumbai',
-      subtitle: '30°C • Humid',
-      lat: 19.07,
-      lon: 72.87,
-      icon: Icons.location_city_rounded,
-      color: Colors.lightBlueAccent,
-    ),
-    EarthGlobeMarker(
-      id: 'marker-remal',
-      title: 'Cyclone REMAL',
-      subtitle: 'Severe Storm • 110 km/h',
-      lat: 19.8,
-      lon: 88.4,
-      icon: Icons.cyclone_rounded,
-      color: Colors.redAccent,
-    ),
-    EarthGlobeMarker(
-      id: 'marker-london',
-      title: 'London',
-      subtitle: '18°C • Rain 70%',
-      lat: 51.50,
-      lon: -0.12,
-      icon: Icons.location_on_rounded,
-      color: Colors.orangeAccent,
-    ),
-    EarthGlobeMarker(
-      id: 'marker-tokyo',
-      title: 'Tokyo',
-      subtitle: '24°C • Clear',
-      lat: 35.67,
-      lon: 139.65,
-      icon: Icons.location_on_rounded,
-      color: Colors.purpleAccent,
-    ),
-  ];
+  double _baseZoom = 1.0;
 
   @override
   void initState() {
@@ -118,33 +75,155 @@ class _EarthGlobeCanvasState extends State<EarthGlobeCanvas>
     super.dispose();
   }
 
+  void _handleTap(TapUpDetails details, Size canvasSize) {
+    if (widget.onMarkerTap == null) return;
+
+    final center = Offset(
+      canvasSize.width / 2 + widget.panOffset.dx,
+      canvasSize.height / 2 + widget.panOffset.dy,
+    );
+    final radius = math.min(canvasSize.width, canvasSize.height) * 0.38 * widget.zoomLevel;
+    final tapPos = details.localPosition;
+
+    // Check hit on existing markers first
+    EarthGlobeMarker? hitMarker;
+    double closestDistance = double.infinity;
+
+    for (final marker in widget.markers) {
+      final pos = _calculateMarkerScreenPosition(marker, center, radius);
+      if (pos != null) {
+        final dist = (pos - tapPos).distance;
+        if (dist < 28.0 && dist < closestDistance) {
+          closestDistance = dist;
+          hitMarker = marker;
+        }
+      }
+    }
+
+    if (hitMarker != null) {
+      widget.onMarkerTap!(hitMarker);
+      return;
+    }
+
+    // If tapped inside globe / map, create dynamic point telemetry marker
+    if (widget.is3DView) {
+      final dx = tapPos.dx - center.dx;
+      final dy = tapPos.dy - center.dy;
+      final distFromCenter = math.sqrt(dx * dx + dy * dy);
+
+      if (distFromCenter <= radius) {
+        final nx = dx / radius;
+        final ny = -dy / radius;
+        final nz = math.sqrt(math.max(0.0, 1.0 - nx * nx - ny * ny));
+
+        final lat = (math.asin(ny) * 180 / math.pi) + (widget.pitchAngle * 180 / math.pi);
+        final lon = (math.atan2(nx, nz) * 180 / math.pi) + (widget.yawAngle * 180 / math.pi);
+
+        final clampedLat = lat.clamp(-90.0, 90.0);
+        final normalizedLon = ((lon + 180) % 360) - 180;
+
+        final dynamicMarker = EarthGlobeMarker(
+          id: 'tap-${tapPos.dx.toInt()}-${tapPos.dy.toInt()}',
+          title: 'Custom Telemetry Point',
+          subtitle: 'Lat: ${clampedLat.toStringAsFixed(2)}°, Lon: ${normalizedLon.toStringAsFixed(2)}°',
+          lat: clampedLat,
+          lon: normalizedLon,
+          icon: Icons.place_rounded,
+          color: widget.selectedLayer.accentColor,
+        );
+
+        widget.onMarkerTap!(dynamicMarker);
+      }
+    } else {
+      final mapWidth = radius * 2.2;
+      final mapHeight = radius * 1.4;
+      final mapRect = Rect.fromCenter(center: center, width: mapWidth, height: mapHeight);
+
+      if (mapRect.contains(tapPos)) {
+        final relX = (tapPos.dx - center.dx) / (mapWidth / 2);
+        final relY = (center.dy - tapPos.dy) / (mapHeight / 2);
+
+        final lon = (relX * 180).clamp(-180.0, 180.0);
+        final lat = (relY * 90).clamp(-90.0, 90.0);
+
+        final dynamicMarker = EarthGlobeMarker(
+          id: 'tap-2d-${tapPos.dx.toInt()}',
+          title: 'Selected Coordinate',
+          subtitle: 'Lat: ${lat.toStringAsFixed(2)}°, Lon: ${lon.toStringAsFixed(2)}°',
+          lat: lat,
+          lon: lon,
+          icon: Icons.place_rounded,
+          color: widget.selectedLayer.accentColor,
+        );
+
+        widget.onMarkerTap!(dynamicMarker);
+      }
+    }
+  }
+
+  Offset? _calculateMarkerScreenPosition(EarthGlobeMarker marker, Offset center, double radius) {
+    if (widget.is3DView) {
+      final deltaLon = (marker.lon * math.pi / 180.0) - widget.yawAngle;
+      final deltaLat = (marker.lat * math.pi / 180.0) - widget.pitchAngle;
+
+      final z = radius * math.cos(deltaLat) * math.cos(deltaLon);
+      if (z < -0.2 * radius) return null; // Behind hemisphere
+
+      final x = center.dx + radius * math.cos(deltaLat) * math.sin(deltaLon);
+      final y = center.dy - radius * math.sin(deltaLat);
+      return Offset(x, y);
+    } else {
+      final mapWidth = radius * 2.2;
+      final mapHeight = radius * 1.4;
+      final x = center.dx + (marker.lon / 180.0) * (mapWidth / 2.0);
+      final y = center.dy - (marker.lat / 90.0) * (mapHeight / 2.0);
+      return Offset(x, y);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onPanUpdate: (details) {
-        if (widget.onPanUpdate != null) {
-          widget.onPanUpdate!(details.delta);
-        }
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final canvasSize = Size(constraints.maxWidth, constraints.maxHeight);
+
+        return GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onScaleStart: (details) {
+            _baseZoom = widget.zoomLevel;
+          },
+          onScaleUpdate: (details) {
+            if (details.pointerCount >= 2 || details.scale != 1.0) {
+              if (widget.onZoomChanged != null) {
+                final newZoom = (_baseZoom * details.scale).clamp(0.5, 3.0);
+                widget.onZoomChanged!(newZoom);
+              }
+            } else if (widget.onPanUpdate != null) {
+              widget.onPanUpdate!(details.focalPointDelta);
+            }
+          },
+          onTapUp: (details) => _handleTap(details, canvasSize),
+          child: AnimatedBuilder(
+            animation: _animationController,
+            builder: (context, child) {
+              return CustomPaint(
+                size: Size.infinite,
+                painter: _EarthPainter(
+                  is3DView: widget.is3DView,
+                  selectedLayer: widget.selectedLayer,
+                  hourOffset: widget.hourOffset,
+                  zoomLevel: widget.zoomLevel,
+                  panOffset: widget.panOffset,
+                  yawAngle: widget.yawAngle,
+                  pitchAngle: widget.pitchAngle,
+                  animValue: _animationController.value,
+                  markers: widget.markers,
+                ),
+              );
+            },
+          ),
+        );
       },
-      child: AnimatedBuilder(
-        animation: _animationController,
-        builder: (context, child) {
-          return CustomPaint(
-            size: Size.infinite,
-            painter: _EarthPainter(
-              is3DView: widget.is3DView,
-              selectedLayer: widget.selectedLayer,
-              hourOffset: widget.hourOffset,
-              zoomLevel: widget.zoomLevel,
-              panOffset: widget.panOffset,
-              yawAngle: widget.yawAngle,
-              pitchAngle: widget.pitchAngle,
-              animValue: _animationController.value,
-              markers: defaultMarkers,
-            ),
-          );
-        },
-      ),
     );
   }
 }
@@ -194,23 +273,23 @@ class _EarthPainter extends CustomPainter {
   void _drawStars(Canvas canvas, Size size) {
     final starPaint = Paint()..color = Colors.white.withOpacity(0.5);
     final rand = math.Random(42);
-    for (int i = 0; i < 60; i++) {
+    for (int i = 0; i < 65; i++) {
       final x = rand.nextDouble() * size.width;
       final y = rand.nextDouble() * size.height;
       final r = (rand.nextDouble() * 1.5) + 0.5;
-      final opacity = 0.3 + 0.7 * math.sin(animValue * 2 * math.pi + i);
-      starPaint.color = Colors.white.withOpacity(opacity.clamp(0.2, 0.9));
+      final opacity = 0.25 + 0.7 * math.sin(animValue * 2 * math.pi + i);
+      starPaint.color = Colors.white.withOpacity(opacity.clamp(0.15, 0.9));
       canvas.drawCircle(Offset(x, y), r, starPaint);
     }
   }
 
   void _draw3DGlobe(Canvas canvas, Offset center, double radius) {
-    // 1. Atmosphere Rim Glow
+    // 1. Atmosphere Glow
     final glowPaint = Paint()
       ..shader = RadialGradient(
         colors: [
-          AppColors.cyanAccent.withOpacity(0.4),
-          AppColors.cyanAccent.withOpacity(0.1),
+          selectedLayer.accentColor.withOpacity(0.4),
+          selectedLayer.accentColor.withOpacity(0.12),
           Colors.transparent,
         ],
         stops: const [0.85, 0.96, 1.0],
@@ -236,16 +315,16 @@ class _EarthPainter extends CustomPainter {
     final spherePath = Path()..addOval(Rect.fromCircle(center: center, radius: radius));
     canvas.clipPath(spherePath);
 
-    // 3. Grid Lines (Latitudes & Longitudes)
+    // 3. Grid Lines
     _drawGlobeGrid(canvas, center, radius);
 
-    // 4. Continents Overlay Simulation
+    // 4. Continents Simulation
     _drawContinents3D(canvas, center, radius);
 
-    // 5. Dynamic Weather Layer (Temperature, Rain, Wind, Clouds, AQI, Pressure, etc.)
+    // 5. Dynamic Weather Layer
     _drawWeatherLayer3D(canvas, center, radius);
 
-    // 6. Day / Night Terminator Shading based on Hour Offset & Time
+    // 6. Day / Night Terminator Shading
     _drawTerminator3D(canvas, center, radius);
 
     // 7. Interactive Markers
@@ -257,7 +336,7 @@ class _EarthPainter extends CustomPainter {
     final borderPaint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0
-      ..color = AppColors.cyanAccent.withOpacity(0.6);
+      ..color = selectedLayer.accentColor.withOpacity(0.6);
     canvas.drawCircle(center, radius, borderPaint);
   }
 
@@ -302,7 +381,6 @@ class _EarthPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.2;
 
-    // Simulated subcontinent shape
     final path = Path();
     final rotX = center.dx + math.sin(yawAngle) * radius * 0.2;
     final rotY = center.dy + math.sin(pitchAngle) * radius * 0.2;
@@ -325,8 +403,8 @@ class _EarthPainter extends CustomPainter {
         final tempPaint = Paint()
           ..shader = RadialGradient(
             colors: [
-              Colors.red.withOpacity(0.4),
-              Colors.orange.withOpacity(0.3),
+              Colors.red.withOpacity(0.45),
+              Colors.orange.withOpacity(0.35),
               Colors.blue.withOpacity(0.2),
             ],
           ).createShader(Rect.fromCircle(center: center, radius: radius * 0.9));
@@ -336,18 +414,18 @@ class _EarthPainter extends CustomPainter {
       case EarthLayerType.precipitation:
       case EarthLayerType.clouds:
         final cloudPaint = Paint()
-          ..color = Colors.white.withOpacity(0.25)
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12);
+          ..color = Colors.white.withOpacity(0.3)
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 14);
         final t = animValue * 2 * math.pi;
-        canvas.drawCircle(Offset(center.dx + math.cos(t) * 20, center.dy + math.sin(t) * 15), radius * 0.5, cloudPaint);
-        canvas.drawCircle(Offset(center.dx - 30, center.dy + 20), radius * 0.4, cloudPaint);
+        canvas.drawCircle(Offset(center.dx + math.cos(t) * 25, center.dy + math.sin(t) * 18), radius * 0.55, cloudPaint);
+        canvas.drawCircle(Offset(center.dx - 35, center.dy + 25), radius * 0.45, cloudPaint);
         break;
 
       case EarthLayerType.wind:
         final windPaint = Paint()
-          ..color = AppColors.cyanAccent.withOpacity(0.6)
+          ..color = AppColors.cyanAccent.withOpacity(0.65)
           ..style = PaintingStyle.stroke
-          ..strokeWidth = 1.5;
+          ..strokeWidth = 1.6;
         for (int i = 0; i < 5; i++) {
           final startY = center.dy - radius * 0.5 + (i * 35);
           final path = Path();
@@ -361,21 +439,12 @@ class _EarthPainter extends CustomPainter {
         }
         break;
 
-      case EarthLayerType.airQuality:
-      case EarthLayerType.uv:
-      case EarthLayerType.pressure:
-      case EarthLayerType.humidity:
-      case EarthLayerType.alerts:
-      case EarthLayerType.cyclones:
-      case EarthLayerType.lightning:
-      case EarthLayerType.visibility:
-      case EarthLayerType.marine:
-      case EarthLayerType.soil:
+      default:
         final generalPaint = Paint()
           ..shader = RadialGradient(
             colors: [
-              layerColor.withOpacity(0.45),
-              layerColor.withOpacity(0.15),
+              layerColor.withOpacity(0.5),
+              layerColor.withOpacity(0.2),
               Colors.transparent,
             ],
           ).createShader(Rect.fromCircle(center: center, radius: radius * 0.85));
@@ -385,7 +454,6 @@ class _EarthPainter extends CustomPainter {
   }
 
   void _drawTerminator3D(Canvas canvas, Offset center, double radius) {
-    // Calculates sun position based on hour offset
     final sunAngle = (hourOffset * (2 * math.pi / 24)) + (animValue * 0.2);
     final shadowDx = math.cos(sunAngle) * radius * 0.8;
 
@@ -394,8 +462,8 @@ class _EarthPainter extends CustomPainter {
         begin: Alignment.centerLeft,
         end: Alignment.centerRight,
         colors: [
-          Colors.black.withOpacity(0.65),
-          Colors.black.withOpacity(0.2),
+          Colors.black.withOpacity(0.68),
+          Colors.black.withOpacity(0.22),
           Colors.transparent,
         ],
         stops: const [0.0, 0.5, 1.0],
@@ -406,28 +474,33 @@ class _EarthPainter extends CustomPainter {
 
   void _drawMarkers3D(Canvas canvas, Offset center, double radius) {
     for (final marker in markers) {
-      final markerX = center.dx + (marker.lon / 180.0) * radius * 0.7;
-      final markerY = center.dy - (marker.lat / 90.0) * radius * 0.6;
+      final deltaLon = (marker.lon * math.pi / 180.0) - yawAngle;
+      final deltaLat = (marker.lat * math.pi / 180.0) - pitchAngle;
 
-      // Pulse ring for current location
-      if (marker.id == 'marker-user') {
+      final z = radius * math.cos(deltaLat) * math.cos(deltaLon);
+      if (z < -0.2 * radius) continue;
+
+      final markerX = center.dx + radius * math.cos(deltaLat) * math.sin(deltaLon);
+      final markerY = center.dy - radius * math.sin(deltaLat);
+
+      if (marker.id == 'marker-user' || marker.id.startsWith('marker-user')) {
         final pulseR = 8.0 + 8.0 * math.sin(animValue * 4 * math.pi);
         final pulsePaint = Paint()
-          ..color = AppColors.cyanAccent.withOpacity(0.4)
+          ..color = AppColors.cyanAccent.withOpacity(0.5)
           ..style = PaintingStyle.stroke
           ..strokeWidth = 2;
         canvas.drawCircle(Offset(markerX, markerY), pulseR, pulsePaint);
       }
 
       final pinPaint = Paint()..color = marker.color;
-      canvas.drawCircle(Offset(markerX, markerY), 6, pinPaint);
+      canvas.drawCircle(Offset(markerX, markerY), 6.5, pinPaint);
 
       final textPainter = TextPainter(
         text: TextSpan(
           text: marker.title,
           style: const TextStyle(
             color: Colors.white,
-            fontSize: 9,
+            fontSize: 9.5,
             fontWeight: FontWeight.bold,
             shadows: [Shadow(color: Colors.black, blurRadius: 4)],
           ),
@@ -440,7 +513,9 @@ class _EarthPainter extends CustomPainter {
   }
 
   void _draw2DMap(Canvas canvas, Size size, Offset center, double radius) {
-    final mapRect = Rect.fromCenter(center: center, width: radius * 2.2, height: radius * 1.4);
+    final mapWidth = radius * 2.2;
+    final mapHeight = radius * 1.4;
+    final mapRect = Rect.fromCenter(center: center, width: mapWidth, height: mapHeight);
 
     final mapBg = Paint()..color = const Color(0xFF0F172A);
     canvas.drawRect(mapRect, mapBg);
@@ -448,7 +523,7 @@ class _EarthPainter extends CustomPainter {
     final borderPaint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5
-      ..color = AppColors.cyanAccent.withOpacity(0.5);
+      ..color = selectedLayer.accentColor.withOpacity(0.5);
     canvas.drawRect(mapRect, borderPaint);
 
     final gridPaint = Paint()
@@ -457,22 +532,24 @@ class _EarthPainter extends CustomPainter {
       ..color = AppColors.cyanAccent.withOpacity(0.15);
 
     for (int i = 1; i <= 4; i++) {
-      final x = mapRect.left + (mapRect.width / 5) * i;
+      final x = mapRect.left + (mapWidth / 5) * i;
       canvas.drawLine(Offset(x, mapRect.top), Offset(x, mapRect.bottom), gridPaint);
     }
     for (int i = 1; i <= 3; i++) {
-      final y = mapRect.top + (mapRect.height / 4) * i;
+      final y = mapRect.top + (mapHeight / 4) * i;
       canvas.drawLine(Offset(mapRect.left, y), Offset(mapRect.right, y), gridPaint);
     }
 
     _drawWeatherLayer3D(canvas, center, radius * 0.7);
 
     for (final marker in markers) {
-      final markerX = center.dx + (marker.lon / 180.0) * (mapRect.width / 2.2);
-      final markerY = center.dy - (marker.lat / 90.0) * (mapRect.height / 2.2);
+      final markerX = center.dx + (marker.lon / 180.0) * (mapWidth / 2.0);
+      final markerY = center.dy - (marker.lat / 90.0) * (mapHeight / 2.0);
 
-      final pinPaint = Paint()..color = marker.color;
-      canvas.drawCircle(Offset(markerX, markerY), 5, pinPaint);
+      if (mapRect.contains(Offset(markerX, markerY))) {
+        final pinPaint = Paint()..color = marker.color;
+        canvas.drawCircle(Offset(markerX, markerY), 5.5, pinPaint);
+      }
     }
   }
 
@@ -485,6 +562,7 @@ class _EarthPainter extends CustomPainter {
         oldDelegate.panOffset != panOffset ||
         oldDelegate.yawAngle != yawAngle ||
         oldDelegate.pitchAngle != pitchAngle ||
-        oldDelegate.animValue != animValue;
+        oldDelegate.animValue != animValue ||
+        oldDelegate.markers != markers;
   }
 }

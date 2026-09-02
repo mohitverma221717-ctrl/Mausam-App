@@ -64,16 +64,16 @@ class MausamBottomNav extends StatelessWidget {
         boxShadow: isDark
             ? [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.35),
-                  blurRadius: 20,
-                  offset: const Offset(0, -4),
+                  color: Colors.black.withOpacity(0.4),
+                  blurRadius: 24,
+                  offset: const Offset(0, -6),
                 ),
               ]
-            : [
+            : const [
                 BoxShadow(
-                  color: const Color(0x0C0F172A),
+                  color: Color(0x0C0F172A),
                   blurRadius: 16,
-                  offset: const Offset(0, -4),
+                  offset: Offset(0, -4),
                 ),
               ],
       ),

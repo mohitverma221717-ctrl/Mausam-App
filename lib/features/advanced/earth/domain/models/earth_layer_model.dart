@@ -78,7 +78,7 @@ extension EarthLayerTypeX on EarthLayerType {
       case EarthLayerType.visibility:
         return 'km';
       case EarthLayerType.marine:
-        return 'meters';
+        return 'm swell';
       case EarthLayerType.soil:
         return '% moisture';
     }
@@ -120,33 +120,132 @@ extension EarthLayerTypeX on EarthLayerType {
   Color get accentColor {
     switch (this) {
       case EarthLayerType.temperature:
-        return const Color(0xFFEF4444); // Red
+        return const Color(0xFFEF4444);
       case EarthLayerType.precipitation:
-        return const Color(0xFF0284C7); // Blue
+        return const Color(0xFF0284C7);
       case EarthLayerType.clouds:
-        return const Color(0xFF94A3B8); // Slate
+        return const Color(0xFF94A3B8);
       case EarthLayerType.wind:
-        return const Color(0xFF06B6D4); // Cyan
+        return const Color(0xFF06B6D4);
       case EarthLayerType.humidity:
-        return const Color(0xFF3B82F6); // Blue
+        return const Color(0xFF3B82F6);
       case EarthLayerType.pressure:
-        return const Color(0xFFF59E0B); // Amber
+        return const Color(0xFFF59E0B);
       case EarthLayerType.airQuality:
-        return const Color(0xFF10B981); // Emerald Green
+        return const Color(0xFF10B981);
       case EarthLayerType.uv:
-        return const Color(0xFFEC4899); // Pink
+        return const Color(0xFFEC4899);
       case EarthLayerType.alerts:
-        return const Color(0xFFDC2626); // Crimson
+        return const Color(0xFFDC2626);
       case EarthLayerType.cyclones:
-        return const Color(0xFFE11D48); // Rose
+        return const Color(0xFFE11D48);
       case EarthLayerType.lightning:
-        return const Color(0xFFA855F7); // Purple
+        return const Color(0xFFA855F7);
       case EarthLayerType.visibility:
-        return const Color(0xFF64748B); // Cool Grey
+        return const Color(0xFF64748B);
       case EarthLayerType.marine:
-        return const Color(0xFF0D9488); // Teal
+        return const Color(0xFF0D9488);
       case EarthLayerType.soil:
-        return const Color(0xFF84CC16); // Lime
+        return const Color(0xFF84CC16);
+    }
+  }
+
+  List<Color> get legendColors {
+    switch (this) {
+      case EarthLayerType.temperature:
+        return const [Color(0xFF3B82F6), Color(0xFF06B6D4), Color(0xFF10B981), Color(0xFFF59E0B), Color(0xFFEF4444)];
+      case EarthLayerType.precipitation:
+        return const [Color(0xFFE0F2FE), Color(0xFF38BDF8), Color(0xFF0284C7), Color(0xFF1E40AF)];
+      case EarthLayerType.clouds:
+        return const [Color(0x33FFFFFF), Color(0x88FFFFFF), Color(0xDDFFFFFF)];
+      case EarthLayerType.wind:
+        return const [Color(0xFF06B6D4), Color(0xFF10B981), Color(0xFFF59E0B), Color(0xFFEF4444)];
+      case EarthLayerType.humidity:
+        return const [Color(0xFFFEF3C7), Color(0xFF60A5FA), Color(0xFF1D4ED8)];
+      case EarthLayerType.pressure:
+        return const [Color(0xFF3B82F6), Color(0xFF10B981), Color(0xFFF59E0B)];
+      case EarthLayerType.airQuality:
+        return const [Color(0xFF10B981), Color(0xFFF59E0B), Color(0xFFEF4444), Color(0xFF8B5CF6)];
+      case EarthLayerType.uv:
+        return const [Color(0xFF10B981), Color(0xFFF59E0B), Color(0xFFEF4444), Color(0xFF8B5CF6)];
+      case EarthLayerType.alerts:
+        return const [Color(0xFFF59E0B), Color(0xFFEF4444), Color(0xFF991B1B)];
+      case EarthLayerType.cyclones:
+        return const [Color(0xFF38BDF8), Color(0xFFF59E0B), Color(0xFFEF4444)];
+      case EarthLayerType.lightning:
+        return const [Color(0xFFFDE047), Color(0xFFA855F7), Color(0xFFDC2626)];
+      case EarthLayerType.visibility:
+        return const [Color(0xFFEF4444), Color(0xFFF59E0B), Color(0xFF10B981)];
+      case EarthLayerType.marine:
+        return const [Color(0xFF0D9488), Color(0xFF0284C7), Color(0xFF1E3A8A)];
+      case EarthLayerType.soil:
+        return const [Color(0xFF78350F), Color(0xFF84CC16), Color(0xFF10B981)];
+    }
+  }
+
+  String get minScaleLabel {
+    switch (this) {
+      case EarthLayerType.temperature:
+        return '-10°C';
+      case EarthLayerType.precipitation:
+        return '0';
+      case EarthLayerType.clouds:
+        return '0%';
+      case EarthLayerType.wind:
+        return '0';
+      case EarthLayerType.humidity:
+        return '0%';
+      case EarthLayerType.pressure:
+        return '980';
+      case EarthLayerType.airQuality:
+        return '0 (Good)';
+      case EarthLayerType.uv:
+        return '0 (Low)';
+      case EarthLayerType.alerts:
+        return 'Watch';
+      case EarthLayerType.cyclones:
+        return 'Depression';
+      case EarthLayerType.lightning:
+        return 'Low';
+      case EarthLayerType.visibility:
+        return '0 km';
+      case EarthLayerType.marine:
+        return '0 m';
+      case EarthLayerType.soil:
+        return '0%';
+    }
+  }
+
+  String get maxScaleLabel {
+    switch (this) {
+      case EarthLayerType.temperature:
+        return '45°C';
+      case EarthLayerType.precipitation:
+        return '50+';
+      case EarthLayerType.clouds:
+        return '100%';
+      case EarthLayerType.wind:
+        return '120+';
+      case EarthLayerType.humidity:
+        return '100%';
+      case EarthLayerType.pressure:
+        return '1040';
+      case EarthLayerType.airQuality:
+        return '300+ (Hazardous)';
+      case EarthLayerType.uv:
+        return '11+ (Extreme)';
+      case EarthLayerType.alerts:
+        return 'Emergency';
+      case EarthLayerType.cyclones:
+        return 'Cat 5 Severe';
+      case EarthLayerType.lightning:
+        return 'Extreme';
+      case EarthLayerType.visibility:
+        return '20+ km';
+      case EarthLayerType.marine:
+        return '8+ m';
+      case EarthLayerType.soil:
+        return '100%';
     }
   }
 }
@@ -164,4 +263,3 @@ class EarthLayer {
     required this.tileUrlTemplate,
   });
 }
-

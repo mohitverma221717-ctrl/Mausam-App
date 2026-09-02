@@ -29,10 +29,7 @@ class AboutScreen extends StatelessWidget {
               width: 100,
               height: 100,
               decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: const LinearGradient(
-                  colors: [AppColors.primaryBlue, AppColors.accentCyan],
-                ),
+                borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
                     color: AppColors.accentCyan.withOpacity(0.35),
@@ -40,9 +37,12 @@ class AboutScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              child: const Center(
-                child:
-                    Icon(Icons.wb_sunny_rounded, size: 54, color: Colors.white),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(24),
+                child: Image.asset(
+                  'assets/images/mausam_logo.jpg',
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             const SizedBox(height: 20),

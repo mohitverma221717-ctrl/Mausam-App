@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 /// Designed around a premium Dark Theme (Deep Navy, Electric Blue, Cyan)
 /// and a refined Light Theme.
 class AppColors {
-  // Dark Palette (Primary / Default)
-  static const Color darkBackground = Color(0xFF0A0E17);
-  static const Color darkBackgroundSecondary = Color(0xFF0D1424);
-  static const Color darkSurface = Color(0xFF131B2E);
-  static const Color darkSurfaceElevated = Color(0xFF1A243D);
-  static const Color darkSurfaceCard = Color(0xFF151F36);
-  static const Color darkBorder = Color(0xFF1E2C4A);
-  static const Color darkBorderSubtle = Color(0xFF18233A);
+  // Dark Palette (Deep Midnight Navy - Reference Inspiration)
+  static const Color darkBackground = Color(0xFF050B16);
+  static const Color darkBackgroundSecondary = Color(0xFF07111F);
+  static const Color darkSurface = Color(0xFF0B1B2D);
+  static const Color darkSurfaceElevated = Color(0xFF102741);
+  static const Color darkSurfaceCard = Color(0xFF0D2138);
+  static const Color darkBorder = Color(0x267DD3FC); // Subtle cyan-navy translucent border
+  static const Color darkBorderSubtle = Color(0x1A7DD3FC);
 
   // Light Palette
   static const Color lightBackground = Color(0xFFF7F9FC);
@@ -32,27 +32,27 @@ class AppColors {
   static const Color blueTintBg = Color(0xFFE8F0FE);
   static const Color blueTintText = Color(0xFF1A73E8);
 
-  // Brand Accents
-  static const Color primaryBlue = Color(0xFF1A73E8);
-  static const Color primaryBlueDark = Color(0xFF0D47A1);
-  static const Color primaryBlueLight = Color(0xFF4285F4);
-  static const Color accentCyan = Color(0xFF00E5FF);
-  static const Color accentCyanGlow = Color(0xFF18FFFF);
-  static const Color accentIndigo = Color(0xFF5C6BC0);
-  static const Color accentPurple = Color(0xFF7C4DFF);
+  // Brand Accents & Weather Palette
+  static const Color primaryBlue = Color(0xFF3B82F6);
+  static const Color primaryBlueDark = Color(0xFF1D4ED8);
+  static const Color primaryBlueLight = Color(0xFF60A5FA);
+  static const Color accentCyan = Color(0xFF38BDF8);
+  static const Color accentCyanGlow = Color(0xFF7DD3FC);
+  static const Color accentIndigo = Color(0xFF6366F1);
+  static const Color accentPurple = Color(0xFF8B5CF6);
 
   // Text Colors - Dark Mode
-  static const Color textDarkPrimary = Color(0xFFFFFFFF);
-  static const Color textDarkSecondary = Color(0xFF94A3B8);
-  static const Color textDarkMuted = Color(0xFF64748B);
+  static const Color textDarkPrimary = Color(0xFFF1F5F9);
+  static const Color textDarkSecondary = Color(0xFFB8C4D2);
+  static const Color textDarkMuted = Color(0xFF8190A5);
   static const Color textDarkDisabled = Color(0xFF475569);
 
   // Convenient Aliases
-  static const Color cyanAccent = Color(0xFF00E5FF);
-  static const Color textPrimary = Color(0xFFFFFFFF);
-  static const Color textSecondary = Color(0xFF94A3B8);
-  static const Color textMuted = Color(0xFF64748B);
-  static const Color glassBorder = Color(0xFF1E2C4A);
+  static const Color cyanAccent = Color(0xFF38BDF8);
+  static const Color textPrimary = Color(0xFFF1F5F9);
+  static const Color textSecondary = Color(0xFFB8C4D2);
+  static const Color textMuted = Color(0xFF8190A5);
+  static const Color glassBorder = Color(0x267DD3FC);
 
   // Text Colors - Light Mode
   static const Color textLightPrimary = Color(0xFF0F172A);
@@ -74,25 +74,25 @@ class AppColors {
   static const LinearGradient sunnyGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFFFF9100), Color(0xFFFF3D00)],
+    colors: [Color(0xFFF59E0B), Color(0xFFD97706)],
   );
 
   static const LinearGradient nightClearGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFF0D1424), Color(0xFF1E2C4A)],
+    colors: [Color(0xFF050B16), Color(0xFF102741)],
   );
 
   static const LinearGradient rainGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFF1A2A44), Color(0xFF0052CC)],
+    colors: [Color(0xFF0D2138), Color(0xFF1E3A8A)],
   );
 
   static const LinearGradient stormyGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFF141923), Color(0xFF37474F)],
+    colors: [Color(0xFF091322), Color(0xFF163554)],
   );
 
   static const LinearGradient aqiGoodGradient = LinearGradient(
@@ -102,13 +102,13 @@ class AppColors {
   static const LinearGradient electricBlueGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFF1A73E8), Color(0xFF00E5FF)],
+    colors: [Color(0xFF3B82F6), Color(0xFF38BDF8)],
   );
 
   static const LinearGradient cardDarkGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFF162035), Color(0xFF101726)],
+    colors: [Color(0xFF0B1B2D), Color(0xFF102741)],
   );
 }
 

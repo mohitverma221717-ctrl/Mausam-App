@@ -157,16 +157,24 @@ class _Weather3dPainter extends CustomPainter {
         _draw3dSun(canvas, size);
         break;
       case WeatherConditionType.clearNight:
-      case WeatherConditionType.partlyCloudyNight:
         _draw3dMoonAndStars(canvas, size);
         break;
+      case WeatherConditionType.partlyCloudyNight:
+        _draw3dMoonAndStars(canvas, size);
+        _drawVolumetricClouds(canvas, size);
+        break;
       case WeatherConditionType.partlyCloudy:
+        _draw3dSun(canvas, size);
+        _drawVolumetricClouds(canvas, size);
+        break;
       case WeatherConditionType.cloudy:
         _drawVolumetricClouds(canvas, size);
         break;
       case WeatherConditionType.rainy:
+        _draw3dRain(canvas, size, isHeavy: false);
+        break;
       case WeatherConditionType.heavyRain:
-        _draw3dRain(canvas, size);
+        _draw3dRain(canvas, size, isHeavy: true);
         break;
       case WeatherConditionType.thunderstorm:
         _draw3dThunderstorm(canvas, size);
@@ -206,7 +214,7 @@ class _Weather3dPainter extends CustomPainter {
       ..strokeWidth = 2.5
       ..style = PaintingStyle.stroke;
 
-    final rayCount = 12;
+    const rayCount = 12;
     for (int i = 0; i < rayCount; i++) {
       double angle = (i * (2 * pi / rayCount)) + (progress * 2 * pi * 0.05);
       double rayLen = sunRadius * (1.3 + 0.2 * sin(progress * 2 * pi * 2 + i));
@@ -301,20 +309,32 @@ class _Weather3dPainter extends CustomPainter {
   }
 
   // 4. Multi-Depth 3D Falling Rain
-  void _draw3dRain(Canvas canvas, Size size) {
+  void _draw3dRain(Canvas canvas, Size size, {bool isHeavy = false}) {
     _drawVolumetricClouds(canvas, size);
 
+    if (isHeavy) {
+      final mistPaint = Paint()
+        ..color = (isDark ? const Color(0xFF1E293B) : const Color(0xFF94A3B8))
+            .withOpacity(0.15)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 20);
+      canvas.drawRect(
+          Rect.fromLTWH(0, size.height * 0.2, size.width, size.height * 0.6),
+          mistPaint);
+    }
+
+    final speedMult = isHeavy ? 3.8 : 2.2;
     for (var p in particles) {
-      double ry = (p.y + progress * p.speed * 2.5) % 1.0;
+      double ry = (p.y + progress * p.speed * speedMult) % 1.0;
       double rx = (p.x + ry * 0.1) % 1.0;
 
       final start = Offset(rx * size.width, ry * size.height);
-      final end = Offset(start.dx + 4 * p.z, start.dy + 18 * p.z);
+      final end = Offset(
+          start.dx + (isHeavy ? 6 : 4) * p.z, start.dy + (isHeavy ? 24 : 18) * p.z);
 
       final rainPaint = Paint()
         ..color = (isDark ? AppColors.accentCyan : const Color(0xFF0284C7))
-            .withOpacity(p.opacity * 0.6 * p.z)
-        ..strokeWidth = 1.2 * p.z
+            .withOpacity(p.opacity * (isHeavy ? 0.8 : 0.6) * p.z)
+        ..strokeWidth = (isHeavy ? 1.8 : 1.2) * p.z
         ..strokeCap = StrokeCap.round;
 
       canvas.drawLine(start, end, rainPaint);

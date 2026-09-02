@@ -41,6 +41,7 @@ void main() {
         // Tap 2D/3D toggle button
         await tester.tap(find.byIcon(Icons.public_rounded));
         await tester.pump();
+        await tester.pump(const Duration(seconds: 1));
 
         expect(tester.takeException(), isNull,
             reason: 'Overflow or exception caught on width $width');
@@ -65,11 +66,10 @@ void main() {
       );
 
       await tester.pump();
-      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(seconds: 1));
 
       expect(tester.takeException(), isNull,
           reason: 'Overflow or exception caught under 1.5x font scaling');
     });
   });
 }
-

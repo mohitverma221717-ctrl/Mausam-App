@@ -4,6 +4,8 @@ import '../theme/app_radius.dart';
 import '../theme/app_typography.dart';
 import '../../features/weather/domain/models/weather_data.dart';
 
+import 'weather_3d_icon_widget.dart';
+
 class WeatherHeroCard extends StatelessWidget {
   final WeatherData weather;
   final VoidCallback? onTap;
@@ -148,7 +150,6 @@ class WeatherHeroCard extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-
                     ),
                   ],
                 ),
@@ -156,53 +157,14 @@ class WeatherHeroCard extends StatelessWidget {
 
               const SizedBox(width: 12),
 
-              // Sun / Weather Glowing Icon Badge
-              Container(
-                width: 76,
-                height: 76,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: isDark
-                      ? const Color(0xFF1E293B)
-                      : const Color(0xFFFEF3C7),
-                  boxShadow: [
-                    BoxShadow(
-                      color: (weather.conditionType == WeatherConditionType.sunny
-                              ? const Color(0xFFF59E0B)
-                              : AppColors.primaryBlue)
-                          .withOpacity(0.35),
-                      blurRadius: 24,
-                      spreadRadius: 2,
-                    ),
-                  ],
-                  border: Border.all(
-                    color: (weather.conditionType == WeatherConditionType.sunny
-                            ? const Color(0xFFF59E0B)
-                            : AppColors.accentCyan)
-                        .withOpacity(0.3),
-                    width: 1.5,
-                  ),
-                ),
-                child: Center(
-                  child: Container(
-                    width: 52,
-                    height: 52,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: weather.conditionType == WeatherConditionType.sunny
-                          ? const LinearGradient(
-                              colors: [Color(0xFFF59E0B), Color(0xFFD97706)],
-                            )
-                          : const LinearGradient(
-                              colors: [Color(0xFF38BDF8), Color(0xFF0284C7)],
-                            ),
-                    ),
-                    child: Icon(
-                      weather.iconData,
-                      size: 30,
-                      color: Colors.white,
-                    ),
-                  ),
+              // Volumetric 3D Animated Weather Graphic
+              SizedBox(
+                width: 90,
+                height: 90,
+                child: Weather3dIconWidget(
+                  conditionType: weather.conditionType,
+                  size: 90,
+                  animate: true,
                 ),
               ),
             ],
@@ -211,6 +173,5 @@ class WeatherHeroCard extends StatelessWidget {
       ),
     );
   }
-
 }
 

@@ -5,6 +5,7 @@ import '../theme/app_colors.dart';
 import '../theme/app_typography.dart';
 import '../../features/location/presentation/providers/location_provider.dart';
 import '../../features/alerts/presentation/providers/alerts_provider.dart';
+import 'live_clock_widget.dart';
 
 class MausamAppBar extends ConsumerWidget implements PreferredSizeWidget {
   final String? title;
@@ -142,17 +143,28 @@ class MausamAppBar extends ConsumerWidget implements PreferredSizeWidget {
                               ),
                             ],
                           ),
-                          Text(
-                            '${locationState.selectedLocation.state} · Updated 4m ago',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTypography.bodySmall.copyWith(
-                              color: isDark
-                                  ? AppColors.textDarkMuted
-                                  : AppColors.textLightMuted,
-                              fontSize: 11,
-                              fontWeight: FontWeight.w500,
-                            ),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  '${locationState.selectedLocation.state} · ',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppTypography.bodySmall.copyWith(
+                                    color: isDark
+                                        ? AppColors.textDarkMuted
+                                        : AppColors.textLightMuted,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              const LiveClockWidget(
+                                style: LiveClockStyle.inlineText,
+                                showDate: true,
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -173,6 +185,14 @@ class MausamAppBar extends ConsumerWidget implements PreferredSizeWidget {
             ),
       actions: actions ??
           [
+            const Center(
+              child: Padding(
+                padding: EdgeInsets.only(right: 8.0),
+                child: LiveClockWidget(
+                  style: LiveClockStyle.pill,
+                ),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.only(right: 14.0),
               child: InkWell(

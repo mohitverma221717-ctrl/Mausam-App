@@ -39,7 +39,7 @@ class LightningMonitorScreen extends ConsumerWidget {
 
           return RefreshIndicator(
             onRefresh: () async {
-              ref.refresh(lightningActivityProvider);
+              ref.invalidate(lightningActivityProvider);
             },
             color: AppColors.cyanAccent,
             child: ListView(

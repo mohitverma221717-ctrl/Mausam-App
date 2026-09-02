@@ -70,51 +70,25 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Spacer(),
-                  // Weather Sun + Cloud Glow Icon
+                  // Official MAUSAM Weather Intelligence Branding Logo Asset
                   Container(
                     width: 120,
                     height: 120,
                     decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: const LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          AppColors.primaryBlue,
-                          AppColors.accentCyan,
-                        ],
-                      ),
+                      borderRadius: BorderRadius.circular(28),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.accentCyan.withOpacity(0.4),
+                          color: AppColors.accentCyan.withOpacity(0.35),
                           blurRadius: 32,
-                          spreadRadius: 4,
+                          spreadRadius: 2,
                         ),
                       ],
                     ),
-                    child: const Center(
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Positioned(
-                            top: 18,
-                            right: 20,
-                            child: Icon(
-                              Icons.wb_sunny_rounded,
-                              size: 46,
-                              color: Color(0xFFFFB300),
-                            ),
-                          ),
-                          Positioned(
-                            bottom: 20,
-                            left: 18,
-                            child: Icon(
-                              Icons.cloud_rounded,
-                              size: 56,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(28),
+                      child: Image.asset(
+                        'assets/images/mausam_logo.jpg',
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
