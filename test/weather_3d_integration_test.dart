@@ -33,7 +33,7 @@ void main() {
         cloudCover: 10,
         rainProbability: 5,
         sunrise: '05:00 AM',
-        sunset: '11:00 PM', // daytime for test
+        sunset: '11:00 PM',
         lastUpdated: DateTime.now(),
         lat: 26.8467,
         lon: 80.9462,
@@ -93,10 +93,11 @@ void main() {
         ),
       );
 
-      await tester.pump(const Duration(seconds: 2));
+      await tester.pump(const Duration(seconds: 1));
       expect(find.text('Main Weather Screen'), findsOneWidget);
       expect(find.byType(Weather3dVisualCanvas), findsWidgets);
       expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
     });
 
     testWidgets('Weather3dShowcaseCard renders live 3D visual without manual choice chips',
@@ -112,11 +113,12 @@ void main() {
         ),
       );
 
-      await tester.pump(const Duration(seconds: 2));
+      await tester.pump(const Duration(seconds: 1));
       expect(find.text('3D Dynamic Weather Engine'), findsOneWidget);
       expect(find.text('LIVE 3D'), findsOneWidget);
       expect(find.byType(ChoiceChip), findsNothing);
       expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
     });
 
     testWidgets('Location change automatically updates 3D weather visual state',
@@ -138,7 +140,7 @@ void main() {
         ),
       );
 
-      await tester.pump(const Duration(seconds: 2));
+      await tester.pump(const Duration(seconds: 1));
       expect(find.text('Location Weather View'), findsOneWidget);
 
       // Select London (Rainy weather)
@@ -152,14 +154,15 @@ void main() {
               lon: -0.1278,
             ),
           );
-      await container.read(weatherProvider.notifier).fetchWeather();
-      await tester.pump(const Duration(seconds: 2));
+      container.read(weatherProvider.notifier).fetchWeather();
+      await tester.pump(const Duration(seconds: 1));
 
       final weatherState = container.read(weatherProvider);
       expect(weatherState.currentWeather?.cityName, 'London');
       expect(weatherState.currentWeather?.conditionType, WeatherConditionType.rainy);
       expect(find.byType(Weather3dVisualCanvas), findsWidgets);
       expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
     });
   });
 }
