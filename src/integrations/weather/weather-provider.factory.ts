@@ -1,4 +1,4 @@
-import { IWeatherProvider } from './IWeatherProvider.js';
+   import { IWeatherProvider } from './IWeatherProvider.js';
 import { OpenMeteoWeatherProvider } from './open-meteo.provider.js';
 import { MockWeatherProvider } from './mock.provider.js';
 import { env } from '@config/env.js';
