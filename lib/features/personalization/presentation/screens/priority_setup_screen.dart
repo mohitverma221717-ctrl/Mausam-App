@@ -23,16 +23,32 @@ class PrioritySetupScreen extends ConsumerWidget {
         .where((r) => state.selectedInterests.contains(r.interest))
         .toList();
 
-    return Scaffold(
-      backgroundColor:
-          isDark ? AppColors.darkBackground : AppColors.lightBackground,
-      appBar: AppBar(
-        title: const Text('Priority Setup'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
-          onPressed: () => context.pop(),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          context.go('/personalization/interests');
+        }
+      },
+      child: Scaffold(
+        backgroundColor:
+            isDark ? AppColors.darkBackground : AppColors.lightBackground,
+        appBar: AppBar(
+          title: const Text('Priority Setup'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
+            onPressed: () {
+              if (context.canPop()) {
+                context.pop();
+              } else {
+                context.go('/personalization/interests');
+              }
+            },
+          ),
         ),
-      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
@@ -171,6 +187,7 @@ class PrioritySetupScreen extends ConsumerWidget {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }

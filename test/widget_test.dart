@@ -28,6 +28,8 @@ import 'package:mausam_app/features/settings/presentation/screens/help_feedback_
 import 'package:mausam_app/features/settings/presentation/screens/about_screen.dart';
 import 'package:mausam_app/features/settings/presentation/screens/aod_screen.dart';
 import 'package:mausam_app/features/settings/presentation/screens/appearance_screen.dart';
+import 'package:mausam_app/features/personalization/presentation/screens/choose_interests_screen.dart';
+import 'package:mausam_app/features/personalization/presentation/screens/priority_setup_screen.dart';
 
 void main() {
   testWidgets('WeatherHeroCard renders temperature and condition',
@@ -376,6 +378,8 @@ void main() {
         const AboutScreen(),
         const AodScreen(),
         const AppearanceScreen(),
+        const ChooseInterestsScreen(),
+        const PrioritySetupScreen(),
       ];
 
       for (final screen in secondaryScreens) {

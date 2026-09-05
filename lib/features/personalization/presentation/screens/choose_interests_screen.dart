@@ -16,17 +16,36 @@ class ChooseInterestsScreen extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final state = ref.watch(personalizationProvider);
     final notifier = ref.read(personalizationProvider.notifier);
+    void handleBack() {
+      try {
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          context.go('/location/permission');
+        }
+      } catch (_) {
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context);
+        }
+      }
+    }
 
-    return Scaffold(
-      backgroundColor:
-          isDark ? AppColors.darkBackground : AppColors.lightBackground,
-      appBar: AppBar(
-        title: const Text('Personalize MAUSAM'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
-          onPressed: () => context.pop(),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        handleBack();
+      },
+      child: Scaffold(
+        backgroundColor:
+            isDark ? AppColors.darkBackground : AppColors.lightBackground,
+        appBar: AppBar(
+          title: const Text('Personalize MAUSAM'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
+            onPressed: handleBack,
+          ),
         ),
-      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
@@ -58,9 +77,9 @@ class ChooseInterestsScreen extends ConsumerWidget {
                 child: GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    crossAxisSpacing: 14,
-                    mainAxisSpacing: 14,
-                    childAspectRatio: 1.15,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    childAspectRatio: 0.96,
                   ),
                   itemCount: UserInterest.values.length,
                   itemBuilder: (context, index) {
@@ -76,7 +95,10 @@ class ChooseInterestsScreen extends ConsumerWidget {
                         onTap: () => notifier.toggleInterest(interest),
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 200),
-                          padding: const EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14.0,
+                            vertical: 12.0,
+                          ),
                           decoration: BoxDecoration(
                             color: isSelected
                                 ? (isDark
@@ -113,7 +135,7 @@ class ChooseInterestsScreen extends ConsumerWidget {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Container(
-                                    padding: const EdgeInsets.all(8),
+                                    padding: const EdgeInsets.all(7),
                                     decoration: BoxDecoration(
                                       color: accent.withOpacity(0.2),
                                       borderRadius: AppRadius.brSm,
@@ -121,14 +143,14 @@ class ChooseInterestsScreen extends ConsumerWidget {
                                     child: Icon(
                                       interest.iconData,
                                       color: accent,
-                                      size: 22,
+                                      size: 20,
                                     ),
                                   ),
                                   if (isSelected)
                                     Icon(
                                       Icons.check_circle_rounded,
                                       color: accent,
-                                      size: 22,
+                                      size: 20,
                                     ),
                                 ],
                               ),
@@ -182,6 +204,7 @@ class ChooseInterestsScreen extends ConsumerWidget {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }
