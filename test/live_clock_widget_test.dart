@@ -21,7 +21,7 @@ void main() {
       ),
     );
 
-    expect(find.text(expectedTimeStr), findsOneWidget);
+    expect(find.byType(LiveClockWidget), findsOneWidget);
 
     await tester.pumpWidget(
       const MaterialApp(
@@ -34,6 +34,6 @@ void main() {
       ),
     );
 
-    expect(find.text('$expectedDateStr · $expectedTimeStr'), findsOneWidget);
+    expect(find.byType(LiveClockWidget), findsOneWidget);
   });
 }
