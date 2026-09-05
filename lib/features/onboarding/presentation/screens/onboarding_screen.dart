@@ -81,7 +81,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
             ),
           ),
           Positioned(
-            bottom: 120,
+            bottom: 100,
             left: -80,
             child: Container(
               width: 260,
@@ -100,123 +100,168 @@ class _OnboardingScreenState extends State<OnboardingScreen>
 
           // 2. Foreground Content
           SafeArea(
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-              child: Column(
-                children: [
-                  const SizedBox(height: 6),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final isCompact = constraints.maxHeight < 680;
+                final isVeryCompact = constraints.maxHeight < 600;
 
-                  // Top Header: Logo + Skip Button
-                  _buildTopHeader(context),
+                return Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 24.0,
+                    vertical: isVeryCompact ? 6.0 : 12.0,
+                  ),
+                  child: Column(
+                    children: [
+                      // Top Header: Logo + Skip Button
+                      _buildTopHeader(context),
 
-                  const Spacer(flex: 1),
+                      // Responsive Flexible Center Carousel (Zero Overflow)
+                      Expanded(
+                        child: PageView.builder(
+                          controller: _pageController,
+                          onPageChanged: (index) {
+                            setState(() {
+                              _currentPage = index;
+                            });
+                          },
+                          itemCount: _slides.length,
+                          itemBuilder: (context, index) {
+                            final slide = _slides[index];
 
-                  // Center Carousel
-                  SizedBox(
-                    height: 440,
-                    child: PageView.builder(
-                      controller: _pageController,
-                      onPageChanged: (index) {
-                        setState(() {
-                          _currentPage = index;
-                        });
-                      },
-                      itemCount: _slides.length,
-                      itemBuilder: (context, index) {
-                        final slide = _slides[index];
+                            return AnimatedBuilder(
+                              animation: _sparkleController,
+                              builder: (context, child) {
+                                return Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Spacer(flex: 1),
 
-                        return AnimatedBuilder(
-                          animation: _sparkleController,
-                          builder: (context, child) {
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                // 3D Frosted Glass Layered Hero Card
-                                GlassCardVisual(
-                                  slideIndex: index,
-                                  animationValue: _sparkleController.value,
-                                ),
-
-                                const SizedBox(height: 32),
-
-                                // Tag Badge
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 6,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: slide.accentColor.withOpacity(0.18),
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(
-                                      color:
-                                          slide.accentColor.withOpacity(0.40),
-                                      width: 1.0,
+                                    // 3D Frosted Glass Layered Hero Card (Flexible / Scaled)
+                                    Flexible(
+                                      flex: 8,
+                                      child: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: GlassCardVisual(
+                                          slideIndex: index,
+                                          animationValue:
+                                              _sparkleController.value,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  child: Text(
-                                    slide.tag,
-                                    style: AppTypography.labelSmall.copyWith(
-                                      color: slide.accentColor,
-                                      fontWeight: FontWeight.w700,
-                                      letterSpacing: 0.5,
+
+                                    SizedBox(
+                                      height: isVeryCompact
+                                          ? 12
+                                          : (isCompact ? 16 : 24),
                                     ),
-                                  ),
-                                ),
 
-                                const SizedBox(height: 18),
-
-                                // Main Title
-                                Text(
-                                  slide.title,
-                                  style: AppTypography.headlineMedium.copyWith(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 26,
-                                    color: Colors.white,
-                                    letterSpacing: -0.5,
-                                    height: 1.25,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-
-                                const SizedBox(height: 10),
-
-                                // Subtitle
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16.0),
-                                  child: Text(
-                                    slide.subtitle,
-                                    style: AppTypography.bodyMedium.copyWith(
-                                      color: const Color(0xFF94A3B8),
-                                      fontSize: 15,
-                                      height: 1.4,
+                                    // Tag Badge
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: isVeryCompact ? 12 : 16,
+                                        vertical: isVeryCompact ? 4 : 6,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color:
+                                            slide.accentColor.withOpacity(0.18),
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: Border.all(
+                                          color: slide.accentColor
+                                              .withOpacity(0.40),
+                                          width: 1.0,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        slide.tag,
+                                        style: AppTypography.labelSmall
+                                            .copyWith(
+                                          color: slide.accentColor,
+                                          fontWeight: FontWeight.w700,
+                                          letterSpacing: 0.5,
+                                          fontSize: isVeryCompact ? 11 : 12,
+                                        ),
+                                      ),
                                     ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ],
+
+                                    SizedBox(
+                                      height: isVeryCompact
+                                          ? 8
+                                          : (isCompact ? 10 : 14),
+                                    ),
+
+                                    // Main Title
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0),
+                                      child: Text(
+                                        slide.title,
+                                        style: AppTypography.headlineMedium
+                                            .copyWith(
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: isVeryCompact
+                                              ? 20
+                                              : (isCompact ? 22 : 25),
+                                          color: Colors.white,
+                                          letterSpacing: -0.5,
+                                          height: 1.2,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+
+                                    SizedBox(
+                                      height: isVeryCompact
+                                          ? 6
+                                          : (isCompact ? 8 : 10),
+                                    ),
+
+                                    // Subtitle
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16.0),
+                                      child: Text(
+                                        slide.subtitle,
+                                        style: AppTypography.bodyMedium
+                                            .copyWith(
+                                          color: const Color(0xFF94A3B8),
+                                          fontSize: isVeryCompact
+                                              ? 13
+                                              : (isCompact ? 14 : 15),
+                                          height: 1.35,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+
+                                    const Spacer(flex: 1),
+                                  ],
+                                );
+                              },
                             );
                           },
-                        );
-                      },
-                    ),
+                        ),
+                      ),
+
+                      // Pagination Dots Indicator
+                      _buildPageIndicator(),
+
+                      SizedBox(
+                        height:
+                            isVeryCompact ? 12 : (isCompact ? 16 : 22),
+                      ),
+
+                      // Bottom Action Button with Sparkle Glint
+                      _buildActionButton(context, isVeryCompact),
+
+                      SizedBox(height: isVeryCompact ? 4 : 8),
+                    ],
                   ),
-
-                  const Spacer(flex: 1),
-
-                  // Pagination Dots Indicator
-                  _buildPageIndicator(),
-
-                  const SizedBox(height: 32),
-
-                  // Bottom Action Button with Sparkle Glint
-                  _buildActionButton(context),
-
-                  const SizedBox(height: 12),
-                ],
-              ),
+                );
+              },
             ),
           ),
         ],
@@ -275,7 +320,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                 borderRadius: BorderRadius.circular(20),
                 child: Container(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
+                      const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
                   decoration: BoxDecoration(
                     color: const Color(0xFF132030).withOpacity(0.65),
                     borderRadius: BorderRadius.circular(20),
@@ -289,7 +334,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                     style: AppTypography.labelMedium.copyWith(
                       color: const Color(0xFF94A3B8),
                       fontWeight: FontWeight.w600,
-                      fontSize: 14,
+                      fontSize: 13,
                     ),
                   ),
                 ),
@@ -332,14 +377,14 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     );
   }
 
-  Widget _buildActionButton(BuildContext context) {
+  Widget _buildActionButton(BuildContext context, bool isVeryCompact) {
     return Stack(
       clipBehavior: Clip.none,
       children: [
         // Main Vibrant Blue Next Button
         Container(
           width: double.infinity,
-          height: 56,
+          height: isVeryCompact ? 48 : 54,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(22),
             gradient: const LinearGradient(
@@ -392,7 +437,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
           ),
         ),
 
-        // Corner Sparkle Star Glint (Matching Image 1)
+        // Corner Sparkle Star Glint
         Positioned(
           top: 6,
           right: 28,
@@ -411,7 +456,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                 child: const Icon(
                   Icons.auto_awesome,
                   color: Color(0xFFBAE6FD),
-                  size: 20,
+                  size: 18,
                 ),
               );
             },
