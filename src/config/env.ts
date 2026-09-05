@@ -13,6 +13,8 @@ const envSchema = z.object({
 
   DATABASE_URL: z.string().min(1, 'DATABASE_URL is required'),
   DIRECT_URL: z.string().optional(),
+  SUPABASE_URL: z.string().optional(),
+  SUPABASE_DB_PASSWORD: z.string().optional(),
 
   REDIS_HOST: z.string().default('localhost'),
   REDIS_PORT: z.string().transform((val) => parseInt(val, 10)).default('6379'),
