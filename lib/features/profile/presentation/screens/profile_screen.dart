@@ -34,7 +34,7 @@ class ProfileScreen extends ConsumerWidget {
                 Navigator.pop(context);
                 await ref.read(authProvider.notifier).logout();
                 if (context.mounted) {
-                  context.go('/auth/login');
+                  context.go('/get-started');
                 }
               },
               child: const Text('Logout'),

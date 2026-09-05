@@ -27,7 +27,11 @@ class _SelectLocationScreenState extends ConsumerState<SelectLocationScreen> {
 
   void _onLocationSelected(LocationModel loc) {
     ref.read(locationProvider.notifier).selectLocation(loc);
-    if (context.canPop()) {
+    final fromOnboarding =
+        GoRouterState.of(context).uri.queryParameters['from'] == 'onboarding';
+    if (fromOnboarding) {
+      context.go('/personalization/interests');
+    } else if (context.canPop()) {
       context.pop();
     } else {
       context.go('/personalization/interests');

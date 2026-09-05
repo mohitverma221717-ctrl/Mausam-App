@@ -128,7 +128,7 @@ class LocationPermissionScreen extends ConsumerWidget {
                 text: 'Select Manually',
                 variant: ButtonVariant.secondary,
                 width: double.infinity,
-                onPressed: () => context.push('/locations/select'),
+                onPressed: () => context.push('/locations/select?from=onboarding'),
               ),
               const SizedBox(height: 12),
             ],
